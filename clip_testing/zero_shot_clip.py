@@ -16,11 +16,11 @@ print("----------Model loaded----------")
 
 # Download the dataset
 # dataset = CIFAR100(root=os.path.expanduser("../../datasets/cifar-10"), download=True, train=False)
-dataset = ImageNet(root=os.path.expanduser("../../datasets/imagenet-clip"))
+dataset = ImageNet(root=os.path.expanduser("/Volumes/Crucial X9/datasets/imagenet-2012"))
 print("----------Dataset loaded----------")
 
 # Prepare the inputs
-image = Image.open("images/orange_cat.jpeg")
+image = Image.open("../testing_images/orange_cat.jpeg")
 image_input = preprocess(image).unsqueeze(0).to(device)
 text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in dataset.classes]).to(device)
 print("----------Inputs prepared----------")
