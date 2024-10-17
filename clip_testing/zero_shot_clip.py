@@ -1,3 +1,6 @@
+# Packages to install:
+# pip install ftfy regex tqdm
+# pip install git+https://github.com/openai/CLIP.git
 import os
 import clip
 import torch
@@ -15,7 +18,7 @@ model, preprocess = clip.load('ViT-B/32', device)
 print("----------Model loaded----------")
 
 # Download the dataset
-# dataset = CIFAR100(root=os.path.expanduser("../../datasets/cifar-10"), download=True, train=False)
+# dataset = CIFAR100(root=os.path.expanduser("/Volumes/Crucial X9/datasets/cifar-10"), download=True, train=False)
 dataset = ImageNet(root=os.path.expanduser("/Volumes/Crucial X9/datasets/imagenet-2012"))
 print("----------Dataset loaded----------")
 
