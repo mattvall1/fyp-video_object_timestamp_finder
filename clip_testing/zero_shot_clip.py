@@ -9,17 +9,18 @@ from PIL import Image
 from torchvision.datasets import CIFAR100
 from torchvision.datasets import ImageNet
 
+
 # Used to override SSl issue (not secure)
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # Load the model
-device = "cpu"
+device = "cuda"
 model, preprocess = clip.load('ViT-B/32', device)
 print("----------Model loaded----------")
 
 # Download the dataset
-# dataset = CIFAR100(root=os.path.expanduser("/Volumes/Crucial X9/datasets/cifar-10"), download=True, train=False)
-dataset = ImageNet(root=os.path.expanduser("/Volumes/Crucial X9/datasets/imagenet-2012"))
+# dataset = CIFAR100(root=os.path.expanduser("D:\\datasets\\cifar-10"), download=False, train=False)
+dataset = ImageNet(root=os.path.expanduser("D:\\datasets\\imagenet-2012"))
 print("----------Dataset loaded----------")
 
 # Prepare the inputs
@@ -34,6 +35,7 @@ with torch.no_grad():
     text_features = model.encode_text(text_inputs)
 print("----------Features calculated----------")
 
+
 # Pick the top 5 most similar labels for the image
 image_features /= image_features.norm(dim=-1, keepdim=True)
 text_features /= text_features.norm(dim=-1, keepdim=True)
@@ -44,4 +46,4 @@ print("----------Top predictions calculated----------")
 # Print the result
 print("\nTop predictions:\n")
 for value, index in zip(values, indices):
-    print(f"{','.join(dataset.classes[index]):>16s}: {100 * value.item():.2f}%")
+    print(f"{''.join(dataset.classes[index]):>16s}: {100 * value.item():.2f}%")
