@@ -3,7 +3,7 @@
 # Purpose: Main view
 import sys
 from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
-from app.processing.file_handler import FileHandler
+from app.processing.file_handler import ImageHandler
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -13,9 +13,10 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi('ui/main_view.ui', self)
         self.show()
 
-        # Access button and line edit widgets
+        # Access elements from UI
         self.select_file_button = self.findChild(QtWidgets.QPushButton, 'select_file_button')
         self.preview_element = self.findChild(QtWidgets.QGraphicsView, 'preview_frame')
+        self.frame_counter = self.findChild(QtWidgets.QLabel, 'frame_counter')
 
         # Connect button click event to method
         self.select_file_button.clicked.connect(self.show_file_selector)
@@ -31,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_file_handler(self, file_path):
         # Create file handler instance and play video
-        self.file_handler = FileHandler(file_path, preview_element=self.preview_element)
+        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element)
         self.file_handler.split_video()
 
 app = QtWidgets.QApplication(sys.argv)

@@ -9,11 +9,12 @@ from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene, QApplication
 from app.global_tools import Tools
 
-class FileHandler:
+class ImageHandler:
 
-    def __init__(self, file_path, preview_element):
+    def __init__(self, file_path, preview_element, frame_counter):
         self.file_path = file_path
         self.preview_element = preview_element
+        self.frame_counter = frame_counter
         self.output_dir = 'key_frames'
 
         # Delete old frames
