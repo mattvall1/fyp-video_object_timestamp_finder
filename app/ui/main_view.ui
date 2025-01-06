@@ -117,7 +117,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="frame_counter">
+   <widget class="QLabel" name="frame_details">
     <property name="geometry">
      <rect>
       <x>70</x>

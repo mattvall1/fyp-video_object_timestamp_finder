@@ -9,32 +9,38 @@ from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene, QApplication
 
 class FrameDisplayer:
-    def __init__(self, preview_element, frame_counter, output_dir='key_frames'):
+    def __init__(self, preview_element, frame_details, output_dir='key_frames'):
         self.preview_element = preview_element
-        self.frame_counter = frame_counter
+        self.frame_details = frame_details
         self.output_dir = output_dir
+        # Create a scene
+        self.scene = QGraphicsScene()
+
+    def display_frame(self, frame_path, frame_count, total_frames):
+        image = QImage('key_frames/' + frame_path)
+        pixmap = QPixmap.fromImage(image)
+        self.scene.addPixmap(pixmap)  # Add pixmap to scene
+
+        self.preview_element.setScene(self.scene)
+        self.preview_element.fitInView(self.scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)  # Keep bounds of video
+        QApplication.processEvents()
+        cv2.waitKey(10) # Temporary delay to display frame
+
+        # Display frame count
+        self.frame_details.setText(f"Processing frame {frame_count} of {total_frames}")
 
     def display_frames(self):
         # Get list of frame files
         frame_files = os.listdir(self.output_dir)
         frame_files.sort()
 
-        scene = QGraphicsScene()  # Create a scene
+        total_frames = len(frame_files)
         frame_count = 1
+
         # Display each frame in preview window
         for frame_path in frame_files:
-            image = QImage('key_frames/' + frame_path)
-            pixmap = QPixmap.fromImage(image)
-            scene.addPixmap(pixmap)  # Add pixmap to scene
-
-            self.preview_element.setScene(scene)
-            self.preview_element.fitInView(scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)  # Keep bounds of video
-            QApplication.processEvents()
-            cv2.waitKey(100)
-
-            # Display frame count
-            self.frame_counter.setText(f"Processing frame {frame_count} of {len(frame_files)}")
+            self.display_frame(frame_path, frame_count, total_frames)
             frame_count += 1
 
         # Set the scene to the preview element
-        self.preview_element.setScene(scene)
+        self.preview_element.setScene(self.scene)

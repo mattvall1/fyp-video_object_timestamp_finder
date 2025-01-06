@@ -11,10 +11,10 @@ from app.processing.frame_display import FrameDisplayer
 
 class ImageHandler:
 
-    def __init__(self, file_path, preview_element, frame_counter):
+    def __init__(self, file_path, preview_element, frame_details):
         self.file_path = file_path
         self.preview_element = preview_element
-        self.frame_counter = frame_counter
+        self.frame_details = frame_details
         self.output_dir = 'key_frames'
 
         # Delete old frames
@@ -33,7 +33,8 @@ class ImageHandler:
             frame_path = os.path.join(self.output_dir, f"{count:04d}.jpg")
             cv2.imwrite(frame_path, image)
             success, image = video_cap.read()
-            print(f"Frame '{frame_path}' saved")
+            print(f"Saving frame '{frame_path}'")
+            self.frame_details.setText(f"Saving frame '{frame_path}'")
             count += 1
 
         video_cap.release()
@@ -47,7 +48,7 @@ class ImageHandler:
         frame_files.sort()
 
         # Display frames
-        frame_displayer = FrameDisplayer(self.preview_element, self.frame_counter, self.output_dir)
+        frame_displayer = FrameDisplayer(self.preview_element, self.frame_details, self.output_dir)
         frame_displayer.display_frames()
 
 

@@ -16,7 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Access elements from UI
         self.select_file_button = self.findChild(QtWidgets.QPushButton, 'select_file_button')
         self.preview_element = self.findChild(QtWidgets.QGraphicsView, 'preview_frame')
-        self.frame_counter = self.findChild(QtWidgets.QLabel, 'frame_counter')
+        self.frame_details = self.findChild(QtWidgets.QLabel, 'frame_details')
 
         # Connect button click event to method
         self.select_file_button.clicked.connect(self.show_file_selector)
@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_file_handler(self, file_path):
         # Create file handler instance and play video
-        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element, frame_counter=self.frame_counter)
+        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element, frame_details=self.frame_details)
         self.file_handler.split_video()
 
 app = QtWidgets.QApplication(sys.argv)
