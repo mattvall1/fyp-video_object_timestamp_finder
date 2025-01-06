@@ -1,5 +1,6 @@
 # ---------- My "ignores" ----------
 .DS_Store
+key_frames/
 
 # Premade model testing
 runs/
