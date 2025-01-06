@@ -117,20 +117,27 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="frame_details">
+   <widget class="QTextEdit" name="information_output">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>550</y>
-      <width>851</width>
-      <height>31</height>
+      <x>10</x>
+      <y>700</y>
+      <width>980</width>
+      <height>80</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="find_button">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>13</y>
+      <width>113</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="text">
-     <string>No video selected</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <string>Find</string>
     </property>
    </widget>
   </widget>

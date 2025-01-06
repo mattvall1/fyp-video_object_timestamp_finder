@@ -9,9 +9,8 @@ from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene, QApplication
 
 class FrameDisplayer:
-    def __init__(self, preview_element, frame_details, output_dir='key_frames'):
+    def __init__(self, preview_element, output_dir='key_frames'):
         self.preview_element = preview_element
-        self.frame_details = frame_details
         self.output_dir = output_dir
         # Create a scene
         self.scene = QGraphicsScene()
@@ -24,10 +23,10 @@ class FrameDisplayer:
         self.preview_element.setScene(self.scene)
         self.preview_element.fitInView(self.scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)  # Keep bounds of video
         QApplication.processEvents()
-        cv2.waitKey(10) # Temporary delay to display frame
+        cv2.waitKey(100) # Temporary delay to display frame
 
         # Display frame count
-        self.frame_details.setText(f"Processing frame {frame_count} of {total_frames}")
+        print(f"Processing frame {frame_count} of {total_frames}")
 
     def display_frames(self):
         # Get list of frame files

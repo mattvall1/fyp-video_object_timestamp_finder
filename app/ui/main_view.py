@@ -4,6 +4,7 @@
 import sys
 from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
 from app.processing.file_handler import ImageHandler
+from app.ui.information_output import TextStream
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -15,8 +16,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Access elements from UI
         self.select_file_button = self.findChild(QtWidgets.QPushButton, 'select_file_button')
+        self.find_button = self.findChild(QtWidgets.QPushButton, 'find_button')
         self.preview_element = self.findChild(QtWidgets.QGraphicsView, 'preview_frame')
-        self.frame_details = self.findChild(QtWidgets.QLabel, 'frame_details')
+        self.information_output = self.findChild(QtWidgets.QTextEdit, 'information_output')
+
+        # Redirect standard output to console
+        sys.stdout = TextStream(self.information_output)
 
         # Connect button click event to method
         self.select_file_button.clicked.connect(self.show_file_selector)
@@ -26,14 +31,17 @@ class MainWindow(QtWidgets.QMainWindow):
         options = file_dialog.options()
         file_path, _ = file_dialog.getOpenFileName(self, "Open File", "/", "Video Files (*.mp4 *.mkv)", options=options)
 
+
         if file_path:
             self.select_file_text.setText(file_path.split('/')[-1])
-            self.create_file_handler(file_path)
+            self.find_button.clicked.connect(lambda: self.create_file_handler(file_path))
 
     def create_file_handler(self, file_path):
         # Create file handler instance and play video
-        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element, frame_details=self.frame_details)
+        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element)
         self.file_handler.split_video()
+
+
 
 app = QtWidgets.QApplication(sys.argv)
 window = MainWindow()
