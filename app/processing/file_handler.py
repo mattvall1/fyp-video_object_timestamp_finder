@@ -49,9 +49,8 @@ class FileHandler:
         frame_files.sort()
 
         scene = QGraphicsScene()  # Create a scene
+        # Display each frame in preview window
         for frame_path in frame_files:
-            print(frame_path)
-            # Display frame in preview window
             image = QImage('key_frames/'+frame_path)
             pixmap = QPixmap.fromImage(image)
             scene.addPixmap(pixmap)  # Add pixmap to scene
