@@ -5,11 +5,9 @@ from itertools import count
 
 import cv2
 import os
-
-from PyQt6 import QtCore
-from PyQt6.QtGui import QImage, QPixmap
-from PyQt6.QtWidgets import QGraphicsScene, QApplication
 from app.global_tools import Tools
+from app.processing.frame_display import FrameDisplayer
+
 
 class ImageHandler:
 
@@ -31,15 +29,12 @@ class ImageHandler:
         count = 0
 
         while success:
-            if count < 50: # Limit to 50 frames (for testing)
-                # Save frame as JPEG file
-                frame_path = os.path.join(self.output_dir, f"{count:04d}.jpg")
-                cv2.imwrite(frame_path, image)
-                success, image = video_cap.read()
-                print(f"Frame '{frame_path}' saved")
-                count += 1
-            else:
-                break
+            # Save frame as JPEG file
+            frame_path = os.path.join(self.output_dir, f"{count:04d}.jpg")
+            cv2.imwrite(frame_path, image)
+            success, image = video_cap.read()
+            print(f"Frame '{frame_path}' saved")
+            count += 1
 
         video_cap.release()
 
@@ -51,25 +46,8 @@ class ImageHandler:
         frame_files = os.listdir(self.output_dir)
         frame_files.sort()
 
-        scene = QGraphicsScene()  # Create a scene
-        frame_count = 1
-        # Display each frame in preview window
-        for frame_path in frame_files:
-            image = QImage('key_frames/'+frame_path)
-            pixmap = QPixmap.fromImage(image)
-            scene.addPixmap(pixmap)  # Add pixmap to scene
-
-            self.preview_element.setScene(scene)
-            self.preview_element.fitInView(scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)
-            QApplication.processEvents()
-            cv2.waitKey(100)
-
-            # Display frame count
-            self.frame_counter.setText(f"Processing frame {frame_count} of {len(frame_files)}")
-            frame_count += 1
-
-        # Set the scene to the preview element
-        self.preview_element.setScene(scene)
-        self.preview_element.fitInView(scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)
+        # Display frames
+        frame_displayer = FrameDisplayer(self.preview_element, self.frame_counter, self.output_dir)
+        frame_displayer.display_frames()
 
 
