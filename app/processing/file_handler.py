@@ -1,6 +1,8 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
 # Purpose: File handler
+from itertools import count
+
 import cv2
 import os
 
@@ -50,6 +52,7 @@ class ImageHandler:
         frame_files.sort()
 
         scene = QGraphicsScene()  # Create a scene
+        frame_count = 1
         # Display each frame in preview window
         for frame_path in frame_files:
             image = QImage('key_frames/'+frame_path)
@@ -60,6 +63,10 @@ class ImageHandler:
             self.preview_element.fitInView(scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)
             QApplication.processEvents()
             cv2.waitKey(100)
+
+            # Display frame count
+            self.frame_counter.setText(f"Processing frame {frame_count} of {len(frame_files)}")
+            frame_count += 1
 
         # Set the scene to the preview element
         self.preview_element.setScene(scene)

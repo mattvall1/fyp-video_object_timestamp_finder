@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_file_handler(self, file_path):
         # Create file handler instance and play video
-        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element)
+        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element, frame_counter=self.frame_counter)
         self.file_handler.split_video()
 
 app = QtWidgets.QApplication(sys.argv)
