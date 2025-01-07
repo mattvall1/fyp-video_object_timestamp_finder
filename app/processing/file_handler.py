@@ -19,7 +19,7 @@ class FileHandler:
         self.total_frames = 0
 
         # Delete old frames
-        Tools.clear_key_frames()
+        Tools.clear_frame_directories()
 
 
     # Method to split video into frames
