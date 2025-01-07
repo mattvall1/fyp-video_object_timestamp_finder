@@ -9,8 +9,9 @@ from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene, QApplication
 
 class FrameDisplayer:
-    def __init__(self, preview_element, output_dir='key_frames'):
+    def __init__(self, preview_element, progress_bar, output_dir='key_frames'):
         self.preview_element = preview_element
+        self.progress_bar = progress_bar
         self.output_dir = output_dir
         # Create a scene
         self.scene = QGraphicsScene()
@@ -40,6 +41,9 @@ class FrameDisplayer:
         for frame_path in frame_files:
             self.display_frame(frame_path, frame_count, total_frames)
             frame_count += 1
+
+            # Update progress bar (second half of bar)
+            self.progress_bar.setValue(50 + int((frame_count / total_frames) * 50))
 
         # Set the scene to the preview element
         self.preview_element.setScene(self.scene)

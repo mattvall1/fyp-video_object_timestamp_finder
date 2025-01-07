@@ -7,11 +7,12 @@ import os
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
 
-class ImageHandler:
+class FileHandler:
 
-    def __init__(self, file_path, preview_element):
+    def __init__(self, file_path, preview_element, progress_bar):
         self.file_path = file_path
         self.preview_element = preview_element
+        self.progress_bar = progress_bar
         self.output_dir = 'key_frames'
 
         # Delete old frames
@@ -23,6 +24,7 @@ class ImageHandler:
         # Open video file
         video_cap = cv2.VideoCapture(self.file_path)
         success, image = video_cap.read()
+        total_frames = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
         count = 0
 
         while success:
@@ -32,6 +34,10 @@ class ImageHandler:
             success, image = video_cap.read()
             print(f"Saving frame '{frame_path}'")
             count += 1
+
+            # Update progress bar (first half of bar)
+            self.progress_bar.setValue(int((count / total_frames) * 50))
+
 
         video_cap.release()
 
@@ -44,7 +50,7 @@ class ImageHandler:
         frame_files.sort()
 
         # Display frames
-        frame_displayer = FrameDisplayer(self.preview_element, self.output_dir)
+        frame_displayer = FrameDisplayer(self.preview_element, self.progress_bar, self.output_dir)
         frame_displayer.display_frames()
 
 

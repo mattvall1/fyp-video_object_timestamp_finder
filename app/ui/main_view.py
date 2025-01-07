@@ -3,7 +3,7 @@
 # Purpose: Main view
 import sys
 from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
-from app.processing.file_handler import ImageHandler
+from app.processing.file_handler import FileHandler
 from app.ui.console_handler import TextStream
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -19,6 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.find_button = self.findChild(QtWidgets.QPushButton, 'find_button')
         self.preview_element = self.findChild(QtWidgets.QGraphicsView, 'preview_frame')
         self.information_output = self.findChild(QtWidgets.QTextEdit, 'information_output')
+        self.progress_bar = self.findChild(QtWidgets.QProgressBar, 'progress_bar')
 
         # Redirect standard output to console
         sys.stdout = TextStream(self.information_output)
@@ -37,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_file_handler(self, file_path):
         # Create file handler instance and play video
-        self.file_handler = ImageHandler(file_path, preview_element=self.preview_element)
+        self.file_handler = FileHandler(file_path, preview_element=self.preview_element, progress_bar=self.progress_bar)
         self.file_handler.split_video()
 
 
