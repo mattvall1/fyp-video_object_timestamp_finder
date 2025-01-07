@@ -2,7 +2,7 @@
 # COMP1682 Final Year Project.
 # Purpose: Object Detection Handler
 import shutil
-from app.processing.frame_display import FrameDisplayer
+from PyQt6 import QtCore
 
 
 class ObjectDetectionHandler:
@@ -14,6 +14,9 @@ class ObjectDetectionHandler:
     def detect_objects(self, frame):
         frame_location = self.original_output_dir + "/" + frame
         # Detect objects in frame and save to output directory
+
+        # ARTIFICIAL DETECTION WAIT
+        QtCore.QThread.sleep(1)
 
         # Save detected objects to output directory
         shutil.copy(frame_location, self.object_output_dir) # Currently, just copy for prototyping

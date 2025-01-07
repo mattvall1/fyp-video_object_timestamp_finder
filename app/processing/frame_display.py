@@ -20,6 +20,5 @@ class FrameDisplayer:
 
         self.preview_element.setScene(self.scene)
         self.preview_element.fitInView(self.scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)  # Keep bounds of video
-        QApplication.processEvents()
-        cv2.waitKey(100) # Temporary delay to display frame
+        QApplication.processEvents()  # Process events to update UI
 
