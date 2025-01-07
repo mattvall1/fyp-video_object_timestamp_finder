@@ -4,7 +4,7 @@
 import sys
 from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
 from app.processing.file_handler import ImageHandler
-from app.ui.information_output import TextStream
+from app.ui.console_handler import TextStream
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -30,7 +30,6 @@ class MainWindow(QtWidgets.QMainWindow):
         file_dialog = QtWidgets.QFileDialog()
         options = file_dialog.options()
         file_path, _ = file_dialog.getOpenFileName(self, "Open File", "/", "Video Files (*.mp4 *.mkv)", options=options)
-
 
         if file_path:
             self.select_file_text.setText(file_path.split('/')[-1])
