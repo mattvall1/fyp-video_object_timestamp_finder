@@ -13,10 +13,6 @@ class TextStream:
         self.output_field.insertPlainText(text)
         self.output_field.ensureCursorVisible()
         QtWidgets.QApplication.processEvents()  # Ensure the UI updates in real-time
-        self.line_count += 1
-        if self.line_count >= 100:
-            self.output_field.clear()
-            self.line_count = 0
 
     def flush(self):
         pass

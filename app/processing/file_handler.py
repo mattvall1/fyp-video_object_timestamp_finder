@@ -26,8 +26,6 @@ class ImageHandler:
         count = 0
 
         while success:
-            if count == 100:
-                break
             # Save frame as JPEG file
             frame_path = os.path.join(self.output_dir, f"{count:04d}.jpg")
             cv2.imwrite(frame_path, image)
