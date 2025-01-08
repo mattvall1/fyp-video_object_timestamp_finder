@@ -62,7 +62,7 @@ class FileHandler:
 
             # Detect objects in frame
             detector_output = object_detection_handler.detect_objects(frame) # Example return value
-            print(f"Detected key words: {detector_output[1]}")
+            print("Detected key words: " + ", ".join(detector_output[1]))  # Example return value
 
             # Display frame in preview window
             frame_displayer.display_frame(detector_output[0])
