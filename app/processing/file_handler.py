@@ -26,7 +26,16 @@ class FileHandler:
     def split_video(self):
         # Open video file
         video_cap = cv2.VideoCapture(self.file_path)
+        if not video_cap.isOpened():
+            print(f"Error: Could not open video file {self.file_path}")
+            return
+
         success, image = video_cap.read()
+        if not success:
+            print("Error: Could not read video")
+            video_cap.release()
+            return
+
         self.total_frames = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
         count = 0
 
