@@ -1,6 +1,7 @@
 # ---------- My "ignores" ----------
 .DS_Store
 key_frames/
+app/temp_notes.md
 
 # Premade model testing
 runs/
