@@ -22,4 +22,4 @@ class ObjectDetectionHandler:
         shutil.copy(frame_location, self.object_output_dir) # Currently, just copy for prototyping
 
         # Return key words
-        return [self.object_output_dir + "/" + frame, ["person", "car", "dog"]]  # Example return value
+        return [self.object_output_dir + "/" + frame, ["turtle", "rock", "stick"]]  # Example return value
