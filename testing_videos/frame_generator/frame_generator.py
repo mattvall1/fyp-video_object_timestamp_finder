@@ -2,7 +2,7 @@
 # COMP1682 Final Year Project.
 # Purpose: This script generates simple frames that can be used to test video processing algorithms
 # Caution: This script generates a large number of frames, don't run it unless you need to. Multi-threading is heavy on resources, make sure to update the max_workers value to suit your system
-# Note: Exports for using cairo with Homebrew: PKG_CONFIG_PATH=/opt/homebrew/opt/cairo/lib/pkgconfig;LD_LIBRARY_PATH=/opt/homebrew/opt/cairo/lib;DYLD_LIBRARY_PATH=/opt/homebrew/opt/cairo/lib
+# Note: Cairo must be installed. Exports for using cairo with Homebrew: PKG_CONFIG_PATH=/opt/homebrew/opt/cairo/lib/pkgconfig;LD_LIBRARY_PATH=/opt/homebrew/opt/cairo/lib;DYLD_LIBRARY_PATH=/opt/homebrew/opt/cairo/lib
 import svgwrite
 from pathlib import Path
 import shutil
@@ -12,6 +12,9 @@ from concurrent.futures import ThreadPoolExecutor
 def generate_frame(object_position: tuple, frame_num: int):
     # Set up the SVG frame
     frame = svgwrite.Drawing(f'temp_svg/{frame_num}.svg', profile='tiny', size=(1920, 1080))
+
+    # Add background
+    frame.add(frame.rect(insert=(0, 0), size=(1920, 1080), fill='white'))
 
     # Add circle
     frame.add(frame.circle(center=object_position, r=250, fill='red'))
@@ -32,7 +35,7 @@ Path('temp_svg').mkdir(parents=True, exist_ok=True) # Create temp_svg directory 
 total_frames = 2420 # Note: with a value of 2420, the object will move the entire way across the screen
 for frame in range(total_frames):
     print(f'Generating frame {frame}')
-    generate_frame((frame-250, 500), frame)
+    generate_frame((frame-250, 830), frame)
 
 # Then, convert all SVG frames to PNG (multi-threading significantly speeds up the process)
 def convert_svg_to_png(svg_frame):
