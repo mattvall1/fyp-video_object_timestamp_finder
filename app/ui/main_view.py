@@ -4,7 +4,7 @@
 import sys
 from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
 from app.processing.file_handler import FileHandler
-from app.ui.console_handler import TextStream
+from app.ui.console_handler import ConsoleHandler
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -22,7 +22,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.progress_bar = self.findChild(QtWidgets.QProgressBar, 'progress_bar')
 
         # Redirect standard output to console
-        sys.stdout = TextStream(self.information_output)
+        sys.stdout = ConsoleHandler(self.information_output)
 
         # Connect button click event to method
         self.select_file_button.clicked.connect(self.show_file_selector)

@@ -4,7 +4,7 @@
 from PyQt6 import QtWidgets
 
 
-class TextStream:
+class ConsoleHandler:
     def __init__(self, text_edit):
         self.output_field = text_edit
         self.line_count = 0
