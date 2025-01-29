@@ -9,26 +9,15 @@ from PyQt6 import QtCore
 class ImageCaptioningHandler:
     def __init__(self, original_output_dir='key_frames'):
         self.original_output_dir = original_output_dir
-        self.object_output_dir = 'key_frames/objects'
-        self.model = YOLO("captioning_models/yolo_pretrained.pt")  # Load pretrained model
+        self.object_output_dir = 'key_frames/objects/'
+        self.model = YOLO("processing/captioning_models/yolo_pretrained.pt")  # Load pretrained model
         pass
 
-    def detect_objects(self, frame):
-        frame_location = self.original_output_dir + "/" + frame
-        # Detect objects in frame and save to output directory
-
-        # ARTIFICIAL DETECTION WAIT
-        QtCore.QThread.sleep(1)
-
-        # Save detected objects to output directory
-        shutil.copy(frame_location, self.object_output_dir) # Currently, just copy for prototyping
-
-        # Return key words
-        return [self.object_output_dir + "/" + frame, ["turtle", "rock", "stick"]]  # Example return value
-
-    def get_detected_captions(self, frame):
+    def _get_detected_captions(self, frame_location, frame):
         # Perform object detection on an image
-        detection = self.model(frame)
+        detection = self.model(frame_location)
+        detection_output_filename = self.object_output_dir + f"{frame}.jpg"
+
 
         # Get possible objects to detect
         possible_objects = detection[0].names
@@ -38,5 +27,17 @@ class ImageCaptioningHandler:
         for cls in detection[0].boxes.cls:
             detected_objects.append(possible_objects[cls.item()])
 
+        # Save the image with the bounding boxes drawn on
+        detection[0].save(detection_output_filename)
+
         # Return key words
-        return [detected_objects, frame]  # Example return value
+        return [detected_objects, detection_output_filename]
+
+    def detect_objects(self, frame):
+        frame_location = self.original_output_dir + "/" + frame
+
+        # Detect objects in frame and get detected object strings
+        detector_output = self._get_detected_captions(frame_location, frame)
+
+        # Return key words
+        return [self.object_output_dir + "/" + frame, detector_output[0]]  # Example return value
