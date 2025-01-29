@@ -6,7 +6,7 @@ import cv2
 import os
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
-from app.processing.object_detection_handler import ObjectDetectionHandler
+from app.processing.object_detection_handler import ImageCaptioningHandler
 
 
 class FileHandler:
@@ -58,7 +58,7 @@ class FileHandler:
 
     def detect_objects(self):
         # Create instance of ObjectDetectionHandler
-        object_detection_handler = ObjectDetectionHandler(original_output_dir=self.original_output_dir)
+        object_detection_handler = ImageCaptioningHandler(original_output_dir=self.original_output_dir)
         frame_displayer = FrameDisplayer(self.preview_element)
 
         # Order frames by number

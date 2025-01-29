@@ -1,11 +1,11 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Object Detection Handler
+# Purpose: Image Captioning Handler
 import shutil
 from PyQt6 import QtCore
 
 
-class ObjectDetectionHandler:
+class ImageCaptioningHandler:
     def __init__(self, original_output_dir='key_frames'):
         self.original_output_dir = original_output_dir
         self.object_output_dir = 'key_frames/objects'
