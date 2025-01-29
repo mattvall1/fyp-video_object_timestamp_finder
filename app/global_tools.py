@@ -13,3 +13,10 @@ class Tools:
                     os.remove(file_path)
                     count += 1
         print(f"Deleted {count} files")
+
+    @staticmethod
+    def create_frame_directories():
+        directories = ['key_frames/objects', 'key_frames/original']
+        for directory in directories:
+            os.makedirs(directory, exist_ok=True)
+        print("Created directories")

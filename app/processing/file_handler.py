@@ -6,7 +6,7 @@ import cv2
 import os
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
-from app.processing.object_detection_handler import ImageCaptioningHandler
+from app.processing.image_captioning_handler import ImageCaptioningHandler
 
 
 class FileHandler:
