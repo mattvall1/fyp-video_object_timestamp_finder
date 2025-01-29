@@ -1,7 +1,7 @@
 from ultralytics import YOLO
 
 # Load a model
-model = YOLO("testing_1.pt")
+model = YOLO("yolo_trained.pt")
 
 # Perform object detection on an image
 results = model("../testing_images/many_cats.jpg")
