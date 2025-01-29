@@ -5,8 +5,6 @@
 # pip3 install PyQt6
 from global_tools import Tools
 
-# Create key_frames directory
-Tools.create_frame_directories()
-
-
+# Create all required directories
+Tools.create_directories()
 

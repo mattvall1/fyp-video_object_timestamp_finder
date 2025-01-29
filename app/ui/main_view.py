@@ -2,6 +2,8 @@
 # COMP1682 Final Year Project.
 # Purpose: Main view
 import sys
+from datetime import datetime
+import logging
 from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
 from app.processing.file_handler import FileHandler
 from app.ui.console_handler import ConsoleHandler
@@ -13,6 +15,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.select_file_text = None
         uic.loadUi('ui/main_view.ui', self)
         self.show()
+
+        # Configure
+        logging.basicConfig(filename=f'logs/{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}_log.txt', level=logging.INFO)
 
         # Access elements from UI
         self.select_file_button = self.findChild(QtWidgets.QPushButton, 'select_file_button')

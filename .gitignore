@@ -4,6 +4,7 @@ key_frames/
 app/temp_notes.md
 testing_videos/frame_generator/red_ball_frames
 testing_videos/frame_generator/temp_svg
+app/logs
 
 # Premade model testing
 runs/

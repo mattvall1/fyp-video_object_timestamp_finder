@@ -15,8 +15,8 @@ class Tools:
         print(f"Deleted {count} files")
 
     @staticmethod
-    def create_frame_directories():
-        directories = ['key_frames/objects', 'key_frames/original']
+    def create_directories():
+        directories = ['key_frames/objects', 'key_frames/original', 'logs']
         for directory in directories:
             os.makedirs(directory, exist_ok=True)
-        print("Created directories")
+            print(f"Created directory: {directory}")
