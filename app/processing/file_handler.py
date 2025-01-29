@@ -13,7 +13,7 @@ class FileHandler:
 
     def __init__(self, file_path, preview_element, progress_bar):
         self.file_path = file_path
-        self.preview_element = preview_element
+        self.frame_displayer = FrameDisplayer(preview_element)
         self.progress_bar = progress_bar
         self.original_output_dir = 'key_frames/original'
         self.total_frames = 0
@@ -45,6 +45,10 @@ class FileHandler:
             cv2.imwrite(frame_path, image)
             success, image = video_cap.read()
             print(f"Saving frame '{frame_path}'")
+
+            # Display frame in preview window
+            self.frame_displayer.display_frame(frame_path)
+
             count += 1
 
             # Update progress bar (first half of bar)
@@ -59,7 +63,6 @@ class FileHandler:
     def detect_objects(self):
         # Create instance of ObjectDetectionHandler
         object_detection_handler = ImageCaptioningHandler(original_output_dir=self.original_output_dir)
-        frame_displayer = FrameDisplayer(self.preview_element)
 
         # Order frames by number
         frames_path_list = sorted(os.listdir(self.original_output_dir), key=lambda x: int(x.split('.')[0]))
@@ -74,7 +77,7 @@ class FileHandler:
             print("Detected key words: " + ", ".join(detector_output[1]))  # Example return value
 
             # Display frame in preview window
-            frame_displayer.display_frame(detector_output[0])
+            self.frame_displayer.display_frame(detector_output[0])
 
             # Update progress bar (second half of bar)
             self.progress_bar.setValue(50 + int((frame_count / self.total_frames) * 50))
