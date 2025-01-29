@@ -6,7 +6,6 @@ import clip
 import torch
 import ssl
 from PIL import Image
-from torchvision.datasets import CIFAR100
 from torchvision.datasets import ImageNet
 
 # Used to override SSl issue (not secure)
