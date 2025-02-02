@@ -23,6 +23,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.select_file_button = self.findChild(QtWidgets.QPushButton, 'select_file_button')
         self.find_button = self.findChild(QtWidgets.QPushButton, 'find_button')
         self.preview_element = self.findChild(QtWidgets.QGraphicsView, 'preview_frame')
+        self.prev_button = self.findChild(QtWidgets.QPushButton, 'prev_button')
+        self.start_stop_button = self.findChild(QtWidgets.QPushButton, 'start_stop_button')
+        self.next_button = self.findChild(QtWidgets.QPushButton, 'next_button')
         self.information_output = self.findChild(QtWidgets.QTextEdit, 'information_output')
         self.progress_bar = self.findChild(QtWidgets.QProgressBar, 'progress_bar')
 
