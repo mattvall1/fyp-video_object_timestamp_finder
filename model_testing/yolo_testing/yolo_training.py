@@ -13,4 +13,4 @@ results = model.train(data="coco8.yaml", epochs=100, imgsz=224, device=0, worker
 metrics = model.val()
 
 # Save the trained model
-model.save("yolo_pretrained.pt")
+model.save("E:/yr3fyp_object_detection/model_testing/yolo_testing/out/yolo_pretrained.pt")
