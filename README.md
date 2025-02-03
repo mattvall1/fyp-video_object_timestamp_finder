@@ -9,7 +9,9 @@ TODO
 
 
 ### Windows installation instructions
->PyTorch must have a compatible version - CUDA drivers installed:
->>`pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124`
+#### Prerequisites
+ - PyTorch must have a compatible version - CUDA drivers installed:
+    - `pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126`
 
-Upon setting up the environment, we may need to e
+
+yolo settings
