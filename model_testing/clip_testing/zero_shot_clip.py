@@ -1,24 +1,23 @@
 # Packages to install:
-# pip install ftfy regex tqdm
 # pip install git+https://github.com/openai/CLIP.git
 import os
 import clip
 import torch
 import ssl
 from PIL import Image
-from torchvision.datasets import ImageNet
+from torchvision.datasets import ImageNet, CIFAR100
 
 # Used to override SSl issue (not secure)
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # Load the model
 device = "cpu"
-model, preprocess = clip.load('ViT-B/32', device)
+model, preprocess = clip.load('RN50', device)
 print("----------Model loaded----------")
 
 # Download the dataset
 # dataset = CIFAR100(root=os.path.expanduser("/Volumes/Crucial X9/datasets/cifar-10"), download=True, train=False)
-dataset = ImageNet(root=os.path.expanduser("/Volumes/Crucial X9/datasets/imagenet-2012"))
+dataset = ImageNet(root=os.path.expanduser("/Users/matthewvallance/Documents/local_development/datasets/ImageNet"))
 print("----------Dataset loaded----------")
 
 # Prepare the inputs

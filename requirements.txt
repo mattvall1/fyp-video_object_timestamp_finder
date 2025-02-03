@@ -9,3 +9,6 @@ torchvision
 svgwrite
 CairoSVG
 pip-upgrader
+ftfy
+regex
+tqdm
