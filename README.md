@@ -4,6 +4,10 @@
 ### Project aims
 TODO
 
+### General requirements
+Always run requirements.txt: `pip install -r requirements.txt`
+For CLIP (if using): `pip install git+https://github.com/openai/CLIP.git`
+
 ### macOS installation instructions
 TODO
 
