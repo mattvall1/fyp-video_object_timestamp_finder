@@ -12,7 +12,7 @@ from torchvision.datasets import ImageNet, CIFAR100
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # Load the model
-device = "cpu"
+device = "cuda"
 model, preprocess = clip.load('RN50', device)
 print("----------Model loaded----------")
 
@@ -21,26 +21,29 @@ print("----------Model loaded----------")
 dataset = ImageNet(root=os.path.expanduser("E:\\datasets\\imagenet-2012"))
 print("----------Dataset loaded----------")
 
-# Prepare the inputs
-image = Image.open("..\\..\\testing_images\\geese_1.jpeg")
-image_input = preprocess(image).unsqueeze(0).to(device)
-text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in dataset.classes]).to(device)
-print("----------Inputs prepared----------")
+# Loop for all testing images
+image_paths = ["..\\..\\testing_images\\geese_1.jpeg", "..\\..\\testing_images\\cat_1.jpeg", "..\\..\\testing_images\\ducks.jpeg"]
+for image_path in image_paths:
+    # Prepare the inputs
+    image = Image.open(image_path)
+    image_input = preprocess(image).unsqueeze(0).to(device)
+    text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in dataset.classes]).to(device)
+    print("----------Inputs prepared----------")
 
-# Calculate features
-with torch.no_grad():
-    image_features = model.encode_image(image_input)
-    text_features = model.encode_text(text_inputs)
-print("----------Features calculated----------")
+    # Calculate features
+    with torch.no_grad():
+        image_features = model.encode_image(image_input)
+        text_features = model.encode_text(text_inputs)
+    print("----------Features calculated----------")
 
-# Pick the top 5 most similar labels for the image
-image_features /= image_features.norm(dim=-1, keepdim=True)
-text_features /= text_features.norm(dim=-1, keepdim=True)
-similarity = (100.0 * image_features @ text_features.T).softmax(dim=-1)
-values, indices = similarity[0].topk(5)
-print("----------Top predictions calculated----------")
+    # Pick the top 5 most similar labels for the image
+    image_features /= image_features.norm(dim=-1, keepdim=True)
+    text_features /= text_features.norm(dim=-1, keepdim=True)
+    similarity = (100.0 * image_features @ text_features.T).softmax(dim=-1)
+    values, indices = similarity[0].topk(5)
+    print("----------Top predictions calculated----------")
 
-# Print the result
-print("\nTop predictions:\n")
-for value, index in zip(values, indices):
-    print(f"{','.join(dataset.classes[index]):>16s}: {100 * value.item():.2f}%")
+    # Print the result
+    print("\nTop predictions:\n")
+    for value, index in zip(values, indices):
+        print(f"{','.join(dataset.classes[index]):>16s}: {100 * value.item():.2f}%")
