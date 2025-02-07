@@ -1,5 +1,6 @@
-# Packages to install:
-# pip install git+https://github.com/openai/CLIP.git
+# © 2024 Matthew Vallance. All rights reserved.
+# COMP1682 Final Year Project.
+# Purpose: File to demonstrate how to train the YOLO model on a custom dataset.
 import os
 import clip
 import torch
