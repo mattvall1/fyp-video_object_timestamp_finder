@@ -16,12 +16,12 @@ model, preprocess = clip.load('RN50', device)
 print("----------Model loaded----------")
 
 # Download the dataset
-# dataset = CIFAR100(root=os.path.expanduser("/Volumes/Crucial X9/datasets/cifar-10"), download=True, train=False)
-dataset = ImageNet(root=os.path.expanduser("/Users/matthewvallance/Documents/local_development/datasets/ImageNet"))
+# dataset = CIFAR100(root=os.path.expanduser("E:\\datasets\\cifar-10"), download=True, train=False)
+dataset = ImageNet(root=os.path.expanduser("E:\\datasets\\imagenet-2012"))
 print("----------Dataset loaded----------")
 
 # Prepare the inputs
-image = Image.open("../testing_images/orange_cat.jpeg")
+image = Image.open("..\\..\\testing_images\\geese_1.jpeg")
 image_input = preprocess(image).unsqueeze(0).to(device)
 text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in dataset.classes]).to(device)
 print("----------Inputs prepared----------")
