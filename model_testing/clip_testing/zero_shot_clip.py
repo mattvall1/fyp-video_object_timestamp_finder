@@ -8,7 +8,7 @@ import ssl
 from PIL import Image
 from torchvision.datasets import ImageNet, CIFAR100
 
-# Used to override SSl issue (not secure)
+# Used to override SSl issue (not secure - but this doesn't really matter for our applications)
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # Load the model
@@ -21,11 +21,10 @@ print("----------Model loaded----------")
 dataset = ImageNet(root=os.path.expanduser("E:\\datasets\\imagenet-2012"))
 print("----------Dataset loaded----------")
 
-# Loop for all testing images
-image_paths = ["..\\..\\testing_images\\geese_1.jpeg", "..\\..\\testing_images\\cat_1.jpeg", "..\\..\\testing_images\\ducks.jpeg"]
-for image_path in image_paths:
+# Run detection on all testing images
+for image_path in os.listdir("testing_images"):
     # Prepare the inputs
-    image = Image.open(image_path)
+    image = Image.open(f"testing_images\\{image_path}")
     image_input = preprocess(image).unsqueeze(0).to(device)
     text_inputs = torch.cat([clip.tokenize(f"a photo of a {c}") for c in dataset.classes]).to(device)
     print("----------Inputs prepared----------")
