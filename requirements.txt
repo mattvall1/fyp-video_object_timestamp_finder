@@ -2,7 +2,7 @@ PyQt6
 opencv-python
 ultralytics
 wn
-clip
+open_clip_torch
 torch
 pillow
 torchvision

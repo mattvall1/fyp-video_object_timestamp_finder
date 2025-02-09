@@ -1,6 +1,6 @@
 # © 2024 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: File to demonstrate how to train the YOLO model on a custom dataset.
+# Purpose: File to demonstrate CLIP model
 import os
 import clip
 import torch
@@ -43,6 +43,7 @@ for image_path in os.listdir("testing_images"):
     print("----------Top predictions calculated----------")
 
     # Print the result
-    print("\nTop predictions:\n")
+    print(f"{image_path} - Top predictions:")
     for value, index in zip(values, indices):
         print(f"{','.join(dataset.classes[index]):>16s}: {100 * value.item():.2f}%")
+    print("---------------------------------------")
