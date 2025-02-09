@@ -19,7 +19,3 @@ TODO
     - sudo: https://community.chocolatey.org/packages/Sudo
  - PyTorch must have a compatible version - CUDA drivers installed:
     - `pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126`
- - The following must be installed for use of SalesForce LAVIS
-    - Rust: https://community.chocolatey.org/packages/rust 
-    - msys2 for MingW: https://community.chocolatey.org/packages/msys2
-    - mingw: https://community.chocolatey.org/packages/mingw
