@@ -4,3 +4,9 @@
 import torch
 from PIL import Image
 import open_clip
+
+# Show available pretrained models
+open_clip.list_pretrained()
+
+# Load the model
+model, preprocess = open_clip.load('ViT-H-14-378-quickgelu')
