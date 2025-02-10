@@ -9,8 +9,8 @@ import time
 from prettytable import PrettyTable
 
 # ---- General functions ----
-def print_results(model_name, results):
-    print(f"--------------- {model_name} ---------------")
+def print_results(model_name, run, results):
+    print(f"\n--------------- {model_name} | Run {run} ---------------")
 
     # Create a table of results
     results_table = PrettyTable(["Image", "Caption", "Time Taken"])
@@ -28,12 +28,25 @@ def print_results(model_name, results):
     print(overview_table)
 
 
-def save_results(model_name, results):
-    pass
+def save_results(results):
+    print("Saving results...")
+    with open(f"results.csv", "a+") as csv:
+        for result in results:
+            csv.write(f"{time.time()},{result[0]},{result[1]}\n")
 
-def print_save_results(model_name, results):
-    print_results(model_name, results)
-    save_results(model_name, results)
+def run_test(model_name):
+    all_results = []
+    match model_name:
+        case "OpenCLIP":
+            for i in range(3):
+                results = run_open_clip()
+                print_results(model_name, i, results)
+                all_results.append([model_name, results])
+        case _:
+            print("Model not found")
+
+    # Save all results
+    save_results(all_results)
 
 # ---- Model definitions ----
 def run_open_clip():
@@ -72,4 +85,5 @@ def run_open_clip():
     return [return_values, total_end_time - total_start_time, indv_timings]
 
 # ---- Run all models ----
-print_save_results("OpenCLIP", run_open_clip())
+run_test("OpenCLIP")
+print("All models have been run and the results have been saved.")
