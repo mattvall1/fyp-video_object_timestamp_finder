@@ -5,6 +5,7 @@ import torch
 from PIL import Image
 import open_clip
 import os
+import csv
 import time
 from prettytable import PrettyTable
 
@@ -30,9 +31,20 @@ def print_results(model_name, run, results):
 
 def save_results(results):
     print("Saving results...")
-    with open(f"results.csv", "a+") as csv:
-        for result in results:
-            csv.write(f"{time.time()},{result[0]},{result[1]}\n")
+    # Create CSV data
+    to_write = []
+    for result in results:
+        for i in range(len(result[2][0])):
+            # Format: Timestamp, Model Name, Run Number, Image Name, Generated Caption, Time Taken
+            to_write.append([int(time.time()), result[0], result[1], os.listdir("testing_images")[i], result[2][0][i], result[2][2][i]])
+
+    # Save data to CSV
+    with open(f"model_testing/results.csv", "a+", newline='') as file:
+        writer = csv.writer(file)
+        # Check if file is empty and add header
+        if file.tell() == 0:
+            writer.writerow(["Timestamp", "Model Name", "Run Number", "Image Name", "Generated Caption", "Time Taken"])
+        writer.writerows(to_write)
 
 def run_test(model_name):
     all_results = []
@@ -41,7 +53,7 @@ def run_test(model_name):
             for i in range(3):
                 results = run_open_clip()
                 print_results(model_name, i, results)
-                all_results.append([model_name, results])
+                all_results.append([model_name, i, results])
         case _:
             print("Model not found")
 
