@@ -4,6 +4,7 @@ open_clip_torch
 opencv-python
 PIL
 pip-upgrader
+prettytable
 PyQt6
 regex
 svgwrite
