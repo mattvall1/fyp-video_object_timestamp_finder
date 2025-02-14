@@ -4,10 +4,13 @@
 import csv
 import torch
 from PIL import Image
-import open_clip
 import os
 import time
 from prettytable import PrettyTable
+
+# ---- Model imports ----
+import open_clip
+from ultralytics import YOLO
 
 # ---- Setup ----
 device = "mps"
@@ -67,9 +70,9 @@ def run_test():
                     results = run_open_clip()
                     print_results(model_name, i, results)
                     run_results.append([model_name, results])
-            case "CLIP":
+            case "YOLO":
                 for i in range(runs):
-                    results = run_clip()
+                    results = run_yolo()
                     print_results(model_name, i, results)
                     run_results.append([model_name, results])
             case _:
@@ -97,12 +100,7 @@ def run_open_clip():
     # Load the image
     for image_path in image_paths:
         indv_start_time = time.time()
-        # Skip if not an image
-        if image_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
-            image = Image.open(image_path)
-        else:
-            continue
-        image = transform(image).unsqueeze(0).to(torch.float32).to(device)
+        image = transform(Image.open(image_path)).unsqueeze(0).to(torch.float32).to(device)
 
         # Get the features
         with torch.no_grad():
@@ -112,6 +110,25 @@ def run_open_clip():
         return_values.append(open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", ""))
         indv_end_time = time.time()
         indv_timings.append(indv_end_time - indv_start_time)
+
+    # End the timer
+    total_end_time = time.time()
+
+    return [return_values, total_end_time - total_start_time, indv_timings]
+
+def run_yolo():
+    # Create array to store all return values
+    return_values = []
+    indv_timings = []
+
+    # Time the process
+    total_start_time = time.time()
+
+    # Load the image
+    for image_path in image_paths:
+        indv_start_time = time.time()
+
+        indv_end_time = time.time()
 
     # End the timer
     total_end_time = time.time()
