@@ -47,7 +47,6 @@ def save_results(results):
     # Create CSV data
     to_write = []
     for result in results:
-        print(result)
         for run in range(len(result[1][0])):
             # Format: Timestamp, Model Name, Run Number, Image Name, Generated Caption, Time Taken
             to_write.append([int(time.time()), result[0], run, image_paths[run], result[1][0][run], result[1][2][run]])
