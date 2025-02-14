@@ -13,6 +13,7 @@ from prettytable import PrettyTable
 device = "mps"
 image_paths = []
 runs = 2
+models_to_run = ["OpenCLIP"]
 
 # Get all image paths
 dir_paths = os.listdir("../testing_images")
@@ -58,16 +59,22 @@ def save_results(results):
             writer.writerow(["Timestamp", "Model Name", "Run Number", "Image Name", "Generated Caption", "Time Taken"])
         writer.writerows(to_write)
 
-def run_test(model_name):
+def run_test():
     all_results = []
-    match model_name:
-        case "OpenCLIP":
-            for i in range(runs):
-                results = run_open_clip()
-                print_results(model_name, i, results)
-                all_results.append([model_name, results])
-        case _:
-            print("Model not found")
+    for model_name in models_to_run:
+        match model_name:
+            case "OpenCLIP":
+                for i in range(runs):
+                    results = run_open_clip()
+                    print_results(model_name, i, results)
+                    all_results.append([model_name, results])
+            case "CLIP":
+                for i in range(runs):
+                    results = run_clip()
+                    print_results(model_name, i, results)
+                    all_results.append([model_name, results])
+            case _:
+                print("Model not found, continuing...")
 
     # Save all results
     save_results(all_results)
@@ -113,5 +120,5 @@ def run_open_clip():
     return [return_values, total_end_time - total_start_time, indv_timings]
 
 # ---- Run all models ----
-run_test("OpenCLIP")
+run_test()
 print("All models have been run and the results have been saved.")
