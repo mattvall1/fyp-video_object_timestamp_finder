@@ -1,6 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: File to demonstrate all models
+# Purpose: Standalone script to demonstrate all models
 import csv
 import torch
 from PIL import Image
@@ -11,12 +11,17 @@ from prettytable import PrettyTable
 # ---- Model imports ----
 import open_clip
 from ultralytics import YOLO
+from ultralytics import settings as yolo_settings
 
 # ---- Setup ----
 device = "mps"
 image_paths = []
 runs = 2
-models_to_run = ["OpenCLIP"]
+models_to_run = ["YOLO"]
+
+# YOLO settings (if using YOLO)
+if "YOLO" in models_to_run:
+    yolo_settings.update({"datasets_dir": "../../datasets", "runs_dir": "detection_output/yolo_runs", "weights_dir": "detection_output/yolo_runs"})
 
 # Get all image paths
 dir_paths = os.listdir("../testing_images")
@@ -107,8 +112,8 @@ def run_open_clip():
             generation = model.generate(image)
 
         # Add features to return_values
-        return_values.append(open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", ""))
         indv_end_time = time.time()
+        return_values.append(open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", ""))
         indv_timings.append(indv_end_time - indv_start_time)
 
     # End the timer
@@ -128,7 +133,21 @@ def run_yolo():
     for image_path in image_paths:
         indv_start_time = time.time()
 
+        # Load the model
+        model = YOLO("yolo11n.pt")
+
+        # Perform object detection on an image
+        detection = model(image_path)
+
+        # Get a list of names of detected objects
+        detected_objects = []
+        for cls in detection[0].boxes.cls:
+            detected_objects.append(detection[0].names[cls.item()])
+
+        # Print the detected objects
         indv_end_time = time.time()
+        return_values.append(', '.join(detected_objects))
+        indv_timings.append(indv_end_time - indv_start_time)
 
     # End the timer
     total_end_time = time.time()
