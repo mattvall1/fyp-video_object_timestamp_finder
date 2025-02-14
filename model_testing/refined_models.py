@@ -8,6 +8,18 @@ import os
 import time
 from prettytable import PrettyTable
 
+# ---- Setup ----
+device = "mps"
+image_paths = []
+runs = 0
+
+# Get all image paths
+dir_paths = os.listdir("../testing_images")
+for dir_path in dir_paths:
+    if dir_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
+        image_paths.append("../testing_images/"+dir_path)
+
+
 # ---- General functions ----
 def print_results(model_name, run, results):
     print(f"\n--------------- {model_name} | Run {run} ---------------")
@@ -15,7 +27,7 @@ def print_results(model_name, run, results):
     # Create a table of results
     results_table = PrettyTable(["Image", "Caption", "Time Taken"])
     for i in range(len(results[0])):
-        results_table.add_row([os.listdir("testing_images")[i], results[0][i], results[2][i]])
+        results_table.add_row([image_paths[i], results[0][i], results[2][i]])
 
     # Print the table
     print(results_table)
@@ -38,7 +50,7 @@ def run_test(model_name):
     all_results = []
     match model_name:
         case "OpenCLIP":
-            for i in range(3):
+            for i in range(runs):
                 results = run_open_clip()
                 print_results(model_name, i, results)
                 all_results.append([model_name, results])
@@ -61,17 +73,21 @@ def run_open_clip():
     model, _, transform = open_clip.create_model_and_transforms(
         'coca_ViT-L-14', 
         pretrained='mscoco_finetuned_laion2b_s13b_b90k',
-        device='cuda'
+        device=device
     )
 
     # Load the image
-    for image_path in os.listdir("testing_images"):
+    for image_path in image_paths:
         indv_start_time = time.time()
-        image = Image.open(f"testing_images/{image_path}")
-        image = transform(image).unsqueeze(0).to(torch.float32).to('cuda')
+        # Skip if not an image
+        if image_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
+            image = Image.open(image_path)
+        else:
+            continue
+        image = transform(image).unsqueeze(0).to(torch.float32).to(device)
 
         # Get the features
-        with torch.no_grad(), torch.amp.autocast('cuda'):
+        with torch.no_grad():
             generation = model.generate(image)
 
         # Add features to return_values
