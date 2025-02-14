@@ -1,6 +1,7 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
 # Purpose: File to demonstrate all models
+import csv
 import torch
 from PIL import Image
 import open_clip
@@ -11,7 +12,7 @@ from prettytable import PrettyTable
 # ---- Setup ----
 device = "mps"
 image_paths = []
-runs = 0
+runs = 2
 
 # Get all image paths
 dir_paths = os.listdir("../testing_images")
@@ -42,9 +43,20 @@ def print_results(model_name, run, results):
 
 def save_results(results):
     print("Saving results...")
-    with open(f"results.csv", "a+") as csv:
-        for result in results:
-            csv.write(f"{time.time()},{result[0]},{result[1]}\n")
+    # Create CSV data
+    to_write = []
+    for result in results:
+        print(result)
+        for run in range(len(result[1][0])):
+            # Format: Timestamp, Model Name, Run Number, Image Name, Generated Caption, Time Taken
+            to_write.append([int(time.time()), result[0], run, image_paths[run], result[1][0][run], result[1][2][run]])
+    # Save data to CSV
+    with open(f"results.csv", "a+", newline='') as file:
+        writer = csv.writer(file)
+        # Check if file is empty and add header
+        if file.tell() == 0:
+            writer.writerow(["Timestamp", "Model Name", "Run Number", "Image Name", "Generated Caption", "Time Taken"])
+        writer.writerows(to_write)
 
 def run_test(model_name):
     all_results = []
