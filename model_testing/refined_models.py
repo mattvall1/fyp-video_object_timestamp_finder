@@ -60,24 +60,24 @@ def save_results(results):
         writer.writerows(to_write)
 
 def run_test():
-    all_results = []
     for model_name in models_to_run:
+        run_results = []
         match model_name:
             case "OpenCLIP":
                 for i in range(runs):
                     results = run_open_clip()
                     print_results(model_name, i, results)
-                    all_results.append([model_name, results])
+                    run_results.append([model_name, results])
             case "CLIP":
                 for i in range(runs):
                     results = run_clip()
                     print_results(model_name, i, results)
-                    all_results.append([model_name, results])
+                    run_results.append([model_name, results])
             case _:
                 print("Model not found, continuing...")
 
-    # Save all results
-    save_results(all_results)
+        # Save run results
+        save_results(run_results)
 
 # ---- Model definitions ----
 def run_open_clip():
