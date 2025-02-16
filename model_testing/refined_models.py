@@ -80,6 +80,11 @@ def run_test():
                     results = run_yolo()
                     print_results(model_name, i, results)
                     run_results.append([model_name, results])
+            case "RegionCLIP":
+                for i in range(runs):
+                    results = run_region_clip()
+                    print_results(model_name, i, results)
+                    run_results.append([model_name, results])
             case _:
                 print("Model not found, continuing...")
 
@@ -153,6 +158,9 @@ def run_yolo():
     total_end_time = time.time()
 
     return [return_values, total_end_time - total_start_time, indv_timings]
+
+def run_region_clip():
+    pass
 
 # ---- Run all models ----
 run_test()
