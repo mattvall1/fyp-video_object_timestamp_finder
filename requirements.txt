@@ -1,3 +1,4 @@
+azure-cognitiveservices-vision-computervision
 CairoSVG
 ftfy
 open_clip_torch
@@ -6,6 +7,7 @@ pip-upgrader
 prettytable
 PyQt6
 regex
+requests
 svgwrite
 torch
 torchvision
