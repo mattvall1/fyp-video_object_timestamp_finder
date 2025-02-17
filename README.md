@@ -12,19 +12,6 @@ For CLIP (if using): `pip install git+https://github.com/openai/CLIP.git`
 ### macOS installation instructions
 TODO
 
-For RegionCLIP:
-
-```pip install --no-build-isolation 'git+https://github.com/facebookresearch/detectron2.git'```
-
-```pip install --no-build-isolation -e .```
-```pip install setuptools==59.0.1```
-
-Change ```version=get_version()``` to ```version='0.1.0'``` in setup.py
-
-```pip install pillow==9.5.0```
-
-```pip install numpy==1.26.4```
-
 ### Windows installation instructions
 #### Prerequisites
  - Chocolately package manager (chocolatey.org/install)
