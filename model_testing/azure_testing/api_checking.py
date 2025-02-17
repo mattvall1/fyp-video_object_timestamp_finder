@@ -4,18 +4,18 @@
 import requests
 
 def upload_image(file_path):
-    url = "http://127.0.0.1:8000/upload-image/"
+    url = "https://fyp-diss.mvallance.com/upload-image/"
     files = {"file": open(file_path, "rb")}
     response = requests.post(url, files=files)
 
     print(response.json())
 
 def delete_image(file_name):
-    url = f"http://127.0.0.1:8000/delete-image/{file_name}"
+    url = f"https://fyp-diss.mvallance.com/delete-image/{file_name}"
     response = requests.delete(url)
 
     print(response.json())
 
-upload_image("../../testing_images/cat_1.jpeg")
+# upload_image("../../testing_images/cat_1.jpeg")
 
-# delete_image("cat_1.jpeg")
+delete_image("cat_1.jpeg")
