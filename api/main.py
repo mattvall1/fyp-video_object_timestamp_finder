@@ -7,4 +7,4 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"tryAzure": "Hello?"}
+    return {"tryAzure": "Hello? Does this work?"}
