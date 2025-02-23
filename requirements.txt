@@ -1,9 +1,12 @@
 azure-cognitiveservices-vision-computervision
+azure-core
 CairoSVG
 ftfy
+msrest
 open_clip_torch
 opencv-python
 pip-upgrader
+Pillow
 prettytable
 PyQt6
 regex
