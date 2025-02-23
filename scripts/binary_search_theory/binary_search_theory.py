@@ -11,7 +11,7 @@ total_frames = len(os.listdir('frames'))
 
 # Get subset of frames to search (every 60th frame)
 initial_subset = []
-for frame in range(0, total_frames, 60):
+for frame in range(1800, total_frames, 60):
     initial_subset.append(f'{frame:04d}')
 
 # Check each image in initial subset
@@ -19,6 +19,7 @@ for frame in initial_subset:
     frame_search = FrameSearcher()
 
     image = frame_search.get_image(image_path=f"frames/{frame}.jpg")
-    captions = frame_search.get_captions(image=image)
+    # Ignore first caption, as that encompasses the whole image
+    captions = frame_search.get_captions(image=image)[1:]
     print(f"frames/{frame}.jpg", captions)
 
