@@ -7,6 +7,7 @@ testing_videos/frame_generator/temp_svg
 app/logs
 model_testing/azure_testing/api_key.txt
 scripts/binary_search_theory/api_key.txt
+scripts/binary_search_theory/frames
 model_testing/results.csv
 
 # Premade model testing
