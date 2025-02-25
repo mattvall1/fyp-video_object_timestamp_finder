@@ -2,6 +2,7 @@
 # COMP1682 Final Year Project.
 # Purpose: Standalone script to demonstrate all models
 import csv
+import requests
 import torch
 from PIL import Image
 import os
@@ -12,17 +13,13 @@ from prettytable import PrettyTable
 import open_clip
 from ultralytics import YOLO
 from ultralytics import settings as yolo_settings
-
-# ---- Azure imports ----
-from azure.ai.vision.imageanalysis import ImageAnalysisClient
-from azure.ai.vision.imageanalysis.models import VisualFeatures
-from azure.core.credentials import AzureKeyCredential
+from transformers import pipeline, AutoProcessor, AutoModelForImageTextToText
 
 # ---- Setup ----
 device = "mps"
 image_paths = []
 runs = 2
-models_to_run = ["AzureVision", "OpenCLIP", "YOLO"]
+models_to_run = ["SalesForceBLIP", "YOLO", "OpenCLIP"]
 
 # YOLO settings (if using YOLO)
 if "YOLO" in models_to_run:
@@ -85,14 +82,9 @@ def run_test():
                     results = run_yolo()
                     print_results(model_name, i, results)
                     run_results.append([model_name, results])
-            case "RegionCLIP":
+            case "SalesForceBLIP":
                 for i in range(runs):
-                    results = run_region_clip()
-                    print_results(model_name, i, results)
-                    run_results.append([model_name, results])
-            case "AzureVision":
-                for i in range(runs):
-                    results = run_azure_vision()
+                    results = run_blip()
                     print_results(model_name, i, results)
                     run_results.append([model_name, results])
             case _:
@@ -169,46 +161,29 @@ def run_yolo():
 
     return [return_values, total_end_time - total_start_time, indv_timings]
 
-def run_region_clip():
-    pass
-
-def run_azure_vision():
+def run_blip():
     # Create array to store all return values
     return_values = []
     indv_timings = []
 
-    # Setup client for Azure Vision
-    client = ImageAnalysisClient(
-        endpoint="https://fyp-msvision.cognitiveservices.azure.com/",
-        credential=AzureKeyCredential(open('azure_testing/api_key.txt').read().strip())
-    )
-
-    # Select Azure Vision features
-    features = [VisualFeatures.DENSE_CAPTIONS, VisualFeatures.OBJECTS]
-
     # Time the process
     total_start_time = time.time()
 
-    # Load the images
-    for image_path in image_paths:
-        image_return_values = []
-        # Get byte stream of image
-        with open(image_path, "rb") as image_stream:
-            image_data = image_stream.read()
+    # Load the model
+    processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    model = AutoModelForImageTextToText.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
 
+    # Process each image
+    for image_path in image_paths:
         indv_start_time = time.time()
 
-        # Analyse the image
-        analysis = client.analyze(image_data=image_data, visual_features=features, language="en")
+        image = Image.open(image_path)
+        inputs = processor(images=image, text=[""], return_tensors="pt").to(device)
 
-        if analysis.dense_captions is not None:
-            for caption in analysis.dense_captions.list:
-                image_return_values.append([caption.text, caption.confidence])
-        else:
-            image_return_values.append(["-", 0])
-
-        # Add features to return_values
-        return_values.append(image_return_values)
+        with torch.no_grad():
+            outputs = model.generate(**inputs, max_new_tokens=50)
+            caption = processor.decode(outputs[0], skip_special_tokens=True)
+            return_values.append(caption)
 
         indv_end_time = time.time()
         indv_timings.append(indv_end_time - indv_start_time)
@@ -219,5 +194,6 @@ def run_azure_vision():
     return [return_values, total_end_time - total_start_time, indv_timings]
 
 # ---- Run all models ----
-run_test()
-print("All models have been run and the results have been saved.")
+if __name__ == "__main__":
+    run_test()
+    print("All models have been run and the results have been saved.")
