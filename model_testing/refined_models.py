@@ -31,7 +31,6 @@ dir_paths = os.listdir(path)
 for dir_path in dir_paths:
     if dir_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
         image_paths.append(path+"/"+dir_path)
-    total_images += 1
 
 
 # ---- General functions ----
