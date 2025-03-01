@@ -21,7 +21,10 @@ class FrameSearcher:
 
     # Get caption for an image using Florence-2
     def get_caption(self, image):
-        inputs = self.processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(self.device)
+        # Create the prompt
+        prompt = "<MORE_DETAILED_CAPTION>"
+
+        inputs = self.processor(images=image, text=prompt, return_tensors="pt").to(self.device)
 
         with torch.no_grad():
             generated_ids = self.model.generate(

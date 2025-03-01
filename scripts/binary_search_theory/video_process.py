@@ -28,5 +28,5 @@ if __name__ == "__main__":
         os.remove(os.path.join('frames', file))
 
     # Save frames from video and search
-    save_frames("../../testing_videos/red_ball_full.mp4")
+    save_frames("../../testing_videos/motorway_2.mp4")
 

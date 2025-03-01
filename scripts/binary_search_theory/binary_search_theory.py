@@ -5,7 +5,7 @@
 # Imports
 import os
 import multiprocessing
-from frame_searching_blip import FrameSearcher
+from frame_searching_florence import FrameSearcher
 
 def main():
     # Get list of all images in frames dir
