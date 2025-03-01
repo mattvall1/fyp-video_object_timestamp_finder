@@ -4,7 +4,7 @@
 # Note: This will only work if we know FOR DEFINITE that there is a specific object in the video - that is okay.
 # Imports
 import os
-from frame_searching_azure import FrameSearcher
+from frame_searching_florence import FrameSearcher
 
 # Get list of all images in frames dir
 total_frames = len(os.listdir('frames'))
