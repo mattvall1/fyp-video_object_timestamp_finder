@@ -69,7 +69,7 @@ def save_results(results):
             writer.writerow(["Timestamp", "Model Name", "Run Number", "Image Name", "Model output", "Time Taken"])
         writer.writerows(to_write)
 
-def run_test(save_results=True):
+def run_test(save_to_csv=True):
     for model_name in models_to_run:
         run_results = []
         match model_name:
@@ -97,7 +97,7 @@ def run_test(save_results=True):
                 print("Model not found, continuing...")
 
         # Save run results
-        if save_results:
+        if save_to_csv:
             save_results(run_results)
 
 # ---- Model definitions ----
@@ -217,7 +217,7 @@ def run_florence2():
         indv_start_time = time.time()
 
         image = Image.open(image_path)
-        inputs = processor(images=image, text=["<CAPTION>"], return_tensors="pt").to(device)
+        inputs = processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(device)
 
         with torch.no_grad():
             generated_ids = model.generate(
@@ -227,7 +227,7 @@ def run_florence2():
                 do_sample=False,
                 num_beams=3
             )
-            return_values.append(processor.post_process_generation(processor.batch_decode(generated_ids, skip_special_tokens=True)[0], task="<CAPTION>", image_size=(image.width, image.height))["<CAPTION>"])
+            return_values.append(processor.post_process_generation(processor.batch_decode(generated_ids, skip_special_tokens=True)[0], task="<MORE_DETAILED_CAPTION>", image_size=(image.width, image.height))["<MORE_DETAILED_CAPTION>"])
 
         indv_end_time = time.time()
         indv_timings.append(indv_end_time - indv_start_time)
@@ -240,5 +240,5 @@ def run_florence2():
 
 # ---- Run all models ----
 if __name__ == "__main__":
-    run_test(False)
+    run_test()
     print("All models have been run and the results have been saved.")
