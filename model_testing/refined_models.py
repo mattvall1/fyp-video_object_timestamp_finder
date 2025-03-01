@@ -19,17 +19,19 @@ from transformers import pipeline, AutoProcessor, AutoModelForImageTextToText, A
 device = "mps"
 image_paths = []
 runs = 2
-models_to_run = ["Florence2"]
+models_to_run = ["OpenCLIP", "YOLO", "SalesForceBLIP", "Florence2"]
 
 # YOLO settings (if using YOLO)
 if "YOLO" in models_to_run:
     yolo_settings.update({"datasets_dir": "../../datasets", "runs_dir": "detection_output/yolo_runs", "weights_dir": "detection_output/yolo_runs"})
 
 # Get all image paths
-dir_paths = os.listdir("../testing_images")
+path = "../testing_images"
+dir_paths = os.listdir(path)
 for dir_path in dir_paths:
     if dir_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
-        image_paths.append("../testing_images/"+dir_path)
+        image_paths.append(path+"/"+dir_path)
+    total_images += 1
 
 
 # ---- General functions ----
@@ -68,7 +70,7 @@ def save_results(results):
             writer.writerow(["Timestamp", "Model Name", "Run Number", "Image Name", "Model output", "Time Taken"])
         writer.writerows(to_write)
 
-def run_test():
+def run_test(save_results=True):
     for model_name in models_to_run:
         run_results = []
         match model_name:
@@ -96,7 +98,8 @@ def run_test():
                 print("Model not found, continuing...")
 
         # Save run results
-        save_results(run_results)
+        if save_results:
+            save_results(run_results)
 
 # ---- Model definitions ----
 def run_open_clip():
@@ -238,5 +241,5 @@ def run_florence2():
 
 # ---- Run all models ----
 if __name__ == "__main__":
-    run_test()
+    run_test(False)
     print("All models have been run and the results have been saved.")
