@@ -13,13 +13,13 @@ from prettytable import PrettyTable
 import open_clip
 from ultralytics import YOLO
 from ultralytics import settings as yolo_settings
-from transformers import pipeline, AutoProcessor, AutoModelForImageTextToText
+from transformers import pipeline, AutoProcessor, AutoModelForImageTextToText, AutoModelForCausalLM
 
 # ---- Setup ----
 device = "mps"
 image_paths = []
 runs = 2
-models_to_run = ["SalesForceBLIP", "YOLO", "OpenCLIP"]
+models_to_run = ["Florence2"]
 
 # YOLO settings (if using YOLO)
 if "YOLO" in models_to_run:
@@ -85,6 +85,11 @@ def run_test():
             case "SalesForceBLIP":
                 for i in range(runs):
                     results = run_blip()
+                    print_results(model_name, i, results)
+                    run_results.append([model_name, results])
+            case "Florence2":
+                for i in range(runs):
+                    results = run_florence2()
                     print_results(model_name, i, results)
                     run_results.append([model_name, results])
             case _:
@@ -192,6 +197,44 @@ def run_blip():
     total_end_time = time.time()
 
     return [return_values, total_end_time - total_start_time, indv_timings]
+
+def run_florence2():
+    # Create array to store all return values
+    return_values = []
+    indv_timings = []
+
+    # Time the process
+    total_start_time = time.time()
+
+    # Load the model
+    processor = AutoProcessor.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True).to(device)
+
+    # Process each image
+    for image_path in image_paths:
+        indv_start_time = time.time()
+
+        image = Image.open(image_path)
+        inputs = processor(images=image, text=["<CAPTION>"], return_tensors="pt").to(device)
+
+        with torch.no_grad():
+            generated_ids = model.generate(
+                input_ids=inputs["input_ids"],
+                pixel_values=inputs["pixel_values"],
+                max_new_tokens=1024,
+                do_sample=False,
+                num_beams=3
+            )
+            return_values.append(processor.post_process_generation(processor.batch_decode(generated_ids, skip_special_tokens=True)[0], task="<CAPTION>", image_size=(image.width, image.height))["<CAPTION>"])
+
+        indv_end_time = time.time()
+        indv_timings.append(indv_end_time - indv_start_time)
+
+    # End the timer
+    total_end_time = time.time()
+
+    return [return_values, total_end_time - total_start_time, indv_timings]
+
 
 # ---- Run all models ----
 if __name__ == "__main__":

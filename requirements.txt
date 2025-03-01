@@ -1,6 +1,7 @@
 azure-cognitiveservices-vision-computervision
 azure-core
 CairoSVG
+einops
 ftfy
 msrest
 open_clip_torch
