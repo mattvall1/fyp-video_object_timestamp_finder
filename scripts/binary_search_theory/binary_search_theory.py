@@ -5,7 +5,7 @@
 # Imports
 import os
 import multiprocessing
-from frame_searching_florence import FrameSearcher
+from frame_searching_blip import FrameSearcher
 
 def main():
     # Get list of all images in frames dir
@@ -13,7 +13,7 @@ def main():
 
     # Get subset of frames to search (every 60th frame)
     initial_subset = []
-    for frame in range(1800, total_frames, 60):
+    for frame in range(0, total_frames, 60):
         initial_subset.append(f'{frame:04d}')
 
     # Create frame searcher once
