@@ -9,6 +9,7 @@ model_testing/azure_testing/api_key.txt
 scripts/binary_search_theory/api_key.txt
 scripts/binary_search_theory/frames
 model_testing/results.csv
+nltk_data
 
 # Premade model testing
 runs/

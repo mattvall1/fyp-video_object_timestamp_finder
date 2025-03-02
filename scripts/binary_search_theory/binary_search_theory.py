@@ -6,6 +6,7 @@
 import os
 import multiprocessing
 from frame_searching_florence import FrameSearcher
+from caption_processing import CaptionProcessor
 
 def main():
     # Get list of all images in frames dir
@@ -16,15 +17,21 @@ def main():
     for frame in range(0, total_frames, 60):
         initial_subset.append(f'{frame:04d}')
 
-    # Create frame searcher once
+    # Create frame and caption searcher once
     frame_search = FrameSearcher()
+    caption_processor = CaptionProcessor()
 
     # Check each image in initial subset
     for frame in initial_subset:
         image = frame_search.get_image(image_path=f"frames/{frame}.jpg")
         # Get caption
         caption = frame_search.get_caption(image=image)
-        print(f"frames/{frame}.jpg", caption)
+        print(f"frames/{frame}.jpg - Caption: {caption}")
+
+        # Get key phrases from caption
+        key_phrases = caption_processor.extract_key_phrases(caption)
+        print(f"frames/{frame}.jpg - Key phrases: {key_phrases}")
+
 
 if __name__ == "__main__":
     # This fixes the multiprocessing issue
