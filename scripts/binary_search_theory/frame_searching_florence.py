@@ -5,8 +5,6 @@
 import torch
 from PIL import Image
 from transformers import AutoProcessor, AutoModelForCausalLM
-from prettytable import PrettyTable
-import os
 
 class FrameSearcher:
     def __init__(self):
@@ -19,7 +17,7 @@ class FrameSearcher:
     def get_image(self, image_path):
         return Image.open(image_path)
 
-    # Get caption for an image using Florence-2
+    # Get caption for an image
     def get_caption(self, image):
         # Create the prompt
         prompt = "<MORE_DETAILED_CAPTION>"
@@ -27,19 +25,21 @@ class FrameSearcher:
         inputs = self.processor(images=image, text=prompt, return_tensors="pt").to(self.device)
 
         with torch.no_grad():
+            # Generate and get the detailed caption
             generated_ids = self.model.generate(
                 input_ids=inputs["input_ids"],
                 pixel_values=inputs["pixel_values"],
-                max_new_tokens=1024,
+                max_new_tokens=4096,
                 do_sample=False,
                 num_beams=3
             )
 
-            detailed_caption = self.processor.post_process_generation(
+            results = self.processor.post_process_generation(
                 self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0],
                 task="<MORE_DETAILED_CAPTION>",
                 image_size=(image.width, image.height)
-            )["<MORE_DETAILED_CAPTION>"]
+            )
+            detailed_caption = results["<MORE_DETAILED_CAPTION>"]
 
             return detailed_caption
 
