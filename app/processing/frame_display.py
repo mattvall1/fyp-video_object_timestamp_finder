@@ -2,7 +2,6 @@
 # COMP1682 Final Year Project.
 # Purpose: Frame display
 
-import cv2
 from PyQt6 import QtCore
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene, QApplication

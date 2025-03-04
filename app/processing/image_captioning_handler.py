@@ -1,9 +1,7 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
 # Purpose: Image Captioning Handler
-import shutil
 from ultralytics import YOLO
-from PyQt6 import QtCore
 
 
 class ImageCaptioningHandler:

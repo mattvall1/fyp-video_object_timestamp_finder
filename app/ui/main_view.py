@@ -4,7 +4,7 @@
 import sys
 from datetime import datetime
 import logging
-from PyQt6 import QtWidgets, uic, QtMultimediaWidgets
+from PyQt6 import QtWidgets, uic
 from app.processing.file_handler import FileHandler
 from app.ui.console_handler import ConsoleHandler
 
@@ -19,7 +19,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Configure
         logging.basicConfig(
-            filename=f'logs/{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}_log.txt',
+            filename=f"logs/{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_log.txt",
             level=logging.INFO,
         )
 

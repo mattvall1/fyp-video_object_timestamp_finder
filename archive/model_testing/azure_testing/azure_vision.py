@@ -2,7 +2,6 @@
 # COMP1682 Final Year Project.
 # Purpose: Standalone script to test azure API calls for image recognition.
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
-from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 from msrest.authentication import CognitiveServicesCredentials
 import os
 

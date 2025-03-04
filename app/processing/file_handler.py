@@ -10,7 +10,6 @@ from app.processing.image_captioning_handler import ImageCaptioningHandler
 
 
 class FileHandler:
-
     def __init__(self, file_path, preview_element, progress_bar):
         self.file_path = file_path
         self.frame_displayer = FrameDisplayer(preview_element)

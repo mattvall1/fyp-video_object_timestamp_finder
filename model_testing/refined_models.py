@@ -2,7 +2,6 @@
 # COMP1682 Final Year Project.
 # Purpose: Standalone script to demonstrate all models
 import csv
-import requests
 import torch
 from PIL import Image
 import os
@@ -14,7 +13,6 @@ import open_clip
 from ultralytics import YOLO
 from ultralytics import settings as yolo_settings
 from transformers import (
-    pipeline,
     AutoProcessor,
     AutoModelForImageTextToText,
     AutoModelForCausalLM,
@@ -82,7 +80,7 @@ def save_results(results):
                 ]
             )
     # Save data to CSV
-    with open(f"results.csv", "a+", newline="") as file:
+    with open("results.csv", "a+", newline="") as file:
         writer = csv.writer(file)
         # Check if file is empty and add header
         if file.tell() == 0:

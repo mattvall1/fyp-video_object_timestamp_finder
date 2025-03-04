@@ -5,8 +5,6 @@
 import torch
 from PIL import Image
 from transformers import AutoProcessor, AutoModelForImageTextToText
-from prettytable import PrettyTable
-import os
 
 
 class FrameSearcher:
