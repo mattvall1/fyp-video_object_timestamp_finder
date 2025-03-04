@@ -1,6 +1,7 @@
 black
 CairoSVG
 einops
+evaluate
 ftfy
 msrest
 open_clip_torch
