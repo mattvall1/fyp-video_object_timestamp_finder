@@ -5,4 +5,3 @@ from global_tools import Tools
 
 # Create all required directories
 Tools.create_directories()
-

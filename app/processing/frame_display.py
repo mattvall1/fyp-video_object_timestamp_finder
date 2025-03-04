@@ -7,6 +7,7 @@ from PyQt6 import QtCore
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import QGraphicsScene, QApplication
 
+
 class FrameDisplayer:
     def __init__(self, preview_element):
         self.preview_element = preview_element
@@ -19,6 +20,7 @@ class FrameDisplayer:
         self.scene.addPixmap(pixmap)  # Add pixmap to scene
 
         self.preview_element.setScene(self.scene)
-        self.preview_element.fitInView(self.scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)  # Keep bounds of video
+        self.preview_element.fitInView(
+            self.scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio
+        )  # Keep bounds of video
         QApplication.processEvents()  # Process events to update UI
-

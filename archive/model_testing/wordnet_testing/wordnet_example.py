@@ -8,10 +8,10 @@ import wn
 import os
 
 # Define a Wordnet object
-en = wn.Wordnet(os.path.join('model_testing', 'wordnet', 'english-wordnet-2024.xml'))
+en = wn.Wordnet(os.path.join("model_testing", "wordnet", "english-wordnet-2024.xml"))
 
 # Get the first synset for 'car' as a noun
-car_ss = en.synsets('car', pos='n')[0]
+car_ss = en.synsets("car", pos="n")[0]
 
 # Print example
 print(car_ss.definition())

@@ -7,17 +7,22 @@ import subprocess
 
 
 # List all PNG files in the directory
-png_files = sorted([f for f in os.listdir('red_ball_frames') if f.endswith('.png')])
+png_files = sorted([f for f in os.listdir("red_ball_frames") if f.endswith(".png")])
 
 # Construct the ffmpeg command
 ffmpeg_command = [
-    'ffmpeg',
-    '-framerate', '30',
-    '-i', 'red_ball_frames/%d.png',
-    '-c:v', 'libx264',
-    '-pix_fmt', 'yuv420p',
-    '-crf', '0',
-    '../red_ball.mp4'
+    "ffmpeg",
+    "-framerate",
+    "30",
+    "-i",
+    "red_ball_frames/%d.png",
+    "-c:v",
+    "libx264",
+    "-pix_fmt",
+    "yuv420p",
+    "-crf",
+    "0",
+    "../red_ball.mp4",
 ]
 
 # Run the ffmpeg command

@@ -15,12 +15,11 @@ class FileHandler:
         self.file_path = file_path
         self.frame_displayer = FrameDisplayer(preview_element)
         self.progress_bar = progress_bar
-        self.original_output_dir = 'key_frames/original'
+        self.original_output_dir = "key_frames/original"
         self.total_frames = 0
 
         # Delete old frames
         Tools.clear_frame_directories()
-
 
     # Method to split video into frames
     def split_video(self):
@@ -54,7 +53,6 @@ class FileHandler:
             # Update progress bar (first half of bar)
             self.progress_bar.setValue(int((count / self.total_frames) * 50))
 
-
         video_cap.release()
 
         # Detect objects in frames
@@ -62,10 +60,14 @@ class FileHandler:
 
     def detect_objects(self):
         # Create instance of ObjectDetectionHandler
-        object_detection_handler = ImageCaptioningHandler(original_output_dir=self.original_output_dir)
+        object_detection_handler = ImageCaptioningHandler(
+            original_output_dir=self.original_output_dir
+        )
 
         # Order frames by number
-        frames_path_list = sorted(os.listdir(self.original_output_dir), key=lambda x: int(x.split('.')[0]))
+        frames_path_list = sorted(
+            os.listdir(self.original_output_dir), key=lambda x: int(x.split(".")[0])
+        )
 
         # Loop through frames and detect objects
         frame_count = 1
@@ -73,8 +75,12 @@ class FileHandler:
             print(f"Processing frame {frame_count} of {self.total_frames}")
 
             # Detect objects in frame
-            detector_output = object_detection_handler.detect_objects(frame) # Example return value
-            print("Detected key words: " + ", ".join(detector_output[1]))  # Example return value
+            detector_output = object_detection_handler.detect_objects(
+                frame
+            )  # Example return value
+            print(
+                "Detected key words: " + ", ".join(detector_output[1])
+            )  # Example return value
 
             # Display frame in preview window
             self.frame_displayer.display_frame(detector_output[0])

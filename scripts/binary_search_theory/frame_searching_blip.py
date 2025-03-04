@@ -8,12 +8,17 @@ from transformers import AutoProcessor, AutoModelForImageTextToText
 from prettytable import PrettyTable
 import os
 
+
 class FrameSearcher:
     def __init__(self):
         self.device = "mps"
         # Load the BLIP model
-        self.processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        self.model = AutoModelForImageTextToText.from_pretrained("Salesforce/blip-image-captioning-base").to(self.device)
+        self.processor = AutoProcessor.from_pretrained(
+            "Salesforce/blip-image-captioning-base"
+        )
+        self.model = AutoModelForImageTextToText.from_pretrained(
+            "Salesforce/blip-image-captioning-base"
+        ).to(self.device)
 
     # Load and return image object
     def get_image(self, image_path):
@@ -21,7 +26,9 @@ class FrameSearcher:
 
     # Get caption for an image using BLIP
     def get_caption(self, image):
-        inputs = self.processor(images=image, text=[""], return_tensors="pt").to(self.device)
+        inputs = self.processor(images=image, text=[""], return_tensors="pt").to(
+            self.device
+        )
 
         with torch.no_grad():
             outputs = self.model.generate(**inputs, max_new_tokens=50)
@@ -49,7 +56,8 @@ class FrameSearcher:
             self.print_caption(caption)
         return self.find_in_frame(caption, search_term)
 
+
 # Main
-if __name__ == '__main__':
+if __name__ == "__main__":
     searcher = FrameSearcher()
-    searcher.search_image('../../testing_images/trucks.jpg', 'red truck')
+    searcher.search_image("../../testing_images/trucks.jpg", "red truck")

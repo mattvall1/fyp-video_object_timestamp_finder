@@ -6,12 +6,17 @@ import torch
 from PIL import Image
 from transformers import AutoProcessor, AutoModelForCausalLM
 
+
 class FrameSearcher:
     def __init__(self):
         self.device = "mps"
         # Load the Florence-2 model
-        self.processor = AutoProcessor.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True).to(self.device)
+        self.processor = AutoProcessor.from_pretrained(
+            "microsoft/Florence-2-large", trust_remote_code=True
+        )
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "microsoft/Florence-2-large", trust_remote_code=True
+        ).to(self.device)
 
     # Load and return image object
     def get_image(self, image_path):
@@ -22,7 +27,9 @@ class FrameSearcher:
         # Create the prompt
         prompt = "<MORE_DETAILED_CAPTION>"
 
-        inputs = self.processor(images=image, text=prompt, return_tensors="pt").to(self.device)
+        inputs = self.processor(images=image, text=prompt, return_tensors="pt").to(
+            self.device
+        )
 
         with torch.no_grad():
             # Generate and get the detailed caption
@@ -31,13 +38,13 @@ class FrameSearcher:
                 pixel_values=inputs["pixel_values"],
                 max_new_tokens=4096,
                 do_sample=False,
-                num_beams=3
+                num_beams=3,
             )
 
             results = self.processor.post_process_generation(
                 self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0],
                 task="<MORE_DETAILED_CAPTION>",
-                image_size=(image.width, image.height)
+                image_size=(image.width, image.height),
             )
             detailed_caption = results["<MORE_DETAILED_CAPTION>"]
 
@@ -64,7 +71,8 @@ class FrameSearcher:
             self.print_caption(caption)
         return self.find_in_frame(caption, search_term)
 
+
 # Main
-if __name__ == '__main__':
+if __name__ == "__main__":
     searcher = FrameSearcher()
-    searcher.search_image('../../testing_images/trucks.jpg', 'red truck')
+    searcher.search_image("../../testing_images/trucks.jpg", "red truck")

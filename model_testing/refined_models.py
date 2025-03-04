@@ -13,7 +13,12 @@ from prettytable import PrettyTable
 import open_clip
 from ultralytics import YOLO
 from ultralytics import settings as yolo_settings
-from transformers import pipeline, AutoProcessor, AutoModelForImageTextToText, AutoModelForCausalLM
+from transformers import (
+    pipeline,
+    AutoProcessor,
+    AutoModelForImageTextToText,
+    AutoModelForCausalLM,
+)
 
 # ---- Setup ----
 device = "mps"
@@ -23,14 +28,20 @@ models_to_run = ["OpenCLIP", "YOLO", "SalesForceBLIP", "Florence2"]
 
 # YOLO settings (if using YOLO)
 if "YOLO" in models_to_run:
-    yolo_settings.update({"datasets_dir": "../../datasets", "runs_dir": "detection_output/yolo_runs", "weights_dir": "detection_output/yolo_runs"})
+    yolo_settings.update(
+        {
+            "datasets_dir": "../../datasets",
+            "runs_dir": "detection_output/yolo_runs",
+            "weights_dir": "detection_output/yolo_runs",
+        }
+    )
 
 # Get all image paths
 path = "../testing_images"
 dir_paths = os.listdir(path)
 for dir_path in dir_paths:
-    if dir_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
-        image_paths.append(path+"/"+dir_path)
+    if dir_path.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff")):
+        image_paths.append(path + "/" + dir_path)
 
 
 # ---- General functions ----
@@ -60,14 +71,33 @@ def save_results(results):
     for result in results:
         for run in range(len(result[1][0])):
             # Format: Timestamp, Model Name, Run Number, Image Name, Generated Caption, Time Taken
-            to_write.append([int(time.time()), result[0], run, image_paths[run], result[1][0][run], result[1][2][run]])
+            to_write.append(
+                [
+                    int(time.time()),
+                    result[0],
+                    run,
+                    image_paths[run],
+                    result[1][0][run],
+                    result[1][2][run],
+                ]
+            )
     # Save data to CSV
-    with open(f"results.csv", "a+", newline='') as file:
+    with open(f"results.csv", "a+", newline="") as file:
         writer = csv.writer(file)
         # Check if file is empty and add header
         if file.tell() == 0:
-            writer.writerow(["Timestamp", "Model Name", "Run Number", "Image Name", "Model output", "Time Taken"])
+            writer.writerow(
+                [
+                    "Timestamp",
+                    "Model Name",
+                    "Run Number",
+                    "Image Name",
+                    "Model output",
+                    "Time Taken",
+                ]
+            )
         writer.writerows(to_write)
+
 
 def run_test(save_to_csv=True):
     for model_name in models_to_run:
@@ -100,6 +130,7 @@ def run_test(save_to_csv=True):
         if save_to_csv:
             save_results(run_results)
 
+
 # ---- Model definitions ----
 def run_open_clip():
     # Create array to store all return values
@@ -111,15 +142,15 @@ def run_open_clip():
 
     # Load the model
     model, _, transform = open_clip.create_model_and_transforms(
-        'coca_ViT-L-14', 
-        pretrained='mscoco_finetuned_laion2b_s13b_b90k',
-        device=device
+        "coca_ViT-L-14", pretrained="mscoco_finetuned_laion2b_s13b_b90k", device=device
     )
 
     # Load the image
     for image_path in image_paths:
         indv_start_time = time.time()
-        image = transform(Image.open(image_path)).unsqueeze(0).to(torch.float32).to(device)
+        image = (
+            transform(Image.open(image_path)).unsqueeze(0).to(torch.float32).to(device)
+        )
 
         # Get the features
         with torch.no_grad():
@@ -127,13 +158,18 @@ def run_open_clip():
 
         # Add features to return_values
         indv_end_time = time.time()
-        return_values.append(open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", ""))
+        return_values.append(
+            open_clip.decode(generation[0])
+            .split("<end_of_text>")[0]
+            .replace("<start_of_text>", "")
+        )
         indv_timings.append(indv_end_time - indv_start_time)
 
     # End the timer
     total_end_time = time.time()
 
     return [return_values, total_end_time - total_start_time, indv_timings]
+
 
 def run_yolo():
     # Create array to store all return values
@@ -160,13 +196,14 @@ def run_yolo():
 
         # Print the detected objects
         indv_end_time = time.time()
-        return_values.append(', '.join(detected_objects))
+        return_values.append(", ".join(detected_objects))
         indv_timings.append(indv_end_time - indv_start_time)
 
     # End the timer
     total_end_time = time.time()
 
     return [return_values, total_end_time - total_start_time, indv_timings]
+
 
 def run_blip():
     # Create array to store all return values
@@ -178,7 +215,9 @@ def run_blip():
 
     # Load the model
     processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-    model = AutoModelForImageTextToText.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
+    model = AutoModelForImageTextToText.from_pretrained(
+        "Salesforce/blip-image-captioning-base"
+    ).to(device)
 
     # Process each image
     for image_path in image_paths:
@@ -200,6 +239,7 @@ def run_blip():
 
     return [return_values, total_end_time - total_start_time, indv_timings]
 
+
 def run_florence2():
     # Create array to store all return values
     return_values = []
@@ -209,15 +249,21 @@ def run_florence2():
     total_start_time = time.time()
 
     # Load the model
-    processor = AutoProcessor.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-large", trust_remote_code=True).to(device)
+    processor = AutoProcessor.from_pretrained(
+        "microsoft/Florence-2-large", trust_remote_code=True
+    )
+    model = AutoModelForCausalLM.from_pretrained(
+        "microsoft/Florence-2-large", trust_remote_code=True
+    ).to(device)
 
     # Process each image
     for image_path in image_paths:
         indv_start_time = time.time()
 
         image = Image.open(image_path)
-        inputs = processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(device)
+        inputs = processor(
+            images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt"
+        ).to(device)
 
         with torch.no_grad():
             generated_ids = model.generate(
@@ -225,9 +271,15 @@ def run_florence2():
                 pixel_values=inputs["pixel_values"],
                 max_new_tokens=1024,
                 do_sample=False,
-                num_beams=3
+                num_beams=3,
             )
-            return_values.append(processor.post_process_generation(processor.batch_decode(generated_ids, skip_special_tokens=True)[0], task="<MORE_DETAILED_CAPTION>", image_size=(image.width, image.height))["<MORE_DETAILED_CAPTION>"])
+            return_values.append(
+                processor.post_process_generation(
+                    processor.batch_decode(generated_ids, skip_special_tokens=True)[0],
+                    task="<MORE_DETAILED_CAPTION>",
+                    image_size=(image.width, image.height),
+                )["<MORE_DETAILED_CAPTION>"]
+            )
 
         indv_end_time = time.time()
         indv_timings.append(indv_end_time - indv_start_time)

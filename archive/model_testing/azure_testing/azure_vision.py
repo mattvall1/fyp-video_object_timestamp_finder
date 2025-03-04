@@ -8,16 +8,18 @@ import os
 
 
 # Setup endpoint and client for Azure Vision
-api_key = open('api_key.txt').read().strip()
+api_key = open("api_key.txt").read().strip()
 endpoint = "https://fyp-msvision.cognitiveservices.azure.com/"
-client = ComputerVisionClient(endpoint, credentials=CognitiveServicesCredentials(api_key))
+client = ComputerVisionClient(
+    endpoint, credentials=CognitiveServicesCredentials(api_key)
+)
 
 # Get all image paths
 image_paths = []
 dir_paths = os.listdir("../../testing_images/small")
 for dir_path in dir_paths:
-    if dir_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
-        image_paths.append("../../testing_images/small/"+dir_path)
+    if dir_path.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff")):
+        image_paths.append("../../testing_images/small/" + dir_path)
 
 # Analyse an image
 for image_path in image_paths:

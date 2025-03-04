@@ -7,17 +7,18 @@ from PyQt6 import QtCore
 
 
 class ImageCaptioningHandler:
-    def __init__(self, original_output_dir='key_frames'):
+    def __init__(self, original_output_dir="key_frames"):
         self.original_output_dir = original_output_dir
-        self.object_output_dir = 'key_frames/objects/'
-        self.model = YOLO("processing/captioning_models/yolo_pretrained.pt")  # Load pretrained model
+        self.object_output_dir = "key_frames/objects/"
+        self.model = YOLO(
+            "processing/captioning_models/yolo_pretrained.pt"
+        )  # Load pretrained model
         pass
 
     def _get_detected_captions(self, frame_location, frame):
         # Perform object detection on an image
         detection = self.model(frame_location)
         detection_output_filename = self.object_output_dir + f"{frame}.jpg"
-
 
         # Get possible objects to detect
         possible_objects = detection[0].names
@@ -40,4 +41,7 @@ class ImageCaptioningHandler:
         detector_output = self._get_detected_captions(frame_location, frame)
 
         # Return key words
-        return [self.object_output_dir + "/" + frame, detector_output[0]]  # Example return value
+        return [
+            self.object_output_dir + "/" + frame,
+            detector_output[0],
+        ]  # Example return value

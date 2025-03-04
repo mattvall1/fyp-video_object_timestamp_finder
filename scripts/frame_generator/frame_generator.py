@@ -9,44 +9,55 @@ import shutil
 import cairosvg
 from concurrent.futures import ThreadPoolExecutor
 
+
 def generate_frame(object_position: tuple, frame_num: int):
     # Set up the SVG frame
-    frame = svgwrite.Drawing(f'temp_svg/{frame_num}.svg', profile='tiny', size=(1920, 1080))
+    frame = svgwrite.Drawing(
+        f"temp_svg/{frame_num}.svg", profile="tiny", size=(1920, 1080)
+    )
 
     # Add background
-    frame.add(frame.rect(insert=(0, 0), size=(1920, 1080), fill='white'))
+    frame.add(frame.rect(insert=(0, 0), size=(1920, 1080), fill="white"))
 
     # Add circle
-    frame.add(frame.circle(center=object_position, r=250, fill='red'))
+    frame.add(frame.circle(center=object_position, r=250, fill="red"))
 
     # Save the frame
     frame.save()
 
+
 # First, clean and setup directories
 try:
-    shutil.rmtree(Path('red_ball_frames')) # Delete red_ball_frames directory
+    shutil.rmtree(Path("red_ball_frames"))  # Delete red_ball_frames directory
 except FileNotFoundError:
-    pass # We don't need to do anything in this case
+    pass  # We don't need to do anything in this case
 
-Path('red_ball_frames').mkdir(parents=True, exist_ok=True) # Delete and create red_ball_frames directory
-Path('temp_svg').mkdir(parents=True, exist_ok=True) # Create temp_svg directory if it doesn't exist
+Path("red_ball_frames").mkdir(
+    parents=True, exist_ok=True
+)  # Delete and create red_ball_frames directory
+Path("temp_svg").mkdir(
+    parents=True, exist_ok=True
+)  # Create temp_svg directory if it doesn't exist
 
 # Next, generate all frames
-total_frames = 2420 # Note: with a value of 2420, the object will move the entire way across the screen
+total_frames = 2420  # Note: with a value of 2420, the object will move the entire way across the screen
 for frame in range(total_frames):
-    print(f'Generating frame {frame}')
-    generate_frame((frame-250, 830), frame)
+    print(f"Generating frame {frame}")
+    generate_frame((frame - 250, 830), frame)
+
 
 # Then, convert all SVG frames to PNG (multi-threading significantly speeds up the process)
 def convert_svg_to_png(svg_frame):
-    print(f'Converting {svg_frame} to PNG')
-    cairosvg.svg2png(url=str(svg_frame), write_to=str(f'red_ball_frames/{svg_frame.stem}.png'))
+    print(f"Converting {svg_frame} to PNG")
+    cairosvg.svg2png(
+        url=str(svg_frame), write_to=str(f"red_ball_frames/{svg_frame.stem}.png")
+    )
+
 
 with ThreadPoolExecutor(max_workers=16) as executor:
-    svg_frames = sorted(Path('temp_svg').iterdir(), key=lambda x: int(x.stem))
+    svg_frames = sorted(Path("temp_svg").iterdir(), key=lambda x: int(x.stem))
     executor.map(convert_svg_to_png, svg_frames)
 
 # Finally, delete temporary SVG frame directory
-shutil.rmtree(Path('temp_svg'))
-print('Done')
-
+shutil.rmtree(Path("temp_svg"))
+print("Done")

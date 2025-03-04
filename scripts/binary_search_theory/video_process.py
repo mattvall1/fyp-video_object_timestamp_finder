@@ -5,6 +5,7 @@
 import os
 import cv2
 
+
 def save_frames(video_path):
     video_cap = cv2.VideoCapture(video_path)
 
@@ -13,7 +14,7 @@ def save_frames(video_path):
     count = 0
     while success:
         # Save each frame as JPEG file
-        frame_path = os.path.join('frames', f"{count:04d}.jpg")
+        frame_path = os.path.join("frames", f"{count:04d}.jpg")
         cv2.imwrite(frame_path, image)
         print(f"Saving frame '{frame_path}'")
 
@@ -22,11 +23,11 @@ def save_frames(video_path):
 
     video_cap.release()
 
+
 if __name__ == "__main__":
     # Clear frames directory
-    for file in os.listdir('frames'):
-        os.remove(os.path.join('frames', file))
+    for file in os.listdir("frames"):
+        os.remove(os.path.join("frames", file))
 
     # Save frames from video and search
     save_frames("../../testing_videos/motorway_2.mp4")
-

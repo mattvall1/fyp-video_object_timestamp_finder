@@ -1,10 +1,11 @@
 # Script to delete all key frames from the key_frames directory
 import os
 
+
 class Tools:
     @staticmethod
     def clear_frame_directories():
-        directories = ['key_frames/objects', 'key_frames/original']
+        directories = ["key_frames/objects", "key_frames/original"]
         count = 0
         for directory in directories:
             for file_name in os.listdir(directory):
@@ -16,7 +17,7 @@ class Tools:
 
     @staticmethod
     def create_directories():
-        directories = ['key_frames/objects', 'key_frames/original', 'logs']
+        directories = ["key_frames/objects", "key_frames/original", "logs"]
         for directory in directories:
             os.makedirs(directory, exist_ok=True)
             print(f"Created directory: {directory}")
