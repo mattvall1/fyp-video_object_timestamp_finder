@@ -8,7 +8,7 @@ import csv
 def get_conceptual_captions():
     cc_lines = []
     print("Reading Conceptual Captions validation dataset...")
-    with open("datasets/conceptual_captions/CC_Validate.tsv", "r") as f:
+    with open("testing_data/conceptual_captions/CC_Validate.tsv", "r") as f:
         read_file = csv.reader(f, delimiter="\t")
         count = 0
         for row in read_file:
@@ -17,6 +17,7 @@ def get_conceptual_captions():
     print(f"Read: {count}")
 
     return cc_lines
+
 
 class ConceptualCaptions:
     def __init__(self):
