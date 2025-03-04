@@ -1,5 +1,4 @@
-azure-cognitiveservices-vision-computervision
-azure-core
+black
 CairoSVG
 einops
 ftfy
