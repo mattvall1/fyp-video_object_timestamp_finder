@@ -7,7 +7,7 @@ from io import BytesIO
 import torch
 import requests
 from PIL import Image
-from model_testing.tests.metrics.BLEUScore import BLEUScoring
+from model_testing.tests.metrics.BLEU_score import BLEUScoring
 from dataset_retrival.conceptual_captions import ConceptualCaptions
 
 # Model imports
