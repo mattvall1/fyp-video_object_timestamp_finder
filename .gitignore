@@ -11,6 +11,7 @@ scripts/binary_search_theory/frames
 model_testing/results.csv
 nltk_data
 model_testing/tests/testing_data
+model_testing/tests/results
 
 # Premade model testing
 runs/

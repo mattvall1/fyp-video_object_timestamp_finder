@@ -1,23 +1,89 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
 # Purpose: Script to run tests on models
+import csv
+import PIL
+from io import BytesIO
+import torch
+import requests
+from PIL import Image
 from BLEUScore import BLEUScoring
 from dataset_retrival.conceptual_captions import ConceptualCaptions
 
-# Setup test
-conceptual_captions = ConceptualCaptions()
+# Model imports
+import open_clip
+
+# Results to CSV
+def save_results(model, reference, candidate, metric, score):
+    with open("results/auto_results.csv", "a", newline="\n") as rf:
+        writer = csv.writer(rf)
+        if rf.tell() == 0:
+            writer.writerow(
+                [
+                    "Model",
+                    "Reference",
+                    "Candidate",
+                    "Metric",
+                    "Score",
+                ]
+            )
+        writer.writerow([model, reference, candidate, metric, score])
+
+def save_failed_url(url):
+    with open("results/failed_urls.csv", "a") as rf:
+        rf.write(url + "\n")
 
 
 if __name__ == "__main__":
-    # Get all reference captions
-    reference_captions = conceptual_captions.get_reference_captions()
-    # Get all candidate captions (TODO: Get from OpenClip)
-    candidate_captions = conceptual_captions.get_reference_captions()
+    # Setup test
+    conceptual_captions = ConceptualCaptions()
+    device = "mps"
 
-    # Run BLEUScore tests for OpenClip
+    # Get all needed details from conceptual captions
+    reference_captions = conceptual_captions.get_reference_captions()
+    image_urls = conceptual_captions.get_reference_image_urls()
+
+    # ---------- OpenCLIP ----------
+    # Load the model
+    model, _, transform = open_clip.create_model_and_transforms(
+        "coca_ViT-L-14", pretrained="mscoco_finetuned_laion2b_s13b_b90k", device=device
+    )
+
+    # Run BLEUScore tests for OpenCLIP
     for i in range(len(reference_captions)):
-        bleu = BLEUScoring(reference_captions[i], candidate_captions[i])
-        print(f"Sentence BLEU score: {bleu.get_sentence_bleu_score()}")
+        image_url = image_urls[i]
+        print(f"Image URL: {image_url}")
+
+        # Download the image, if it doesn't exist, skip this iteration.
+        try:
+            raw_image = requests.get(image_url, stream=True, timeout=5).raw
+            image_data = raw_image.read()
+            image = Image.open(BytesIO(image_data))
+        except (requests.exceptions.RequestException, PIL.UnidentifiedImageError, requests.exceptions.Timeout):
+            print("Image not found, ignoring")
+            save_failed_url(image_url)
+            continue
+
+        # Run OpenCLIP
+        transformed_image = (
+            transform(image).unsqueeze(0).to(torch.float32).to(device)
+        )
+
+        with torch.no_grad():
+            generation = model.generate(transformed_image)
+
+        candidate_caption = open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", "")
+
+        # Get BLEU score
+        bleu = BLEUScoring(reference_captions[i], candidate_caption)
+
+        # Print results
+        print(f"Reference: {reference_captions[i]}")
+        print(f"Candidate: {candidate_caption}")
+        print(f"Sentence BLEU score: {bleu.get_sentence_bleu_score()}\n")
+
+        # Save results
+        save_results("OpenCLIP", reference_captions[i], candidate_caption, "BLEU", bleu.get_sentence_bleu_score())
 
         if i == 10:
             break
