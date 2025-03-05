@@ -7,7 +7,7 @@ from io import BytesIO
 import torch
 import requests
 from PIL import Image
-from BLEUScore import BLEUScoring
+from model_testing.tests.metrics.BLEUScore import BLEUScoring
 from dataset_retrival.conceptual_captions import ConceptualCaptions
 
 # Model imports
@@ -50,7 +50,9 @@ if __name__ == "__main__":
     )
 
     # Get scores OpenCLIP
-    for i in range(len(reference_captions)):
+    completion_percentage = 0
+    total_images = len(reference_captions)
+    for i in range(total_images):
         image_url = image_urls[i]
         print(f"Image URL: {image_url}")
 
@@ -80,7 +82,6 @@ if __name__ == "__main__":
 
         # ----- Get BLEU score -----
         bleu = BLEUScoring(reference_captions[i], candidate_caption)
-
         print(f"Sentence BLEU score: {bleu.get_sentence_bleu_score()}\n")
 
         # Save results
