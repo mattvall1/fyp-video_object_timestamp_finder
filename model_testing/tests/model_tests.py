@@ -13,6 +13,7 @@ from dataset_retrival.conceptual_captions import ConceptualCaptions
 # Model imports
 import open_clip
 
+
 # Results to CSV
 def save_results(model, reference, candidate, metric, score):
     with open("results/auto_results.csv", "a", newline="\n") as rf:
@@ -28,6 +29,7 @@ def save_results(model, reference, candidate, metric, score):
                 ]
             )
         writer.writerow([model, reference, candidate, metric, score])
+
 
 def save_failed_url(url):
     with open("results/failed_urls.csv", "a") as rf:
@@ -61,20 +63,26 @@ if __name__ == "__main__":
             raw_image = requests.get(image_url, stream=True, timeout=5).raw
             image_data = raw_image.read()
             image = Image.open(BytesIO(image_data))
-        except (requests.exceptions.RequestException, PIL.UnidentifiedImageError, requests.exceptions.Timeout):
+        except (
+            requests.exceptions.RequestException,
+            PIL.UnidentifiedImageError,
+            requests.exceptions.Timeout,
+        ):
             print("Image not found, ignoring")
             save_failed_url(image_url)
             continue
 
         # ---------- Run OpenCLIP ----------
-        transformed_image = (
-            transform(image).unsqueeze(0).to(torch.float32).to(device)
-        )
+        transformed_image = transform(image).unsqueeze(0).to(torch.float32).to(device)
 
         with torch.no_grad():
             generation = model.generate(transformed_image)
 
-        candidate_caption = open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", "")
+        candidate_caption = (
+            open_clip.decode(generation[0])
+            .split("<end_of_text>")[0]
+            .replace("<start_of_text>", "")
+        )
 
         # Print captions
         print(f"Reference: {reference_captions[i]}")
@@ -85,7 +93,13 @@ if __name__ == "__main__":
         print(f"Sentence BLEU score: {bleu.get_sentence_bleu_score()}\n")
 
         # Save results
-        save_results("OpenCLIP", reference_captions[i], candidate_caption, "BLEU", bleu.get_sentence_bleu_score())
+        save_results(
+            "OpenCLIP",
+            reference_captions[i],
+            candidate_caption,
+            "BLEU",
+            bleu.get_sentence_bleu_score(),
+        )
 
         if i == 10:
             break
