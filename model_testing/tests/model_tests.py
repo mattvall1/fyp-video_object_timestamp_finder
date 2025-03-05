@@ -49,7 +49,7 @@ if __name__ == "__main__":
         "coca_ViT-L-14", pretrained="mscoco_finetuned_laion2b_s13b_b90k", device=device
     )
 
-    # Run BLEUScore tests for OpenCLIP
+    # Get scores OpenCLIP
     for i in range(len(reference_captions)):
         image_url = image_urls[i]
         print(f"Image URL: {image_url}")
@@ -64,7 +64,7 @@ if __name__ == "__main__":
             save_failed_url(image_url)
             continue
 
-        # Run OpenCLIP
+        # ---------- Run OpenCLIP ----------
         transformed_image = (
             transform(image).unsqueeze(0).to(torch.float32).to(device)
         )
@@ -74,12 +74,13 @@ if __name__ == "__main__":
 
         candidate_caption = open_clip.decode(generation[0]).split("<end_of_text>")[0].replace("<start_of_text>", "")
 
-        # Get BLEU score
-        bleu = BLEUScoring(reference_captions[i], candidate_caption)
-
-        # Print results
+        # Print captions
         print(f"Reference: {reference_captions[i]}")
         print(f"Candidate: {candidate_caption}")
+
+        # ----- Get BLEU score -----
+        bleu = BLEUScoring(reference_captions[i], candidate_caption)
+
         print(f"Sentence BLEU score: {bleu.get_sentence_bleu_score()}\n")
 
         # Save results
