@@ -1,7 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Script to retrive conceptual captions data
-# Note: Download Conceptual Captions validation dataset from https://ai.google.com/research/ConceptualCaptions/download
+# Purpose: Script to retrieve conceptual captions data
 import csv
 
 

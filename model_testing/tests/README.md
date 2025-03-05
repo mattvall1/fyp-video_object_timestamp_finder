@@ -7,10 +7,9 @@ The various files should be retrieved according to the list in the next section.
 testing_data/
 ├── conceptual_captions/
 │   └── CC_Validate.tsv
-├── dir/
-│   ├── 
-│   ├── 
-│   └── 
+├── text_caps/
+│   ├── TextCaps_0.1_val.json (15,508 captions)
+│   ├── TextCaps_0.1_train.json (109,765 captions)
 └── dir/
     ├── 
     ├── 
@@ -19,4 +18,4 @@ testing_data/
 
 ## Where to find the datasets
 - [Conceptual Captions Download](https://ai.google.com/research/ConceptualCaptions/download) - 'Validation split' == 'CC_Validate.tsv'
-- 
+- [TextCaps Download](https://textvqa.org/textcaps/download/)
