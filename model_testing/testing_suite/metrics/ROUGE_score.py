@@ -33,7 +33,7 @@ class ROUGEScoring:
             rl += score["rougeL"].fmeasure
 
         return [
-            ["ROUGE-1", r1 / len(scores)],
-            ["ROUGE-2", r2 / len(scores)],
-            ["ROUGE-L", rl / len(scores)],
+            ["ROUGE-1", round(r1 / len(scores), 4)],
+            ["ROUGE-2", round(r2 / len(scores), 4)],
+            ["ROUGE-L", round(rl / len(scores), 4)],
         ]

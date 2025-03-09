@@ -15,6 +15,11 @@ from model_testing.testing_suite.metrics.ROUGE_score import ROUGEScoring
 
 # Model imports
 import open_clip
+from transformers import (
+    AutoProcessor,
+    AutoModelForImageTextToText,
+)
+
 
 
 # Setup results file
@@ -130,12 +135,17 @@ if __name__ == "__main__":
     print("Load models...")
     # ---------- OpenCLIP ----------
     # Load the model
-    open_clip_model, _, open_clip_transform = open_clip.create_model_and_transforms(
+    openclip_model, _, openclip_transform = open_clip.create_model_and_transforms(
         "coca_ViT-L-14", pretrained="mscoco_finetuned_laion2b_s13b_b90k", device=device
     )
 
     # ---------- BLIP ----------
     # Load the model
+    blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    blip_model = AutoModelForImageTextToText.from_pretrained(
+        "Salesforce/blip-image-captioning-base"
+    ).to(device)
+
 
 
     print("Models loaded, starting test...")
@@ -167,22 +177,36 @@ if __name__ == "__main__":
         print(f"Reference(s): {reference_captions[i]}")
 
         # ---------- Run OpenCLIP ----------
-        transformed_image = open_clip_transform(image).unsqueeze(0).to(torch.float32).to(device)
+        transformed_image = openclip_transform(image).unsqueeze(0).to(torch.float32).to(device)
 
         with torch.no_grad():
-            generation = open_clip_model.generate(transformed_image)
+            generation = openclip_model.generate(transformed_image)
 
-        candidate_caption = (
+        openclip_candidate_caption = (
             open_clip.decode(generation[0])
             .split("<end_of_text>")[0]
             .replace("<start_of_text>", "")
         )
 
-        # Print candidate captions
-        print(f"OpenCLIP Candidate: {candidate_caption}")
+        # Print candidate caption
+        print(f"OpenCLIP Candidate: {openclip_candidate_caption}")
 
         # Calculate scores and save results
-        calculate_scores_save("OpenCLIP", reference_captions[i], candidate_caption)
+        calculate_scores_save("OpenCLIP", reference_captions[i], openclip_candidate_caption)
+
+        # ---------- Run BLIP ----------
+        inputs = blip_processor(images=image, text=[""], return_tensors="pt").to(device)
+
+        with torch.no_grad():
+            outputs = blip_model.generate(**inputs, max_new_tokens=50)
+            blip_candidate_caption = blip_processor.decode(outputs[0], skip_special_tokens=True)
+
+        # Print candidate caption
+        print(f"BLIP Candidate: {blip_candidate_caption}")
+
+        # Calculate scores and save results
+        calculate_scores_save("BLIP", reference_captions[i], blip_candidate_caption)
+
 
         # Print progress
         completion_percentage += 1
