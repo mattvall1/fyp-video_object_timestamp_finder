@@ -10,8 +10,8 @@ scripts/binary_search_theory/api_key.txt
 scripts/binary_search_theory/frames
 model_testing/results.csv
 nltk_data
-model_testing/tests/testing_data
-model_testing/tests/results
+model_testing/testing_suite/testing_data
+model_testing/testing_suite/results
 
 # Premade model testing
 runs/

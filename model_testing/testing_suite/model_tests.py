@@ -7,12 +7,12 @@ from io import BytesIO
 import torch
 import requests
 from PIL import Image
-from model_testing.tests.dataset_retrival.text_caps import TextCaps
-from model_testing.tests.metrics.BLEU_score import BLEUScoring
+from model_testing.testing_suite.dataset_retrival.text_caps import TextCaps
+from model_testing.testing_suite.metrics.BLEU_score import BLEUScoring
+from model_testing.testing_suite.metrics.METEOR_score import METEORScoring
 
 # Model imports
 import open_clip
-
 
 # Results to CSV
 def save_results(model, reference, candidate, metric, score):
@@ -86,14 +86,12 @@ if __name__ == "__main__":
         )
 
         # Print captions
-        print(f"Reference: {reference_captions[i]}")
+        print(f"Reference(s): {reference_captions[i]}")
         print(f"Candidate: {candidate_caption}")
 
-        # ----- Get BLEU score -----
+        # ----- Get BLEU score and save results -----
         bleu = BLEUScoring(reference_captions[i], candidate_caption)
-        print(f"Sentence BLEU score: {bleu.get_sentence_bleu_score()}\n")
-
-        # Save results
+        print(f"BLEU score: {bleu.get_sentence_bleu_score()}\n")
         save_results(
             "OpenCLIP",
             reference_captions[i],
@@ -102,5 +100,12 @@ if __name__ == "__main__":
             bleu.get_sentence_bleu_score(),
         )
 
+        # ----- Get METEOR score and save results -----
+        meteor = METEORScoring(reference_captions[i], candidate_caption)
+
+        # Print progress
+        completion_percentage += 1
+        print(f"Progress: {completion_percentage}/{total_images} ({(completion_percentage / total_images) * 100:.2f}%)")
+        # Apply limit if needed
         if limit != 0 and i == limit:
             break

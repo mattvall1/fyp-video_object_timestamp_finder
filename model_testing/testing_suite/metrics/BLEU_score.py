@@ -1,6 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Script to test BLEU scoring
+# Purpose: Script for BLEU scoring
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 
@@ -25,4 +25,4 @@ class BLEUScoring:
             self.candidate_caption,
             smoothing_function=smooth_f.method2,
         )
-        return score
+        return round(score, 4)
