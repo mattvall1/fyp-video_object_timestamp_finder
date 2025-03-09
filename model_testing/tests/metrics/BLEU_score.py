@@ -1,7 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
 # Purpose: Script to test BLEU scoring
-# Note: Download Conceptual Captions validation dataset from https://ai.google.com/research/ConceptualCaptions/download
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 
@@ -12,7 +11,6 @@ class BLEUScoring:
             self.reference_caption = [
                 reference_captions.split() for reference_captions in reference_captions
             ]
-            print(f"Reference captions SPLIT: {self.reference_caption}")
         else:
             self.reference_caption = [reference_captions.split()]
         self.candidate_caption = candidate_caption.split()

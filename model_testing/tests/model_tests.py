@@ -40,6 +40,7 @@ if __name__ == "__main__":
     # Setup test
     text_caps = TextCaps()
     device = "mps"
+    limit = 0  # Set to 0 to run all images
 
     # Get all needed details from conceptual captions
     reference_captions = text_caps.get_reference_captions()
@@ -101,5 +102,5 @@ if __name__ == "__main__":
             bleu.get_sentence_bleu_score(),
         )
 
-        if i == 10:
+        if limit != 0 and i == limit:
             break
