@@ -16,6 +16,7 @@ from model_testing.testing_suite.metrics.ROUGE_score import ROUGEScoring
 # Model imports
 import open_clip
 
+
 # Setup results file
 def setup_results_file():
     with open("results/auto_results.csv", "a", newline="\n") as rf:
@@ -38,13 +39,78 @@ def setup_results_file():
     print("Results file opened")
     return csv.writer(rf), rf
 
+
 # Save results to CSV
 def save_results(csv_writer, model, reference, candidate, metric, score):
     csv_writer.writerow([int(time.time()), model, reference, candidate, metric, score])
 
+
+# Log failed URLs
 def save_failed_url(url):
     with open("results/failed_urls.csv", "a") as rf:
         rf.write(url + "\n")
+
+
+# Calculate scores
+def calculate_scores_save(model_name, reference_captions, candidate_caption):
+    # BLEU
+    bleu = BLEUScoring(reference_captions, candidate_caption)
+    bleu_score = bleu.get_sentence_bleu_score()
+    print("BLEU score:", bleu_score)
+    save_results(
+        csv_writer,
+        model_name,
+        reference_captions,
+        candidate_caption,
+        "BLEU",
+        bleu_score,
+    )
+
+    # METEOR
+    meteor = METEORScoring(reference_captions, candidate_caption)
+    meteor_score = meteor.get_meteor_score()
+    print("METEOR score:", meteor_score)
+    save_results(
+        csv_writer,
+        model_name,
+        reference_captions,
+        candidate_caption,
+        "METEOR",
+        meteor_score,
+    )
+
+    # ROUGE
+    rouge = ROUGEScoring(reference_captions, candidate_caption)
+    rouge_scores = rouge.get_rouge_score()
+    print("ROUGE-1 score:", rouge_scores[0][1])
+    print("ROUGE-2 score:", rouge_scores[1][1])
+    print("ROUGE-L score:", rouge_scores[2][1])
+    save_results(
+        csv_writer,
+        model_name,
+        reference_captions,
+        candidate_caption,
+        "ROUGE-1",
+        rouge_scores[0][1],
+    )
+    save_results(
+        csv_writer,
+        model_name,
+        reference_captions,
+        candidate_caption,
+        "ROUGE-2",
+        rouge_scores[1][1],
+    )
+    save_results(
+        csv_writer,
+        model_name,
+        reference_captions,
+        candidate_caption,
+        "ROUGE-L",
+        rouge_scores[2][1],
+    )
+
+    return bleu_score, meteor_score, rouge_scores
 
 
 if __name__ == "__main__":
@@ -69,6 +135,7 @@ if __name__ == "__main__":
     # Get scores OpenCLIP
     completion_percentage = 0
     total_images = len(reference_captions)
+    total_failed = 0
     for i in range(total_images):
         image_url = image_urls[i]
         print(f"Image URL: {image_url}")
@@ -86,6 +153,7 @@ if __name__ == "__main__":
             print("Image not found, ignoring")
             save_failed_url(image_url)
             completion_percentage += 1
+            total_failed += 1
             continue
 
         # ---------- Run OpenCLIP ----------
@@ -104,63 +172,8 @@ if __name__ == "__main__":
         print(f"Reference(s): {reference_captions[i]}")
         print(f"Candidate: {candidate_caption}")
 
-        # ----- Get BLEU score and save results -----
-        bleu = BLEUScoring(reference_captions[i], candidate_caption)
-        bleu_score = bleu.get_sentence_bleu_score()
-        print(f"BLEU score: {bleu_score}")
-        save_results(
-            csv_writer,
-            "OpenCLIP",
-            reference_captions[i],
-            candidate_caption,
-            "BLEU",
-            bleu_score,
-        )
-
-        # ----- Get METEOR score and save results -----
-        meteor = METEORScoring(reference_captions[i], candidate_caption)
-        meteor_score = meteor.get_meteor_score()
-        print(f"METEOR Score: {meteor_score}")
-        save_results(
-            csv_writer,
-            "OpenCLIP",
-            reference_captions[i],
-            candidate_caption,
-            "METEOR",
-            meteor_score,
-        )
-
-        # Get ROUGE score and save results
-        rouge = ROUGEScoring(reference_captions[i], candidate_caption)
-        rouge_scores = rouge.get_rouge_score()
-        print(f"ROUGE-1 Score: {rouge_scores[0][1]}")
-        print(f"ROUGE-2 Score: {rouge_scores[1][1]}")
-        print(f"ROUGE-L Score: {rouge_scores[2][1]}")
-
-        save_results(
-            csv_writer,
-            "OpenCLIP",
-            reference_captions[i],
-            candidate_caption,
-            "ROUGE-1",
-            rouge_scores[0][1],
-        )
-        save_results(
-            csv_writer,
-            "OpenCLIP",
-            reference_captions[i],
-            candidate_caption,
-            "ROUGE-2",
-            rouge_scores[1][1],
-        )
-        save_results(
-            csv_writer,
-            "OpenCLIP",
-            reference_captions[i],
-            candidate_caption,
-            "ROUGE-L",
-            rouge_scores[2][1],
-        )
+        # Calculate scores and save results
+        calculate_scores_save("OpenCLIP", reference_captions[i], candidate_caption)
 
         # Print progress
         completion_percentage += 1
@@ -170,3 +183,29 @@ if __name__ == "__main__":
         # Apply limit if needed
         if limit != 0 and i == limit:
             break
+
+    # Print completion message
+    print("--------------------- Testing complete | cleaning up ---------------------")
+    # Close the results file
+    results_file.close()
+    print("Results file closed")
+
+    # Create a summary file
+    total_attempted = total_images if limit == 0 else limit
+    with open("results/summary.csv", "w", newline="\n") as summary_file:
+        summary_writer = csv.writer(summary_file)
+        summary_writer.writerow(
+            [
+                "Total failed/non-existent images",
+                "Total attempted images",
+                "Percentage images failed",
+            ]
+        )
+        summary_writer.writerow(
+            [
+                total_failed,
+                total_attempted,
+                f"{(total_failed / total_attempted) * 100:.2f}%",
+            ]
+        )
+        print("Summary file created")
