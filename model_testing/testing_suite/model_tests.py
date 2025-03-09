@@ -71,6 +71,7 @@ if __name__ == "__main__":
         ):
             print("Image not found, ignoring")
             save_failed_url(image_url)
+            completion_percentage += 1
             continue
 
         # ---------- Run OpenCLIP ----------
@@ -91,7 +92,7 @@ if __name__ == "__main__":
 
         # ----- Get BLEU score and save results -----
         bleu = BLEUScoring(reference_captions[i], candidate_caption)
-        print(f"BLEU score: {bleu.get_sentence_bleu_score()}\n")
+        print(f"BLEU score: {bleu.get_sentence_bleu_score()}")
         save_results(
             "OpenCLIP",
             reference_captions[i],
@@ -102,10 +103,18 @@ if __name__ == "__main__":
 
         # ----- Get METEOR score and save results -----
         meteor = METEORScoring(reference_captions[i], candidate_caption)
+        print(f"METEOR Score: {meteor.get_meteor_score()}")
+        save_results(
+            "OpenCLIP",
+            reference_captions[i],
+            candidate_caption,
+            "METEOR",
+            meteor.get_meteor_score()
+        )
 
         # Print progress
         completion_percentage += 1
-        print(f"Progress: {completion_percentage}/{total_images} ({(completion_percentage / total_images) * 100:.2f}%)")
+        print(f"Progress: {completion_percentage}/{total_images} ({(completion_percentage / total_images) * 100:.2f}%)\n")
         # Apply limit if needed
         if limit != 0 and i == limit:
             break
