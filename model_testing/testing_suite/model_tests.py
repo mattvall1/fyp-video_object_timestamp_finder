@@ -2,6 +2,7 @@
 # COMP1682 Final Year Project.
 # Purpose: Script to run tests on models
 import csv
+import time
 import PIL
 from io import BytesIO
 import torch
@@ -15,14 +16,14 @@ from model_testing.testing_suite.metrics.ROUGE_score import ROUGEScoring
 # Model imports
 import open_clip
 
-
-# Results to CSV
-def save_results(model, reference, candidate, metric, score):
+# Setup results file
+def setup_results_file():
     with open("results/auto_results.csv", "a", newline="\n") as rf:
         writer = csv.writer(rf)
         if rf.tell() == 0:
             writer.writerow(
                 [
+                    "Timestamp",
                     "Model",
                     "Reference(s)",
                     "Candidate",
@@ -30,8 +31,16 @@ def save_results(model, reference, candidate, metric, score):
                     "Score",
                 ]
             )
-        writer.writerow([model, reference, candidate, metric, score])
+            print("Written header")
 
+    # Open the file in append mode and return the writer object
+    rf = open("results/auto_results.csv", "a", newline="\n")
+    print("Results file opened")
+    return csv.writer(rf), rf
+
+# Save results to CSV
+def save_results(csv_writer, model, reference, candidate, metric, score):
+    csv_writer.writerow([int(time.time()), model, reference, candidate, metric, score])
 
 def save_failed_url(url):
     with open("results/failed_urls.csv", "a") as rf:
@@ -43,6 +52,9 @@ if __name__ == "__main__":
     text_caps = TextCaps()
     device = "mps"
     limit = 0  # Set to 0 to run all images
+
+    # Set up results file and get writer
+    csv_writer, results_file = setup_results_file()
 
     # Get all needed details from conceptual captions
     reference_captions = text_caps.get_reference_captions()
@@ -97,6 +109,7 @@ if __name__ == "__main__":
         bleu_score = bleu.get_sentence_bleu_score()
         print(f"BLEU score: {bleu_score}")
         save_results(
+            csv_writer,
             "OpenCLIP",
             reference_captions[i],
             candidate_caption,
@@ -109,6 +122,7 @@ if __name__ == "__main__":
         meteor_score = meteor.get_meteor_score()
         print(f"METEOR Score: {meteor_score}")
         save_results(
+            csv_writer,
             "OpenCLIP",
             reference_captions[i],
             candidate_caption,
@@ -124,6 +138,7 @@ if __name__ == "__main__":
         print(f"ROUGE-L Score: {rouge_scores[2][1]}")
 
         save_results(
+            csv_writer,
             "OpenCLIP",
             reference_captions[i],
             candidate_caption,
@@ -131,6 +146,7 @@ if __name__ == "__main__":
             rouge_scores[0][1],
         )
         save_results(
+            csv_writer,
             "OpenCLIP",
             reference_captions[i],
             candidate_caption,
@@ -138,6 +154,7 @@ if __name__ == "__main__":
             rouge_scores[1][1],
         )
         save_results(
+            csv_writer,
             "OpenCLIP",
             reference_captions[i],
             candidate_caption,
