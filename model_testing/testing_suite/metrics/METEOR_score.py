@@ -2,7 +2,7 @@
 # COMP1682 Final Year Project.
 # Purpose: Script for METEOR scoring
 from nltk.translate import meteor
-from nltk import word_tokenize
+
 
 class METEORScoring:
     def __init__(self, reference_captions, candidate_caption):
