@@ -7,7 +7,7 @@ import json
 def get_text_caps():
     text_caps = []
     print("Reading TextCaps validation dataset...")
-    with open("testing_data/text_caps/TextCaps_0.1_val.json", "r") as f:
+    with open("testing_data/text_caps/TextCaps_0.1_train.json", "r") as f:
         read_file = json.load(f)
         for row in read_file["data"]:
             text_caps.append(row)

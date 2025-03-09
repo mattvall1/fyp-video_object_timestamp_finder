@@ -56,7 +56,7 @@ def calculate_scores_save(model_name, reference_captions, candidate_caption):
     # BLEU
     bleu = BLEUScoring(reference_captions, candidate_caption)
     bleu_score = bleu.get_sentence_bleu_score()
-    print("BLEU score:", bleu_score)
+    print(f"{model_name} BLEU score: {bleu_score}")
     save_results(
         csv_writer,
         model_name,
@@ -69,7 +69,7 @@ def calculate_scores_save(model_name, reference_captions, candidate_caption):
     # METEOR
     meteor = METEORScoring(reference_captions, candidate_caption)
     meteor_score = meteor.get_meteor_score()
-    print("METEOR score:", meteor_score)
+    print(f"{model_name} METEOR score: {meteor_score}")
     save_results(
         csv_writer,
         model_name,
@@ -82,9 +82,10 @@ def calculate_scores_save(model_name, reference_captions, candidate_caption):
     # ROUGE
     rouge = ROUGEScoring(reference_captions, candidate_caption)
     rouge_scores = rouge.get_rouge_score()
-    print("ROUGE-1 score:", rouge_scores[0][1])
-    print("ROUGE-2 score:", rouge_scores[1][1])
-    print("ROUGE-L score:", rouge_scores[2][1])
+    print(f"{model_name} ROUGE-1 score: {rouge_scores}")
+    print(f"{model_name} ROUGE-2 score: {rouge_scores[1][1]}")
+    print(f"{model_name} ROUGE-L score: {rouge_scores[2][1]}")
+
     save_results(
         csv_writer,
         model_name,
@@ -126,13 +127,19 @@ if __name__ == "__main__":
     reference_captions = text_caps.get_reference_captions()
     image_urls = text_caps.get_reference_image_urls()
 
+    print("Load models...")
     # ---------- OpenCLIP ----------
     # Load the model
-    model, _, transform = open_clip.create_model_and_transforms(
+    open_clip_model, _, open_clip_transform = open_clip.create_model_and_transforms(
         "coca_ViT-L-14", pretrained="mscoco_finetuned_laion2b_s13b_b90k", device=device
     )
 
-    # Get scores OpenCLIP
+    # ---------- BLIP ----------
+    # Load the model
+
+
+    print("Models loaded, starting test...")
+    # Get model scores
     completion_percentage = 0
     total_images = len(reference_captions)
     total_failed = 0
@@ -156,11 +163,14 @@ if __name__ == "__main__":
             total_failed += 1
             continue
 
+        # Print reference captions
+        print(f"Reference(s): {reference_captions[i]}")
+
         # ---------- Run OpenCLIP ----------
-        transformed_image = transform(image).unsqueeze(0).to(torch.float32).to(device)
+        transformed_image = open_clip_transform(image).unsqueeze(0).to(torch.float32).to(device)
 
         with torch.no_grad():
-            generation = model.generate(transformed_image)
+            generation = open_clip_model.generate(transformed_image)
 
         candidate_caption = (
             open_clip.decode(generation[0])
@@ -168,9 +178,8 @@ if __name__ == "__main__":
             .replace("<start_of_text>", "")
         )
 
-        # Print captions
-        print(f"Reference(s): {reference_captions[i]}")
-        print(f"Candidate: {candidate_caption}")
+        # Print candidate captions
+        print(f"OpenCLIP Candidate: {candidate_caption}")
 
         # Calculate scores and save results
         calculate_scores_save("OpenCLIP", reference_captions[i], candidate_caption)
