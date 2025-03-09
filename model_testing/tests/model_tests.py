@@ -7,8 +7,8 @@ from io import BytesIO
 import torch
 import requests
 from PIL import Image
+from model_testing.tests.dataset_retrival.text_caps import TextCaps
 from model_testing.tests.metrics.BLEU_score import BLEUScoring
-from dataset_retrival.conceptual_captions import ConceptualCaptions
 
 # Model imports
 import open_clip
@@ -22,7 +22,7 @@ def save_results(model, reference, candidate, metric, score):
             writer.writerow(
                 [
                     "Model",
-                    "Reference",
+                    "Reference(s)",
                     "Candidate",
                     "Metric",
                     "Score",
@@ -38,12 +38,12 @@ def save_failed_url(url):
 
 if __name__ == "__main__":
     # Setup test
-    conceptual_captions = ConceptualCaptions()
+    text_caps = TextCaps()
     device = "mps"
 
     # Get all needed details from conceptual captions
-    reference_captions = conceptual_captions.get_reference_captions()
-    image_urls = conceptual_captions.get_reference_image_urls()
+    reference_captions = text_caps.get_reference_captions()
+    image_urls = text_caps.get_reference_image_urls()
 
     # ---------- OpenCLIP ----------
     # Load the model
