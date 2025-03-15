@@ -35,7 +35,7 @@ if "YOLO" in models_to_run:
     )
 
 # Get all image paths
-path = "../testing_images"
+path = "../../testing_images"
 dir_paths = os.listdir(path)
 for dir_path in dir_paths:
     if dir_path.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff")):

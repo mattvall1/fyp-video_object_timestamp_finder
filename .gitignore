@@ -5,13 +5,13 @@ app/temp_notes.md
 testing_videos/frame_generator/red_ball_frames
 testing_videos/frame_generator/temp_svg
 app/logs
-model_testing/azure_testing/api_key.txt
+testing/azure_testing/api_key.txt
 scripts/binary_search_theory/api_key.txt
 scripts/binary_search_theory/frames
-model_testing/results.csv
+testing/model_testing/results.csv
 nltk_data
-model_testing/testing_suite/testing_data
-model_testing/testing_suite/results
+testing/model_testing/testing_suite/testing_data
+testing/model_testing/testing_suite/results
 
 # Premade model testing
 runs/
