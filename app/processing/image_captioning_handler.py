@@ -10,9 +10,8 @@ from transformers import (
 
 
 class ImageCaptioningHandler:
-    def __init__(self, original_output_dir="key_frames"):
+    def __init__(self, original_output_dir="key_frames/"):
         self.original_output_dir = original_output_dir
-        self.object_output_dir = "key_frames/objects/"
         self.device = "mps"  # Use "cuda" for GPU, "mps" for Mac, "cpu" for CPU
         self.model = AutoModelForCausalLM.from_pretrained(
             "microsoft/Florence-2-large", trust_remote_code=True
@@ -54,6 +53,6 @@ class ImageCaptioningHandler:
 
         # Return key words
         return [
-            self.object_output_dir + "/" + frame,
+            self.original_output_dir + "/" + frame,
             detector_output[0],
         ]  # Example return value
