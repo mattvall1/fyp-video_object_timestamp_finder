@@ -20,7 +20,7 @@ class FileHandler:
         # Delete old frames
         Tools.clear_frame_directories()
 
-    # Method to split video into frames
+    # Method to split video into frames (TODO: Replace with key framing)
     def split_video(self):
         # Open video file
         video_cap = cv2.VideoCapture(self.file_path)
@@ -55,10 +55,10 @@ class FileHandler:
         video_cap.release()
 
         # Detect objects in frames
-        self.detect_objects()
+        self.generate_captions()
 
-    def detect_objects(self):
-        # Create instance of ObjectDetectionHandler
+    def generate_captions(self):
+        # Create instance of ImageCaptioningHandler
         frame_caption_generator = ImageCaptioningHandler(
             original_output_dir=self.original_output_dir
         )
@@ -74,11 +74,11 @@ class FileHandler:
             print(f"Processing frame {frame_count} of {self.total_frames}")
 
             # Caption frame
-            detector_output = frame_caption_generator.frame_caption(frame)
-            print("Generated caption: " + detector_output[1])
+            generator_output = frame_caption_generator.frame_caption(frame)
+            print("Generated caption: " + generator_output[1])
 
             # Display frame in preview window
-            self.frame_displayer.display_frame(detector_output[0])
+            self.frame_displayer.display_frame(generator_output[0])
 
             # Update progress bar (second half of bar)
             self.progress_bar.setValue(50 + int((frame_count / self.total_frames) * 50))

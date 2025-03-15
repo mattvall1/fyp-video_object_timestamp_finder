@@ -21,7 +21,7 @@ class ImageCaptioningHandler:
         )
         pass
 
-    def _get_detected_captions(self, frame_location, frame):
+    def get_captions(self, frame_location, frame):
         # Open and process the image
         image = Image.open(frame_location)
         inputs = self.processor(
@@ -49,10 +49,10 @@ class ImageCaptioningHandler:
         frame_location = self.original_output_dir + "/" + frame
 
         # Detect objects in frame and get detected object strings
-        detector_output = self._get_detected_captions(frame_location, frame)
+        caption_output = self.get_captions(frame_location, frame)
 
         # Return key words
         return [
             self.original_output_dir + "/" + frame,
-            detector_output[0],
+            caption_output[0],
         ]  # Example return value
