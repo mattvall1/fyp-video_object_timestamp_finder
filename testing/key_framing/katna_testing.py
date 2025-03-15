@@ -9,7 +9,7 @@ def get_keyframes():
     vid = Video()
 
     # Settings
-    output_dir = "key_frames_katna"
+    output_dir = "outputs/key_frames_katna"
     video_path = "../../testing_videos/highway_driving.mp4"
     total_frames_to_retrieve = 10
 

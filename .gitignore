@@ -12,6 +12,7 @@ testing/model_testing/results.csv
 nltk_data
 testing/model_testing/testing_suite/testing_data
 testing/model_testing/testing_suite/results
+testing/key_framing/outputs
 
 # Premade model testing
 runs/
