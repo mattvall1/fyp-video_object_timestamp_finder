@@ -59,7 +59,7 @@ class FileHandler:
 
     def detect_objects(self):
         # Create instance of ObjectDetectionHandler
-        object_detection_handler = ImageCaptioningHandler(
+        frame_caption_generator = ImageCaptioningHandler(
             original_output_dir=self.original_output_dir
         )
 
@@ -73,13 +73,9 @@ class FileHandler:
         for frame in frames_path_list:
             print(f"Processing frame {frame_count} of {self.total_frames}")
 
-            # Detect objects in frame
-            detector_output = object_detection_handler.detect_objects(
-                frame
-            )  # Example return value
-            print(
-                "Detected key words: " + ", ".join(detector_output[1])
-            )  # Example return value
+            # Caption frame
+            detector_output = frame_caption_generator.frame_caption(frame)
+            print("Generated caption: " + detector_output[1])
 
             # Display frame in preview window
             self.frame_displayer.display_frame(detector_output[0])

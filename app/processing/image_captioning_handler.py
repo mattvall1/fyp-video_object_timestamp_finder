@@ -1,38 +1,52 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Image Captioning Handler
-from ultralytics import YOLO
+# Purpose: Image Captioning Handler (Florence2)
+from PIL import Image
+import torch
+from transformers import (
+    AutoProcessor,
+    AutoModelForCausalLM,
+)
 
 
 class ImageCaptioningHandler:
     def __init__(self, original_output_dir="key_frames"):
         self.original_output_dir = original_output_dir
         self.object_output_dir = "key_frames/objects/"
-        self.model = YOLO(
-            "processing/captioning_models/yolo_pretrained.pt"
-        )  # Load pretrained model
+        self.device = "mps"  # Use "cuda" for GPU, "mps" for Mac, "cpu" for CPU
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "microsoft/Florence-2-large", trust_remote_code=True
+        ).to(self.device)
+        self.processor = AutoProcessor.from_pretrained(
+            "microsoft/Florence-2-large", trust_remote_code=True
+        )
         pass
 
     def _get_detected_captions(self, frame_location, frame):
-        # Perform object detection on an image
-        detection = self.model(frame_location)
-        detection_output_filename = self.object_output_dir + f"{frame}.jpg"
+        # Open and process the image
+        image = Image.open(frame_location)
+        inputs = self.processor(
+            images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt"
+        ).to(self.device)
 
-        # Get possible objects to detect
-        possible_objects = detection[0].names
-
-        # Get a list of names of detected objects
-        detected_objects = []
-        for cls in detection[0].boxes.cls:
-            detected_objects.append(possible_objects[cls.item()])
-
-        # Save the image with the bounding boxes drawn on
-        detection[0].save(detection_output_filename)
+        with torch.no_grad():
+            generated_ids = self.model.generate(
+                input_ids=inputs["input_ids"],
+                pixel_values=inputs["pixel_values"],
+                max_new_tokens=1024,
+                do_sample=False,
+                num_beams=3,
+            )
+            caption = self.processor.post_process_generation(
+                self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0],
+                task="<MORE_DETAILED_CAPTION>",
+                image_size=(image.width, image.height),
+            )["<MORE_DETAILED_CAPTION>"]
 
         # Return key words
-        return [detected_objects, detection_output_filename]
+        return [caption, "None"]
 
-    def detect_objects(self, frame):
+    def frame_caption(self, frame):
         frame_location = self.original_output_dir + "/" + frame
 
         # Detect objects in frame and get detected object strings
