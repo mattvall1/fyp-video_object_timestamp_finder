@@ -7,71 +7,41 @@ import os
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
-
+from app.processing.key_framing import KeyFraming
 
 class FileHandler:
     def __init__(self, file_path, preview_element, progress_bar):
         self.file_path = file_path
         self.frame_displayer = FrameDisplayer(preview_element)
         self.progress_bar = progress_bar
-        self.original_output_dir = "key_frames"
-        self.total_frames = 0
+        self.output_dir = "key_frames"
 
         # Delete old frames
         Tools.clear_frame_directories()
 
-    # Method to split video into frames (TODO: Replace with key framing)
-    def split_video(self):
-        # Open video file
-        video_cap = cv2.VideoCapture(self.file_path)
-        if not video_cap.isOpened():
-            print(f"Error: Could not open video file {self.file_path}")
-            return
+    # Extract keyframes from video
+    def extract_keyframes(self):
+        # Create instance of KeyFraming
+        key_fr = KeyFraming(file_path=self.file_path, output_dir=self.output_dir, frames_to_retrieve=10)
+        key_fr.extract_keyframes()
 
-        success, image = video_cap.read()
-        if not success:
-            print("Error: Could not read video")
-            video_cap.release()
-            return
-
-        self.total_frames = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        count = 0
-
-        while success:
-            # Save frame as JPEG file
-            frame_path = os.path.join(self.original_output_dir, f"{count:04d}.jpg")
-            cv2.imwrite(frame_path, image)
-            success, image = video_cap.read()
-            print(f"Saving frame '{frame_path}'")
-
-            # Display frame in preview window
-            self.frame_displayer.display_frame(frame_path)
-
-            count += 1
-
-            # Update progress bar (first half of bar)
-            self.progress_bar.setValue(int((count / self.total_frames) * 50))
-
-        video_cap.release()
-
-        # Detect objects in frames
+        # Generate captions for keyframes
         self.generate_captions()
 
     def generate_captions(self):
         # Create instance of ImageCaptioningHandler
         frame_caption_generator = ImageCaptioningHandler(
-            original_output_dir=self.original_output_dir
+            original_output_dir=self.output_dir
         )
 
-        # Order frames by number
-        frames_path_list = sorted(
-            os.listdir(self.original_output_dir), key=lambda x: int(x.split(".")[0])
-        )
+        # Get list of frames sorted alphabetically, and get total frames
+        frames_path_list = sorted(os.listdir(self.output_dir))
+        total_frames = len(frames_path_list)
 
         # Loop through frames and detect objects
         frame_count = 1
         for frame in frames_path_list:
-            print(f"Processing frame {frame_count} of {self.total_frames}")
+            print(f"Processing frame {frame_count} of {total_frames}")
 
             # Caption frame
             generator_output = frame_caption_generator.frame_caption(frame)
@@ -81,5 +51,5 @@ class FileHandler:
             self.frame_displayer.display_frame(generator_output[0])
 
             # Update progress bar (second half of bar)
-            self.progress_bar.setValue(50 + int((frame_count / self.total_frames) * 50))
+            self.progress_bar.setValue(50 + int((frame_count / total_frames) * 50))
             frame_count += 1

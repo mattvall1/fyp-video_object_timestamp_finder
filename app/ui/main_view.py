@@ -15,7 +15,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.file_handler = None
         self.select_file_text = None
         uic.loadUi("ui/main_view.ui", self)
-        self.show()
 
         # Configure
         logging.basicConfig(
@@ -65,9 +64,4 @@ class MainWindow(QtWidgets.QMainWindow):
             preview_element=self.preview_element,
             progress_bar=self.progress_bar,
         )
-        self.file_handler.split_video()
-
-
-app = QtWidgets.QApplication(sys.argv)
-window = MainWindow()
-sys.exit(app.exec())
+        self.file_handler.extract_keyframes()
