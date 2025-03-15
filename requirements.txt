@@ -1,7 +1,9 @@
 black
 CairoSVG
 einops
+ffmpeg-python
 ftfy
+katna
 msrest
 open_clip_torch
 opencv-python
