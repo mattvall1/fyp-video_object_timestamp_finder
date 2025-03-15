@@ -21,7 +21,6 @@ from transformers import (
 )
 
 
-
 # Setup results file
 def setup_results_file():
     with open("results/auto_results.csv", "a", newline="\n") as rf:
@@ -141,12 +140,12 @@ if __name__ == "__main__":
 
     # ---------- BLIP ----------
     # Load the model
-    blip_processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    blip_processor = AutoProcessor.from_pretrained(
+        "Salesforce/blip-image-captioning-base"
+    )
     blip_model = AutoModelForImageTextToText.from_pretrained(
         "Salesforce/blip-image-captioning-base"
     ).to(device)
-
-
 
     print("Models loaded, starting test...")
     # Get model scores
@@ -177,7 +176,9 @@ if __name__ == "__main__":
         print(f"Reference(s): {reference_captions[i]}")
 
         # ---------- Run OpenCLIP ----------
-        transformed_image = openclip_transform(image).unsqueeze(0).to(torch.float32).to(device)
+        transformed_image = (
+            openclip_transform(image).unsqueeze(0).to(torch.float32).to(device)
+        )
 
         with torch.no_grad():
             generation = openclip_model.generate(transformed_image)
@@ -192,21 +193,24 @@ if __name__ == "__main__":
         print(f"OpenCLIP Candidate: {openclip_candidate_caption}")
 
         # Calculate scores and save results
-        calculate_scores_save("OpenCLIP", reference_captions[i], openclip_candidate_caption)
+        calculate_scores_save(
+            "OpenCLIP", reference_captions[i], openclip_candidate_caption
+        )
 
         # ---------- Run BLIP ----------
         inputs = blip_processor(images=image, text=[""], return_tensors="pt").to(device)
 
         with torch.no_grad():
             outputs = blip_model.generate(**inputs, max_new_tokens=50)
-            blip_candidate_caption = blip_processor.decode(outputs[0], skip_special_tokens=True)
+            blip_candidate_caption = blip_processor.decode(
+                outputs[0], skip_special_tokens=True
+            )
 
         # Print candidate caption
         print(f"BLIP Candidate: {blip_candidate_caption}")
 
         # Calculate scores and save results
         calculate_scores_save("BLIP", reference_captions[i], blip_candidate_caption)
-
 
         # Print progress
         completion_percentage += 1
