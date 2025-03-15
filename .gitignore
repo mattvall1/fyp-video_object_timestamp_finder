@@ -6,8 +6,8 @@ testing_videos/frame_generator/red_ball_frames
 testing_videos/frame_generator/temp_svg
 app/logs
 testing/azure_testing/api_key.txt
-scripts/binary_search_theory/api_key.txt
-scripts/binary_search_theory/frames
+testing/binary_search_theory/api_key.txt
+testing/binary_search_theory/frames
 testing/model_testing/results.csv
 nltk_data
 testing/model_testing/testing_suite/testing_data
