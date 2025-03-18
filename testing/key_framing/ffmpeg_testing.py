@@ -19,13 +19,14 @@ def get_keyframes_ffmpeg():
 
     # ffmpeg filter complex
     (
-        ffmpeg
-        .input(video_path)
-        .filter('select', 'eq(pict_type,I)')
-        .output(output_pattern,
-                vsync='vfr',
-                q=0,  # Quality scale - 0 is lossless, we want minimal performance loss, compression is not a concern
-                vframes=total_frames_to_retrieve)
+        ffmpeg.input(video_path)
+        .filter("select", "eq(pict_type,I)")
+        .output(
+            output_pattern,
+            vsync="vfr",
+            q=0,  # Quality scale - 0 is lossless, we want minimal performance loss, compression is not a concern
+            vframes=total_frames_to_retrieve,
+        )
         .overwrite_output()
         .run()
     )

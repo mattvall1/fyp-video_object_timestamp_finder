@@ -8,6 +8,7 @@ from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
 from app.processing.key_framing import KeyFraming
 
+
 class FileHandler:
     def __init__(self, file_path, preview_element, progress_bar):
         self.file_path = file_path
@@ -21,7 +22,9 @@ class FileHandler:
     # Extract keyframes from video
     def extract_keyframes(self):
         # Create instance of KeyFraming
-        key_fr = KeyFraming(file_path=self.file_path, output_dir=self.output_dir, frames_to_retrieve=10)
+        key_fr = KeyFraming(
+            file_path=self.file_path, output_dir=self.output_dir, frames_to_retrieve=10
+        )
         key_fr.extract_keyframes()
 
         # Generate captions for keyframes

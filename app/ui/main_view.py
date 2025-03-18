@@ -71,13 +71,13 @@ class MainWindow(QtWidgets.QMainWindow):
         # TODO: Here we want to do text analysis
 
         # Check if file path and search term are set
-        if hasattr(self, '_selected_file_path') and self.search_term:
+        if hasattr(self, "_selected_file_path") and self.search_term:
             self.create_file_handler(self._selected_file_path)
-        elif not hasattr(self, '_selected_file_path') and not self.search_term:
+        elif not hasattr(self, "_selected_file_path") and not self.search_term:
             print("No file selected or search term provided")
         elif not self.search_term:
             print("No search term provided")
-        elif not hasattr(self, '_selected_file_path'):
+        elif not hasattr(self, "_selected_file_path"):
             print("No file selected")
 
     def create_file_handler(self, file_path):

@@ -4,6 +4,7 @@
 from Katna.video import Video
 from Katna.writer import KeyFrameDiskWriter
 
+
 def get_keyframes():
     # Instantiate the video object
     vid = Video()
@@ -18,9 +19,9 @@ def get_keyframes():
 
     # Extract keyframes and process data
     vid.extract_video_keyframes(
-        no_of_frames=total_frames_to_retrieve, file_path=video_path,
-        writer=diskwriter
+        no_of_frames=total_frames_to_retrieve, file_path=video_path, writer=diskwriter
     )
+
 
 if __name__ == "__main__":
     get_keyframes()

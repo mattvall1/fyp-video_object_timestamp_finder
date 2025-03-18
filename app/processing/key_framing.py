@@ -5,7 +5,8 @@ import shutil
 from Katna.video import Video
 from Katna.writer import KeyFrameDiskWriter
 
-class KeyFraming():
+
+class KeyFraming:
     def __init__(self, file_path, output_dir, frames_to_retrieve):
         self.file_path = file_path
         self.video = Video()

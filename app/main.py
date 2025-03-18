@@ -6,6 +6,7 @@ from PyQt6 import QtWidgets
 from global_tools import Tools
 from app.ui.main_view import MainWindow
 
+
 def main():
     # Create all required directories
     Tools.create_directories()
@@ -15,6 +16,7 @@ def main():
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
