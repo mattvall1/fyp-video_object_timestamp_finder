@@ -13,7 +13,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.file_handler = None
+        self._selected_file_path = None
         self.select_file_text = None
+        self.search_term = None
         uic.loadUi("ui/main_view.ui", self)
 
         # Configure
@@ -26,6 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.select_file_button = self.findChild(
             QtWidgets.QPushButton, "select_file_button"
         )
+        self.find_text = self.findChild(QtWidgets.QLineEdit, "find_text")
         self.find_button = self.findChild(QtWidgets.QPushButton, "find_button")
         self.preview_element = self.findChild(QtWidgets.QGraphicsView, "preview_frame")
         self.prev_button = self.findChild(QtWidgets.QPushButton, "prev_button")
@@ -51,11 +54,31 @@ class MainWindow(QtWidgets.QMainWindow):
             self, "Open File", "/", "Video Files (*.mp4 *.mkv)", options=options
         )
 
+        # Retrieve search term
         if file_path:
             self.select_file_text.setText(file_path.split("/")[-1])
-            self.find_button.clicked.connect(
-                lambda: self.create_file_handler(file_path)
-            )
+            # Store file path for later use when find button is clicked
+            self._selected_file_path = file_path
+            # Connect find button if not already connected
+            self.find_button.clicked.connect(self.handle_find_button)
+        elif not file_path:
+            print("No file selected")
+
+    def handle_find_button(self):
+        # Get search term
+        self.search_term = self.find_text.text()
+
+        # TODO: Here we want to do text analysis
+
+        # Check if file path and search term are set
+        if hasattr(self, '_selected_file_path') and self.search_term:
+            self.create_file_handler(self._selected_file_path)
+        elif not hasattr(self, '_selected_file_path') and not self.search_term:
+            print("No file selected or search term provided")
+        elif not self.search_term:
+            print("No search term provided")
+        elif not hasattr(self, '_selected_file_path'):
+            print("No file selected")
 
     def create_file_handler(self, file_path):
         # Create file handler instance and play video

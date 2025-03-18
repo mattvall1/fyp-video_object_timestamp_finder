@@ -88,7 +88,7 @@
      <string>Select File...</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="find_text">
     <property name="geometry">
      <rect>
       <x>450</x>

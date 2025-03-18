@@ -2,7 +2,6 @@
 # COMP1682 Final Year Project.
 # Purpose: File handler
 
-import cv2
 import os
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
