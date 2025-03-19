@@ -3,7 +3,7 @@
 # Purpose: Process text inputs and outputs
 
 
-class LanguageHandler:
+class TextHandler:
     def __init__(self):
         pass
 
