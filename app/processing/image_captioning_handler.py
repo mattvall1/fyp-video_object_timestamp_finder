@@ -10,7 +10,7 @@ from transformers import (
 
 
 class ImageCaptioningHandler:
-    def __init__(self, original_output_dir="key_frames/"):
+    def __init__(self, original_output_dir="data/key_frames/"):
         self.original_output_dir = original_output_dir
         self.device = "mps"  # Use "cuda" for GPU, "mps" for Mac, "cpu" for CPU
         self.model = AutoModelForCausalLM.from_pretrained(

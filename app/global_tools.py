@@ -5,7 +5,7 @@ import os
 class Tools:
     @staticmethod
     def clear_frame_directories():
-        directories = ["key_frames"]
+        directories = ["data/key_frames", "data/data_files"]
         count = 0
         for directory in directories:
             for file_name in os.listdir(directory):
@@ -17,7 +17,7 @@ class Tools:
 
     @staticmethod
     def create_directories():
-        directories = ["key_frames", "logs"]
+        directories = ["data", "data/data_files", "data/key_frames", "logs"]
         for directory in directories:
             os.makedirs(directory, exist_ok=True)
             print(f"Created directory: {directory}")

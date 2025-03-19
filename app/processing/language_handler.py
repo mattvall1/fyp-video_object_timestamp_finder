@@ -14,3 +14,5 @@ class LanguageHandler:
     # Get synonyms for a word
     def get_word_synonyms(self, text):
         pass
+
+

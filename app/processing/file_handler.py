@@ -14,7 +14,7 @@ class FileHandler:
         self.file_path = file_path
         self.frame_displayer = FrameDisplayer(preview_element)
         self.progress_bar = progress_bar
-        self.output_dir = "key_frames"
+        self.output_dir = "data/key_frames"
 
         # Delete old frames
         Tools.clear_frame_directories()
