@@ -3,10 +3,21 @@
 # Purpose: File handler
 
 import os
+import csv
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
 from app.processing.key_framing import KeyFraming
+
+
+# Function to set up CSV writer, so we can write results to it (without recreating it each time)
+def setup_caption_file(video_name):
+    # Open the CSV file to write results to
+    captions_file = open(f"data/data_files/{video_name}_captions.csv", "w", newline="\n")
+    csv_writer = csv.writer(captions_file)
+
+    # Start writer for use later
+    return csv_writer, captions_file
 
 
 class FileHandler:
@@ -18,6 +29,9 @@ class FileHandler:
 
         # Delete old frames
         Tools.clear_frame_directories()
+
+        # Create writer for caption file
+        self.csv_writer, self.results_file = setup_caption_file(file_path.split(".")[0].split("/")[-1])
 
     # Extract keyframes from video
     def extract_keyframes(self):
@@ -52,6 +66,19 @@ class FileHandler:
             # Display frame in preview window
             self.frame_displayer.display_frame(generator_output[0])
 
+            # Save caption to CSV
+            self.save_caption(frame, generator_output[1])
+
             # Update progress bar (second half of bar)
             self.progress_bar.setValue(50 + int((frame_count / total_frames) * 50))
             frame_count += 1
+
+        # Close the CSV file after writing all captions
+        self.results_file.close()
+
+
+    def save_caption(self, frame, caption):
+        # Save the caption to a text file, using the writer created earlier
+        self.csv_writer.writerow([frame, caption])
+        print(f"Caption saved for frame")
+
