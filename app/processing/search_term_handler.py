@@ -3,7 +3,7 @@
 # Purpose: Process text inputs and outputs
 
 
-class TextHandler:
+class SearchTermHandler:
     def __init__(self):
         pass
 
@@ -15,6 +15,8 @@ class TextHandler:
     def get_word_synonyms(self, text):
         pass
 
+    def get_words_to_search(self):
+        pass
 
 
 
