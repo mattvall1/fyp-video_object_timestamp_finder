@@ -6,6 +6,7 @@ from datetime import datetime
 import logging
 from PyQt6 import QtWidgets, uic
 from app.processing.file_handler import FileHandler
+from app.processing.search_term_handler import SearchTermHandler
 from app.ui.console_handler import ConsoleHandler
 
 
@@ -68,11 +69,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # Get search term
         self.search_term = self.find_text.text()
 
-        # TODO: Here we want to do text analysis
-
         # Check if file path and search term are set
         if hasattr(self, "_selected_file_path") and self.search_term:
-            self.create_file_handler(self._selected_file_path)
+            self.manage_search_term()
+            self.create_file_handler()
         elif not hasattr(self, "_selected_file_path") and not self.search_term:
             print("No file selected or search term provided")
         elif not self.search_term:
@@ -80,11 +80,17 @@ class MainWindow(QtWidgets.QMainWindow):
         elif not hasattr(self, "_selected_file_path"):
             print("No file selected")
 
-    def create_file_handler(self, file_path):
+
+    def create_file_handler(self):
         # Create file handler instance and play video
         self.file_handler = FileHandler(
-            file_path,
+            self._selected_file_path,
             preview_element=self.preview_element,
             progress_bar=self.progress_bar,
         )
         self.file_handler.extract_keyframes()
+
+    def manage_search_term(self):
+        # Create a SearchTermHandler instance
+        search_term_handler = SearchTermHandler(self.find_text.text())
+
