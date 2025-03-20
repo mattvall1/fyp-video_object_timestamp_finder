@@ -6,7 +6,7 @@ from datetime import datetime
 import logging
 from PyQt6 import QtWidgets, uic
 from app.processing.file_handler import FileHandler
-from app.processing.search_term_handler import SearchTermHandler
+from app.processing.language_handler import LanguageHandler
 from app.ui.console_handler import ConsoleHandler
 
 
@@ -16,7 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.file_handler = None
         self._selected_file_path = None
         self.select_file_text = None
-        self.search_term = None
+        self.search_term_handler = None
         uic.loadUi("ui/main_view.ui", self)
 
         # Configure
@@ -67,30 +67,28 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def handle_find_button(self):
         # Get search term
-        self.search_term = self.find_text.text()
+        search_term = self.find_text.text()
 
         # Check if file path and search term are set
-        if hasattr(self, "_selected_file_path") and self.search_term:
-            self.manage_search_term()
+        if hasattr(self, "_selected_file_path") and search_term:
+            # Create a SearchTermHandler instance
+            self.search_term_handler = LanguageHandler(search_term)
             self.create_file_handler()
-        elif not hasattr(self, "_selected_file_path") and not self.search_term:
+        elif not hasattr(self, "_selected_file_path") and not search_term:
             print("No file selected or search term provided")
-        elif not self.search_term:
+        elif not search_term:
             print("No search term provided")
         elif not hasattr(self, "_selected_file_path"):
             print("No file selected")
-
 
     def create_file_handler(self):
         # Create file handler instance and play video
         self.file_handler = FileHandler(
             self._selected_file_path,
             preview_element=self.preview_element,
+            search_term_handler=self.search_term_handler,
             progress_bar=self.progress_bar,
         )
         self.file_handler.extract_keyframes()
 
-    def manage_search_term(self):
-        # Create a SearchTermHandler instance
-        search_term_handler = SearchTermHandler(self.find_text.text())
 

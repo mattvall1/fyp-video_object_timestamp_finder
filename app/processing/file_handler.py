@@ -21,9 +21,10 @@ def setup_caption_file(video_name):
 
 
 class FileHandler:
-    def __init__(self, file_path, preview_element, progress_bar):
+    def __init__(self, file_path, preview_element, search_term_handler, progress_bar):
         self.file_path = file_path
         self.frame_displayer = FrameDisplayer(preview_element)
+        self.search_term_handler = search_term_handler
         self.progress_bar = progress_bar
         self.output_dir = "data/key_frames"
 
@@ -42,9 +43,9 @@ class FileHandler:
         key_fr.extract_keyframes()
 
         # Generate captions for keyframes
-        self.generate_captions()
+        self.process_keyframes()
 
-    def generate_captions(self):
+    def process_keyframes(self):
         # Create instance of ImageCaptioningHandler
         frame_caption_generator = ImageCaptioningHandler(
             original_output_dir=self.output_dir
@@ -65,6 +66,14 @@ class FileHandler:
 
             # Display frame in preview window
             self.frame_displayer.display_frame(generator_output[0])
+
+            # Compare caption to search term
+            search_results = self.search_term_handler.compare_caption_to_search_term(generator_output[1])
+            # TEMP PRINT
+            if search_results:
+                print(f"Search term found: {", ".join(search_results)}")
+            else:
+                print("Search term not found")
 
             # Save caption to CSV
             self.save_caption(frame, generator_output[1])

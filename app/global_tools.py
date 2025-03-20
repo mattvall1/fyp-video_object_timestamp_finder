@@ -13,7 +13,8 @@ class Tools:
                 if os.path.isfile(file_path):
                     os.remove(file_path)
                     count += 1
-        print(f"Deleted {count} files")
+
+        return count
 
     @staticmethod
     def create_directories():

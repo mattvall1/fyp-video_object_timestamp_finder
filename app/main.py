@@ -10,7 +10,8 @@ from app.ui.main_view import MainWindow
 def main():
     # Create all required directories
     Tools.create_directories()
-    Tools.clear_frame_directories()
+    deletions = Tools.clear_frame_directories()
+    print(f"Deleted {deletions} files.")
 
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
