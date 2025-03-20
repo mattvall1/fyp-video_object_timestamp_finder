@@ -21,11 +21,11 @@ def setup_caption_file(video_name):
 
 
 class FileHandler:
-    def __init__(self, file_path, preview_element, search_term_handler, progress_bar):
+    def __init__(self, file_path, element_handler):
         self.file_path = file_path
-        self.frame_displayer = FrameDisplayer(preview_element)
-        self.search_term_handler = search_term_handler
-        self.progress_bar = progress_bar
+        self.element_handler = element_handler
+        self.frame_displayer = FrameDisplayer(self.element_handler.preview_element)
+        self.progress_bar = self.element_handler.progress_bar
         self.output_dir = "data/key_frames"
 
         # Delete old frames
@@ -68,10 +68,14 @@ class FileHandler:
             self.frame_displayer.display_frame(generator_output[0])
 
             # Compare caption to search term
-            search_results = self.search_term_handler.compare_caption_to_search_term(generator_output[1])
+            search_results = self.element_handler.search_term_handler.compare_caption_to_search_term(generator_output[1])
             # TEMP PRINT
             if search_results:
                 print(f"Search term found: {", ".join(search_results)}")
+                print("PAUSE SIGNAL")
+                # Pause processing
+
+
             else:
                 print("Search term not found")
 

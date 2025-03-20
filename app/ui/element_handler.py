@@ -10,6 +10,7 @@ class ElementHandler:
         # Get reference to the main window
         self.main_window = main_window
         self._selected_file_path = None
+        self.search_term_handler = None
         
         # Find all UI elements
         self.select_file_button = self.main_window.findChild(QtWidgets.QPushButton, "select_file_button")
@@ -58,7 +59,7 @@ class ElementHandler:
         # Check if file path and search term are set
         if self._selected_file_path and search_term:
             # Create a SearchTermHandler instance
-            self.main_window.search_term_handler = LanguageHandler(search_term)
+            self.search_term_handler = LanguageHandler(search_term)
             self.main_window._selected_file_path = self._selected_file_path
             self.main_window.create_file_handler()
         elif not self._selected_file_path and not search_term:

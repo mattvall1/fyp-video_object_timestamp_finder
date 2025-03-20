@@ -15,7 +15,6 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.file_handler = None
         self._selected_file_path = None
-        self.search_term_handler = None
         uic.loadUi("ui/main_view.ui", self)
 
         # Configure
@@ -25,18 +24,16 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         
         # Initialize button handler
-        self.button_handler = ElementHandler(self)
+        self.element_handler = ElementHandler(self)
         
         # Redirect standard output to console
-        sys.stdout = ConsoleHandler(self.button_handler.information_output)
+        sys.stdout = ConsoleHandler(self.element_handler.information_output)
 
     def create_file_handler(self):
         # Create file handler instance and play video
         self.file_handler = FileHandler(
             self._selected_file_path,
-            preview_element=self.button_handler.preview_element,
-            search_term_handler=self.search_term_handler,
-            progress_bar=self.button_handler.progress_bar,
+            element_handler=self.element_handler,
         )
         self.file_handler.extract_keyframes()
 
