@@ -5,29 +5,26 @@
 from PyQt6 import QtWidgets
 from app.processing.language_handler import LanguageHandler
 
-class ButtonHandler:
+class ElementHandler:
     def __init__(self, main_window):
         # Get reference to the main window
         self.main_window = main_window
         self._selected_file_path = None
         
         # Find all UI elements
-        self.select_file_button = self.main_window.findChild(
-            QtWidgets.QPushButton, "select_file_button"
-        )
+        self.select_file_button = self.main_window.findChild(QtWidgets.QPushButton, "select_file_button")
         self.select_file_text = self.main_window.findChild(QtWidgets.QLineEdit, "select_file_text")
         self.find_text = self.main_window.findChild(QtWidgets.QLineEdit, "find_text")
         self.find_button = self.main_window.findChild(QtWidgets.QPushButton, "find_button")
+
         self.preview_element = self.main_window.findChild(QtWidgets.QGraphicsView, "preview_frame")
+
         self.prev_button = self.main_window.findChild(QtWidgets.QPushButton, "prev_button")
-        self.start_stop_button = self.main_window.findChild(
-            QtWidgets.QPushButton, "start_stop_button"
-        )
+        self.start_stop_button = self.main_window.findChild(QtWidgets.QPushButton, "start_stop_button")
         self.next_button = self.main_window.findChild(QtWidgets.QPushButton, "next_button")
-        self.information_output = self.main_window.findChild(
-            QtWidgets.QTextEdit, "information_output"
-        )
+
         self.progress_bar = self.main_window.findChild(QtWidgets.QProgressBar, "progress_bar")
+        self.information_output = self.main_window.findChild(QtWidgets.QTextEdit, "information_output")
         
         # Connect button click events to methods
         self.connect_buttons()
@@ -70,3 +67,16 @@ class ButtonHandler:
             print("No search term provided")
         elif not self._selected_file_path:
             print("No file selected")
+
+    def prev_button(self):
+        print("Previous button clicked")
+        pass
+
+    def start_stop_button(self):
+        print("Start/Stop button clicked")
+        return True
+
+    def next_button(self):
+        print("Next button clicked")
+        pass
+

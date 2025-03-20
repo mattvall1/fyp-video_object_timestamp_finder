@@ -7,7 +7,7 @@ import logging
 from PyQt6 import QtWidgets, uic
 from app.processing.file_handler import FileHandler
 from app.ui.console_handler import ConsoleHandler
-from app.ui.button_handler import ButtonHandler
+from app.ui.element_handler import ElementHandler
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
         
         # Initialize button handler
-        self.button_handler = ButtonHandler(self)
+        self.button_handler = ElementHandler(self)
         
         # Redirect standard output to console
         sys.stdout = ConsoleHandler(self.button_handler.information_output)
