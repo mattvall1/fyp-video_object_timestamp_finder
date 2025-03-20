@@ -6,8 +6,8 @@ from datetime import datetime
 import logging
 from PyQt6 import QtWidgets, uic
 from app.processing.file_handler import FileHandler
-from app.processing.language_handler import LanguageHandler
 from app.ui.console_handler import ConsoleHandler
+from app.ui.button_handler import ButtonHandler
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -15,7 +15,6 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.file_handler = None
         self._selected_file_path = None
-        self.select_file_text = None
         self.search_term_handler = None
         uic.loadUi("ui/main_view.ui", self)
 
@@ -24,70 +23,20 @@ class MainWindow(QtWidgets.QMainWindow):
             filename=f"logs/{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_log.txt",
             level=logging.INFO,
         )
-
-        # Access elements from UI
-        self.select_file_button = self.findChild(
-            QtWidgets.QPushButton, "select_file_button"
-        )
-        self.find_text = self.findChild(QtWidgets.QLineEdit, "find_text")
-        self.find_button = self.findChild(QtWidgets.QPushButton, "find_button")
-        self.preview_element = self.findChild(QtWidgets.QGraphicsView, "preview_frame")
-        self.prev_button = self.findChild(QtWidgets.QPushButton, "prev_button")
-        self.start_stop_button = self.findChild(
-            QtWidgets.QPushButton, "start_stop_button"
-        )
-        self.next_button = self.findChild(QtWidgets.QPushButton, "next_button")
-        self.information_output = self.findChild(
-            QtWidgets.QTextEdit, "information_output"
-        )
-        self.progress_bar = self.findChild(QtWidgets.QProgressBar, "progress_bar")
-
+        
+        # Initialize button handler
+        self.button_handler = ButtonHandler(self)
+        
         # Redirect standard output to console
-        sys.stdout = ConsoleHandler(self.information_output)
-
-        # Connect button click event to method
-        self.select_file_button.clicked.connect(self.show_file_selector)
-
-    def show_file_selector(self):
-        file_dialog = QtWidgets.QFileDialog()
-        options = file_dialog.options()
-        file_path, _ = file_dialog.getOpenFileName(
-            self, "Open File", "/", "Video Files (*.mp4 *.mkv)", options=options
-        )
-
-        # Retrieve search term
-        if file_path:
-            self.select_file_text.setText(file_path.split("/")[-1])
-            # Store file path for later use when find button is clicked
-            self._selected_file_path = file_path
-            # Connect find button if not already connected
-            self.find_button.clicked.connect(self.handle_find_button)
-        elif not file_path:
-            print("No file selected")
-
-    def handle_find_button(self):
-        # Get search term
-        search_term = self.find_text.text()
-
-        # Check if file path and search term are set
-        if hasattr(self, "_selected_file_path") and search_term:
-            # Create a SearchTermHandler instance
-            self.search_term_handler = LanguageHandler(search_term)
-            self.create_file_handler()
-        elif not hasattr(self, "_selected_file_path") and not search_term:
-            print("No file selected or search term provided")
-        elif not search_term:
-            print("No search term provided")
-        elif not hasattr(self, "_selected_file_path"):
-            print("No file selected")
+        sys.stdout = ConsoleHandler(self.button_handler.information_output)
 
     def create_file_handler(self):
         # Create file handler instance and play video
         self.file_handler = FileHandler(
             self._selected_file_path,
-            preview_element=self.preview_element,
+            preview_element=self.button_handler.preview_element,
             search_term_handler=self.search_term_handler,
-            progress_bar=self.progress_bar,
+            progress_bar=self.button_handler.progress_bar,
         )
         self.file_handler.extract_keyframes()
 
