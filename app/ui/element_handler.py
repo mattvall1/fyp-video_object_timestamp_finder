@@ -36,6 +36,15 @@ class ElementHandler:
 
         # Connect the find button to the find handler
         self.find_button.clicked.connect(self.handle_find_button)
+
+        # Connect the previous button to the previous handler
+        self.prev_button.clicked.connect(self.handle_prev_button)
+
+        # Connect the start/stop button to the start/stop handler
+        self.start_stop_button.clicked.connect(self.handle_start_stop_button)
+
+        # Connect the next button to the next handler
+        self.next_button.clicked.connect(self.handle_next_button)
     
     def show_file_selector(self):
         file_dialog = QtWidgets.QFileDialog()
@@ -69,15 +78,15 @@ class ElementHandler:
         elif not self._selected_file_path:
             print("No file selected")
 
-    def prev_button(self):
+    def handle_prev_button(self):
         print("Previous button clicked")
         pass
 
-    def start_stop_button(self):
+    def handle_start_stop_button(self):
         print("Start/Stop button clicked")
         return True
 
-    def next_button(self):
+    def handle_next_button(self):
         print("Next button clicked")
         pass
 
