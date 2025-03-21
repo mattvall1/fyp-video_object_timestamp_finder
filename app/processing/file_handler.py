@@ -38,7 +38,7 @@ class FileHandler:
     def extract_keyframes(self):
         # Create instance of KeyFraming
         key_fr = KeyFraming(
-            file_path=self.file_path, output_dir=self.output_dir, frames_to_retrieve=10
+            file_path=self.file_path, output_dir=self.output_dir, frame_displayer=self.frame_displayer
         )
         key_fr.extract_keyframes()
 
