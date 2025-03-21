@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 
 
 class KeyFraming:
-    # pylint: disable=too-few-public-methods
+    # TODO: In report Explain what these pylint things do
+    # pylint: disable=too-few-public-methods,too-many-arguments,too-many-positional-arguments
     """Handles the extraction of key frames from video files by using S Ghatak's method."""
 
     def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
@@ -130,7 +131,8 @@ class KeyFraming:
 
         return hist_1, hist_2
 
-    # Module 3 - Calculate threshold  TODO: This is slightly different to the paper, this should run within the loop, but this makes more sense
+    # Module 3 - Calculate threshold
+    # TODO: This is slightly different to the paper, possibly change?
     @staticmethod
     def _calculate_threshold(frame_diffs, const):
         # Get the mean of the differences

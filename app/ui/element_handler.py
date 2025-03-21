@@ -7,6 +7,7 @@ from app.processing.language_handler import LanguageHandler
 
 
 class ElementHandler:
+    # pylint: disable=too-many-instance-attributes
     """Handles UI elements and their interactions in the application."""
 
     def __init__(self, main_window):
