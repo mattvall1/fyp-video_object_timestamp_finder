@@ -69,16 +69,23 @@ class KeyFraming:
             frame_2_gray = cv2.cvtColor(frame_2, cv2.COLOR_BGR2GRAY)
 
             # Generate histograms
-            self.generate_histograms(frame_1_gray, frame_2_gray, frame_1_path, frame_2_path)
+            frame_1_hist, frame_2_hist = self.generate_histograms(frame_1_gray, frame_2_gray)
+
+            # Plot histograms
+            self.plot_histogram(frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path)
 
         return frame_diffs
 
     # S Ghatak paper - Module 2 - Plot and save histograms
-    def generate_histograms(self, frame_1_gray, frame_2_gray, frame_1_path, frame_2_path):
+    def generate_histograms(self, frame_1_gray, frame_2_gray):
         # Calculate histograms (and flatten them)
         hist_1 = cv2.calcHist([frame_1_gray], [0], None, [256], [0, 256]).flatten()
         hist_2 = cv2.calcHist([frame_2_gray], [0], None, [256], [0, 256]).flatten()
 
+        return hist_1, hist_2
+
+
+    def plot_histogram(self, frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path):
         # Create figure for plotting (so it fits nicely in the window - 16:9/1080p)
         plt.figure(figsize=(19.2, 10.8), dpi=100)
 
@@ -89,7 +96,7 @@ class KeyFraming:
         plt.axis('off')
 
         plt.subplot(2, 2, 3)
-        plt.bar(range(256), hist_1, color='blue', alpha=0.7)
+        plt.bar(range(256), frame_1_hist, color='blue', alpha=0.7)
         plt.title("Histogram")
         plt.xlabel("Pixel Value")
         plt.ylabel("Frequency")
@@ -101,7 +108,7 @@ class KeyFraming:
         plt.axis('off')
 
         plt.subplot(2, 2, 4)
-        plt.bar(range(256), hist_2, color='red', alpha=0.7)
+        plt.bar(range(256), frame_2_hist, color='blue', alpha=0.7)
         plt.title("Histogram")
         plt.xlabel("Pixel Value")
         plt.ylabel("Frequency")
