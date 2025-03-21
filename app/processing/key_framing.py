@@ -1,7 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Key framing class
-# Note: This is based upon: https://www.ijeast.com/papers/51-56,Tesma108,IJEAST.pdf (TODO: Must be cited in report)
+"""Key framing module for extracting significant frames from videos. Based on: https://www.ijeast.com/papers/51-56,Tesma108,IJEAST.pdf"""
 import os
 import shutil
 
@@ -12,6 +11,8 @@ import matplotlib.pyplot as plt
 
 
 class KeyFraming:
+    """Handles the extraction of key frames from video files by using S Ghatak's method to identify significant frames."""
+
     def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
         self.file_path = file_path
         self.output_dir = output_dir
@@ -20,7 +21,7 @@ class KeyFraming:
 
         # Split video method
         self.total_frames = 0
-        self.all_frames = f"data/original_frames"
+        self.all_frames = "data/original_frames"
 
     # Module 1 - Extract all original frames
     def _split_video(self):
@@ -194,8 +195,8 @@ class KeyFraming:
         # Display histograms in preview window
         self.frame_displayer.display_frame(hist_output_path)
 
-    # Complete workflow
     def extract_keyframes(self):
+        """Complete workflow for extracting keyframes from a video. Extracts frames, calculates differences, then identifies key frames."""
         print("Extracting keyframes...")
         # Module 1 - Extract frames
         self._split_video()

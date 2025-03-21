@@ -1,6 +1,7 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Image Captioning Handler (Florence2)
+"""Image captioning module using Florence2 model to generate descriptions of images."""
+
 from PIL import Image
 import torch
 from transformers import (
@@ -10,6 +11,8 @@ from transformers import (
 
 
 class ImageCaptioningHandler:
+    """Handles image captioning using the Florence-2-large model which generates detailed captions for frames extracted from videos."""
+
     def __init__(self, original_output_dir="data/key_frames/"):
         self.original_output_dir = original_output_dir
         self.device = "mps"  # Use "cuda" for GPU, "mps" for Mac, "cpu" for CPU
@@ -19,9 +22,17 @@ class ImageCaptioningHandler:
         self.processor = AutoProcessor.from_pretrained(
             "microsoft/Florence-2-large", trust_remote_code=True
         )
-        pass
 
-    def get_captions(self, frame_location, frame):
+    def get_captions(self, frame_location):
+        """
+        Generate captions for an image using the Florence-2 model.
+
+        Parameters:
+            frame_location: Path to the image file
+
+        Returns:
+            list: Caption and placeholder for future extensions
+        """
         # Open and process the image
         image = Image.open(frame_location)
         inputs = self.processor(
@@ -46,10 +57,19 @@ class ImageCaptioningHandler:
         return [caption, "None"]
 
     def frame_caption(self, frame):
+        """
+        Process a frame to generate its caption.
+
+        Parameters:
+            frame: Frame identifier
+
+        Returns:
+            list: Frame path and caption
+        """
         frame_location = self.original_output_dir + "/" + frame
 
         # Detect objects in frame and get detected object strings
-        caption_output = self.get_captions(frame_location, frame)
+        caption_output = self.get_captions(frame_location)
 
         # Return key words
         return [

@@ -1,12 +1,14 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Button handling functionality
+"""UI element handling functionality for the application."""
 
 from PyQt6 import QtWidgets
 from app.processing.language_handler import LanguageHandler
 
 
 class ElementHandler:
+    """Handles UI elements and their interactions in the application."""
+
     def __init__(self, main_window):
         # Get reference to the main window
         self.main_window = main_window
@@ -50,6 +52,7 @@ class ElementHandler:
         self.connect_buttons()
 
     def connect_buttons(self):
+        """Connect UI buttons to their handler methods."""
         # Connect the select file button to the file selector
         self.select_file_button.clicked.connect(self.show_file_selector)
 
@@ -66,6 +69,7 @@ class ElementHandler:
         self.next_button.clicked.connect(self.handle_next_button)
 
     def show_file_selector(self):
+        """Show file selector dialog and handle selected file."""
         file_dialog = QtWidgets.QFileDialog()
         options = file_dialog.options()
         file_path, _ = file_dialog.getOpenFileName(
@@ -85,6 +89,7 @@ class ElementHandler:
             print("No file selected")
 
     def handle_find_button(self):
+        """Handle find button click to start search with selected file and search term."""
         # Get search term
         search_term = self.find_text.text()
 
@@ -92,6 +97,7 @@ class ElementHandler:
         if self._selected_file_path and search_term:
             # Create a SearchTermHandler instance
             self.search_term_handler = LanguageHandler(search_term)
+            # Use property setter or method to safely set main window's file path
             self.main_window._selected_file_path = self._selected_file_path
             self.main_window.create_file_handler()
         elif not self._selected_file_path and not search_term:
@@ -102,13 +108,19 @@ class ElementHandler:
             print("No file selected")
 
     def handle_prev_button(self):
+        """Handle previous button click to show previous frame."""
         print("Previous button clicked")
-        pass
 
     def handle_start_stop_button(self):
+        """
+        Handle start/stop button click to pause/resume processing.
+
+        Returns:
+            bool: Processing state
+        """
         print("Start/Stop button clicked")
         return True
 
     def handle_next_button(self):
+        """Handle next button click to show next frame."""
         print("Next button clicked")
-        pass

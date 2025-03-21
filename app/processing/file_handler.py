@@ -1,6 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: File handler
+"""File handler module for processing video files and extracting keyframes."""
 
 import os
 import csv
@@ -10,19 +10,31 @@ from app.processing.image_captioning_handler import ImageCaptioningHandler
 from app.processing.key_framing import KeyFraming
 
 
-# Function to set up CSV writer, so we can write results to it (without recreating it each time)
 def setup_caption_file(video_name):
-    # Open the CSV file to write results to
+    """
+    Set up CSV writer for storing captions.
+
+    Parameters:
+        video_name: Name of the video file being processed
+
+    Return:
+        tuple: CSV writer and file handle
+    """
+    # Open the CSV file to write results to - without using 'with' statement
+    # to keep the file open for later use
     captions_file = open(
-        f"data/data_files/{video_name}_captions.csv", "w", newline="\n"
+        f"data/data_files/{video_name}_captions.csv",
+        "w",
+        newline="\n",
+        encoding="utf-8",
     )
     csv_writer = csv.writer(captions_file)
-
-    # Start writer for use later
     return csv_writer, captions_file
 
 
 class FileHandler:
+    """Handles video file processing, keyframe extraction, and caption generation."""
+
     def __init__(self, file_path, element_handler):
         self.file_path = file_path
         self.element_handler = element_handler
@@ -38,8 +50,8 @@ class FileHandler:
             file_path.split(".")[0].split("/")[-1]
         )
 
-    # Extract keyframes from video
     def extract_keyframes(self):
+        """Extract keyframes from the video file and process them."""
         # Create instance of KeyFraming
         key_fr = KeyFraming(
             file_path=self.file_path,
@@ -53,6 +65,7 @@ class FileHandler:
         self.process_keyframes()
 
     def process_keyframes(self):
+        """Process extracted keyframes by generating and analyzing captions."""
         # Create instance of ImageCaptioningHandler
         frame_caption_generator = ImageCaptioningHandler(
             original_output_dir=self.output_dir
@@ -100,6 +113,13 @@ class FileHandler:
         self.results_file.close()
 
     def save_caption(self, frame, caption):
+        """
+        Save the caption to the CSV file.
+
+        Parameters:
+            frame: Frame identifier
+            caption: Generated caption text
+        """
         # Save the caption to a text file, using the writer created earlier
         self.csv_writer.writerow([frame, caption])
-        print(f"Caption saved for frame")
+        print("Caption saved for frame")
