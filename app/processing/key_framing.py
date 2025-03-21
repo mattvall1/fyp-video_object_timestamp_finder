@@ -11,10 +11,11 @@ import matplotlib.pyplot as plt
 # TODO: Mention in report here we started with katna but it didnt do what I wanted
 
 class KeyFraming:
-    def __init__(self, file_path, output_dir, frame_displayer):
+    def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
         self.file_path = file_path
         self.output_dir = output_dir
         self.frame_displayer = frame_displayer
+        self.progress_bar = progress_bar
 
         # Split video method
         self.total_frames = 0
@@ -46,6 +47,10 @@ class KeyFraming:
 
             # Display frame
             self.frame_displayer.display_frame(frame_path)
+
+            # Update progress bar (first third of first half of bar)
+            self.progress_bar.setValue(int((count / self.total_frames) * 16))
+
 
             count += 1
 
@@ -94,6 +99,9 @@ class KeyFraming:
 
             # Add this frame difference to main list
             frame_diffs.append(frame_diff)
+
+            # Update progress bar (second third of first half of bar)
+            self.progress_bar.setValue(16 + int((i / len(frames)) * 16))
 
         return frame_diffs
 
@@ -175,10 +183,15 @@ class KeyFraming:
         threshold = self._calculate_threshold(frame_differences, 1)
 
         # Module 3 - Loop through frame differences and extract keyframes - copy these to the keyframes directory
+        count = 0
         for frame_diff in frame_differences:
             # Check if the average difference is greater than the threshold, this is a keyframe, so we move it to the keyframes directory
             if frame_diff[3] > threshold:
                 selected_keyframe = frame_diff[0]
                 print(f"Keyframe found: {selected_keyframe} with difference {frame_diff[3]}, moving to keyframes directory...")
                 shutil.move(os.path.join(self.all_frames, selected_keyframe), self.output_dir)
+
+            # Update progress bar (last third of first half of bar)
+            self.progress_bar.setValue(32 + int((count / self.total_frames) * 16))
+            count += 1
 
