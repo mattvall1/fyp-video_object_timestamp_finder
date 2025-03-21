@@ -84,6 +84,7 @@ class KeyFraming:
             # Calculate the sum of the absolute differences
             sum_diff = cv2.sumElems(difference)[0]
             frame_diff.append(sum_diff)
+            print(f"Absolute difference: {sum_diff}")
 
             # Plot histograms
             self.plot_histogram(frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path)
@@ -170,11 +171,9 @@ class KeyFraming:
 
         # Module 3 - Loop through frame differences and extract keyframes - copy these to the keyframes directory
         for frame_diff in frame_differences:
-            # Check if the average difference is greater than the threshold, if so, frame 1 is a keyframe, else frame 2 is a keyframe
+            # Check if the average difference is greater than the threshold, this is a keyframe, so we move it to the keyframes directory
             if frame_diff[3] > threshold:
                 selected_keyframe = frame_diff[0]
-            else:
-                selected_keyframe = frame_diff[1]
+                print(f"Keyframe found: {selected_keyframe} with difference {frame_diff[3]}, moving to keyframes directory...")
+                shutil.move(os.path.join(self.all_frames, selected_keyframe), self.output_dir)
 
-            # Move selected original frame to keyframes directory
-            shutil.move(os.path.join(self.all_frames, selected_keyframe), self.output_dir)
