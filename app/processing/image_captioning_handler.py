@@ -11,7 +11,7 @@ from transformers import (
 
 
 class ImageCaptioningHandler:
-    """Handles image captioning using the Florence-2-large model which generates detailed captions for frames extracted from videos."""
+    """Handles image captioning using Florence-2 model to generate detailed captions for frames."""
 
     def __init__(self, original_output_dir="data/key_frames/"):
         self.original_output_dir = original_output_dir

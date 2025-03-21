@@ -208,7 +208,7 @@ class KeyFraming:
         # Module 2 - Calculate frame differences
         frame_differences = self._calculate_frame_difference()
 
-        # Module 3 - Extract keyframes - CONST VALUE: Smaller const = lower threshold (and vice versa)
+        # Module 3 - Extract keyframes - const: Smaller const = lower threshold (and vice versa)
         threshold = self._calculate_threshold(frame_differences, 0.7)
 
         # Module 3 - Loop through frame differences, extract keyframes - copy to keyframes directory

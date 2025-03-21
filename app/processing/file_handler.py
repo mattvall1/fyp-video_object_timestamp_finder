@@ -20,14 +20,13 @@ def setup_caption_file(video_name):
     Return:
         tuple: CSV writer and file handle
     """
-    # Open the CSV file to write results to - without using 'with' statement
-    # to keep the file open for later use
+    # Open the CSV file to write results to - DO NOT use 'with' statement (as it closes the file)
     captions_file = open(
         f"data/data_files/{video_name}_captions.csv",
         "w",
         newline="\n",
         encoding="utf-8",
-    )
+    ) # pylint: disable=consider-using-with
     csv_writer = csv.writer(captions_file)
     return csv_writer, captions_file
 
