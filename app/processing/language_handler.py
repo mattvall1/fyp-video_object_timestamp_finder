@@ -1,12 +1,12 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-"""Process text inputs and outputs for NLP tasks, handling search term processing and text comparison."""
+"""Handles search term processing and text comparison."""
 import re
 from nltk.corpus import wordnet  # TODO: Check if we should use Open WordNet instead
 
 
 class LanguageHandler:
-    """Handles language processing tasks including synonym extraction and text comparison, by processing search terms and compares them with generated captions."""
+    """Handles language processing tasks including synonym extraction and text comparison."""
 
     def __init__(self, search_term):
         self.search_term = search_term

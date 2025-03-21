@@ -28,4 +28,3 @@ class ConsoleHandler:
     def flush(self):
         """Flush method required for file-like object compatibility."""
         # TODO: Do we need this? Why is this here?
-        pass

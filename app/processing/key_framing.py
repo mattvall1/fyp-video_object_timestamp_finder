@@ -213,12 +213,13 @@ class KeyFraming:
         # Module 3 - Loop through frame differences, extract keyframes - copy to keyframes directory
         count = 0
         for frame_diff in frame_differences:
-            # Check if the average difference is greater than the threshold, this is a keyframe, so we move it to the keyframes directory
+            # Check if the average difference is greater than the threshold
             if frame_diff[3] > threshold:
                 selected_keyframe = frame_diff[0]
                 print(
                     f"Keyframe found: {selected_keyframe} with difference {frame_diff[3]}..."
                 )
+                # Move keyframe to output directory
                 shutil.move(
                     os.path.join(self.all_frames, selected_keyframe), self.output_dir
                 )

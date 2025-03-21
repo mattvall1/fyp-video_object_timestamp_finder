@@ -12,6 +12,7 @@ from app.ui.element_handler import ElementHandler
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    # pylint: disable=too-few-public-methods
     """Handles UI initialization and file processing."""
 
     def __init__(self):
