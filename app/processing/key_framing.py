@@ -5,7 +5,7 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 
-# NOTES FOR REPORT: Mention here we started with katna but it didnt do what I wanted
+# TODO: Mention in report here we started with katna but it didnt do what I wanted
 
 class KeyFraming:
     def __init__(self, file_path, output_dir, frame_displayer):
@@ -56,6 +56,9 @@ class KeyFraming:
 
         for i in range(len(frames) - 1):
             print(f"Calculating frame difference for frame {frames[i]} and frame {frames[i + 1]}...")
+            # Create array to hold frame differences
+            frame_diff = [frames[i], frames[i + 1]]
+
             # Retrive frames
             frame_1_path = os.path.join(self.all_frames, frames[i])
             frame_2_path = os.path.join(self.all_frames, frames[i + 1])
@@ -71,8 +74,23 @@ class KeyFraming:
             # Generate histograms
             frame_1_hist, frame_2_hist = self.generate_histograms(frame_1_gray, frame_2_gray)
 
+            # Find difference of the two frames
+            difference = cv2.absdiff(frame_1_hist, frame_2_hist)
+            frame_diff.append(difference)
+
+            # Calculate the sum of the absolute differences
+            sum_diff = cv2.sumElems(difference)[0]
+            frame_diff.append(sum_diff)
+
             # Plot histograms
             self.plot_histogram(frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path)
+
+            # Add this frame difference to main list
+            frame_diffs.append(frame_diff)
+
+            # Testing
+            if i == 4:
+                break
 
         return frame_diffs
 
@@ -83,6 +101,18 @@ class KeyFraming:
         hist_2 = cv2.calcHist([frame_2_gray], [0], None, [256], [0, 256]).flatten()
 
         return hist_1, hist_2
+
+    # S Ghatak paper - Module 3 - Extract keyframes - Step 1: Calculate  TODO: This is slightly different to the paper, this should run within the loop, but this makes more sense
+    def calculate_threshold(self, frame_diffs, const):
+        # Get the mean of the differences
+        total_diffs = sum(frame_diff[3] for frame_diff in frame_diffs)
+        mean_diffs = total_diffs / len(frame_diffs)
+
+        # Get the standard deviation of the differences TODO: Explain why we do this
+        sd_diffs = (sum((frame_diff[3] - mean_diffs) ** 2 for frame_diff in frame_diffs) / len(frame_diffs)) ** 0.5
+
+        # Find the threshold
+        return sd_diffs + (mean_diffs * const)
 
 
     def plot_histogram(self, frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path):
@@ -134,9 +164,9 @@ class KeyFraming:
         self.split_video()
 
         # Module 2 - Calculate frame differences
-        self.calculate_frame_difference()
+        frame_differences = self.calculate_frame_difference()
 
-        # Module 3 - Extract keyframes
-
+        # Module 3 - Extract keyframes - NOTE ON CONST VALUE: Smaller const = lower threshold/more keyframes | Larger const = higher threshold/fewer keyframes
+        threshold = self.calculate_threshold(frame_differences, 1)
 
         exit() # TEMP
