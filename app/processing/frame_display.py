@@ -23,3 +23,10 @@ class FrameDisplayer:
             self.scene.itemsBoundingRect(), QtCore.Qt.AspectRatioMode.KeepAspectRatio
         )  # Keep bounds of video
         QApplication.processEvents()  # Process events to update UI
+
+    def clear_frame(self):
+        # Clear the scene
+        self.scene.clear()
+
+        # Create a new scene
+        self.scene = QGraphicsScene()

@@ -57,6 +57,9 @@ class KeyFraming:
         frames = sorted(os.listdir(self.all_frames))
         frame_diffs = []
 
+        # Clear frame displayer (fixes resolution issues)
+        self.frame_displayer.clear_frame()
+
         for i in range(len(frames) - 1):
             print(f"Calculating frame difference for frame {frames[i]} and frame {frames[i + 1]}...")
             # Create array to hold frame differences
