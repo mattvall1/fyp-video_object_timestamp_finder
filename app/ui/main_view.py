@@ -22,10 +22,10 @@ class MainWindow(QtWidgets.QMainWindow):
             filename=f"logs/{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_log.txt",
             level=logging.INFO,
         )
-        
+
         # Initialize button handler
         self.element_handler = ElementHandler(self)
-        
+
         # Redirect standard output to console
         sys.stdout = ConsoleHandler(self.element_handler.information_output)
 
@@ -36,5 +36,3 @@ class MainWindow(QtWidgets.QMainWindow):
             element_handler=self.element_handler,
         )
         self.file_handler.extract_keyframes()
-
-

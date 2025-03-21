@@ -5,7 +5,12 @@ import os
 class Tools:
     @staticmethod
     def clear_frame_directories():
-        directories = ["data/key_frames", "data/original_frames", "data/frame_histograms", "data/data_files"]
+        directories = [
+            "data/key_frames",
+            "data/original_frames",
+            "data/frame_histograms",
+            "data/data_files",
+        ]
         count = 0
         for directory in directories:
             for file_name in os.listdir(directory):
@@ -18,7 +23,14 @@ class Tools:
 
     @staticmethod
     def create_directories():
-        directories = ["data", "data/data_files", "data/key_frames", "data/frame_histograms", "data/original_frames", "logs"]
+        directories = [
+            "data",
+            "data/data_files",
+            "data/key_frames",
+            "data/frame_histograms",
+            "data/original_frames",
+            "logs",
+        ]
         for directory in directories:
             os.makedirs(directory, exist_ok=True)
             print(f"Created directory: {directory}")

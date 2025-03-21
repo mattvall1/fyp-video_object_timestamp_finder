@@ -5,31 +5,50 @@
 from PyQt6 import QtWidgets
 from app.processing.language_handler import LanguageHandler
 
+
 class ElementHandler:
     def __init__(self, main_window):
         # Get reference to the main window
         self.main_window = main_window
         self._selected_file_path = None
         self.search_term_handler = None
-        
+
         # Find all UI elements
-        self.select_file_button = self.main_window.findChild(QtWidgets.QPushButton, "select_file_button")
-        self.select_file_text = self.main_window.findChild(QtWidgets.QLineEdit, "select_file_text")
+        self.select_file_button = self.main_window.findChild(
+            QtWidgets.QPushButton, "select_file_button"
+        )
+        self.select_file_text = self.main_window.findChild(
+            QtWidgets.QLineEdit, "select_file_text"
+        )
         self.find_text = self.main_window.findChild(QtWidgets.QLineEdit, "find_text")
-        self.find_button = self.main_window.findChild(QtWidgets.QPushButton, "find_button")
+        self.find_button = self.main_window.findChild(
+            QtWidgets.QPushButton, "find_button"
+        )
 
-        self.preview_element = self.main_window.findChild(QtWidgets.QGraphicsView, "preview_frame")
+        self.preview_element = self.main_window.findChild(
+            QtWidgets.QGraphicsView, "preview_frame"
+        )
 
-        self.prev_button = self.main_window.findChild(QtWidgets.QPushButton, "prev_button")
-        self.start_stop_button = self.main_window.findChild(QtWidgets.QPushButton, "start_stop_button")
-        self.next_button = self.main_window.findChild(QtWidgets.QPushButton, "next_button")
+        self.prev_button = self.main_window.findChild(
+            QtWidgets.QPushButton, "prev_button"
+        )
+        self.start_stop_button = self.main_window.findChild(
+            QtWidgets.QPushButton, "start_stop_button"
+        )
+        self.next_button = self.main_window.findChild(
+            QtWidgets.QPushButton, "next_button"
+        )
 
-        self.progress_bar = self.main_window.findChild(QtWidgets.QProgressBar, "progress_bar")
-        self.information_output = self.main_window.findChild(QtWidgets.QTextEdit, "information_output")
-        
+        self.progress_bar = self.main_window.findChild(
+            QtWidgets.QProgressBar, "progress_bar"
+        )
+        self.information_output = self.main_window.findChild(
+            QtWidgets.QTextEdit, "information_output"
+        )
+
         # Connect button click events to methods
         self.connect_buttons()
-    
+
     def connect_buttons(self):
         # Connect the select file button to the file selector
         self.select_file_button.clicked.connect(self.show_file_selector)
@@ -45,12 +64,16 @@ class ElementHandler:
 
         # Connect the next button to the next handler
         self.next_button.clicked.connect(self.handle_next_button)
-    
+
     def show_file_selector(self):
         file_dialog = QtWidgets.QFileDialog()
         options = file_dialog.options()
         file_path, _ = file_dialog.getOpenFileName(
-            self.main_window, "Open File", "/", "Video Files (*.mp4 *.mkv)", options=options
+            self.main_window,
+            "Open File",
+            "/",
+            "Video Files (*.mp4 *.mkv)",
+            options=options,
         )
 
         # Retrieve search term
@@ -89,4 +112,3 @@ class ElementHandler:
     def handle_next_button(self):
         print("Next button clicked")
         pass
-

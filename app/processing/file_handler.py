@@ -13,7 +13,9 @@ from app.processing.key_framing import KeyFraming
 # Function to set up CSV writer, so we can write results to it (without recreating it each time)
 def setup_caption_file(video_name):
     # Open the CSV file to write results to
-    captions_file = open(f"data/data_files/{video_name}_captions.csv", "w", newline="\n")
+    captions_file = open(
+        f"data/data_files/{video_name}_captions.csv", "w", newline="\n"
+    )
     csv_writer = csv.writer(captions_file)
 
     # Start writer for use later
@@ -32,13 +34,18 @@ class FileHandler:
         Tools.clear_frame_directories()
 
         # Create writer for caption file
-        self.csv_writer, self.results_file = setup_caption_file(file_path.split(".")[0].split("/")[-1])
+        self.csv_writer, self.results_file = setup_caption_file(
+            file_path.split(".")[0].split("/")[-1]
+        )
 
     # Extract keyframes from video
     def extract_keyframes(self):
         # Create instance of KeyFraming
         key_fr = KeyFraming(
-            file_path=self.file_path, output_dir=self.output_dir, frame_displayer=self.frame_displayer, progress_bar=self.progress_bar
+            file_path=self.file_path,
+            output_dir=self.output_dir,
+            frame_displayer=self.frame_displayer,
+            progress_bar=self.progress_bar,
         )
         key_fr.extract_keyframes()
 
@@ -68,13 +75,16 @@ class FileHandler:
             self.frame_displayer.display_frame(generator_output[0])
 
             # Compare caption to search term
-            search_results = self.element_handler.search_term_handler.compare_caption_to_search_term(generator_output[1])
+            search_results = (
+                self.element_handler.search_term_handler.compare_caption_to_search_term(
+                    generator_output[1]
+                )
+            )
             # TEMP PRINT
             if search_results:
                 print(f"Search term found: {", ".join(search_results)}")
                 print("PAUSE SIGNAL")
                 # Pause processing
-
 
             else:
                 print("Search term not found")
@@ -89,9 +99,7 @@ class FileHandler:
         # Close the CSV file after writing all captions
         self.results_file.close()
 
-
     def save_caption(self, frame, caption):
         # Save the caption to a text file, using the writer created earlier
         self.csv_writer.writerow([frame, caption])
         print(f"Caption saved for frame")
-
