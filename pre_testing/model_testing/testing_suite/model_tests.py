@@ -8,10 +8,10 @@ from io import BytesIO
 import torch
 import requests
 from PIL import Image
-from testing.model_testing.testing_suite.dataset_retrival.text_caps import TextCaps
-from testing.model_testing.testing_suite.metrics.BLEU_score import BLEUScoring
-from testing.model_testing.testing_suite.metrics.METEOR_score import METEORScoring
-from testing.model_testing.testing_suite.metrics.ROUGE_score import ROUGEScoring
+from pre_testing.model_testing.testing_suite.dataset_retrival.text_caps import TextCaps
+from pre_testing.model_testing.testing_suite.metrics.BLEU_score import BLEUScoring
+from pre_testing.model_testing.testing_suite.metrics.METEOR_score import METEORScoring
+from pre_testing.model_testing.testing_suite.metrics.ROUGE_score import ROUGEScoring
 
 # Model imports
 import open_clip

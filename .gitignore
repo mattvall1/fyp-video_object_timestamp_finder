@@ -6,14 +6,14 @@ testing_videos/frame_generator/red_ball_frames
 testing_videos/frame_generator/temp_svg
 app/logs
 app/data
-testing/azure_testing/api_key.txt
-testing/binary_search_theory/api_key.txt
-testing/binary_search_theory/frames
-testing/model_testing/results.csv
+pre_testing/azure_testing/api_key.txt
+pre_testing/binary_search_theory/api_key.txt
+pre_testing/binary_search_theory/frames
+pre_testing/model_testing/results.csv
 nltk_data
-testing/model_testing/testing_suite/testing_data
-testing/model_testing/testing_suite/results
-testing/key_framing/outputs
+pre_testing/model_testing/testing_suite/testing_data
+pre_testing/model_testing/testing_suite/results
+pre_testing/key_framing/outputs
 
 # Premade model testing
 runs/
