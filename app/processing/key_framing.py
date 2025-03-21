@@ -1,6 +1,9 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-"""Key framing module for extracting significant frames from videos. Based on: https://www.ijeast.com/papers/51-56,Tesma108,IJEAST.pdf"""
+"""
+Key framing module for extracting significant frames from videos.
+Based on: https://www.ijeast.com/papers/51-56,Tesma108,IJEAST.pdf
+"""
 import os
 import shutil
 
@@ -11,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 class KeyFraming:
-    """Handles the extraction of key frames from video files by using S Ghatak's method to identify significant frames."""
+    """Handles the extraction of key frames from video files by using S Ghatak's method."""
 
     def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
         self.file_path = file_path
@@ -196,7 +199,7 @@ class KeyFraming:
         self.frame_displayer.display_frame(hist_output_path)
 
     def extract_keyframes(self):
-        """Complete workflow for extracting keyframes from a video. Extracts frames, calculates differences, then identifies key frames."""
+        """Complete workflow for extracting keyframes from a video."""
         print("Extracting keyframes...")
         # Module 1 - Extract frames
         self._split_video()
@@ -204,17 +207,17 @@ class KeyFraming:
         # Module 2 - Calculate frame differences
         frame_differences = self._calculate_frame_difference()
 
-        # Module 3 - Extract keyframes - NOTE ON CONST VALUE: Smaller const = lower threshold/more keyframes | Larger const = higher threshold/fewer keyframes
+        # Module 3 - Extract keyframes - CONST VALUE: Smaller const = lower threshold | Larger const = higher threshold
         threshold = self._calculate_threshold(frame_differences, 0.7)
 
-        # Module 3 - Loop through frame differences and extract keyframes - copy these to the keyframes directory
+        # Module 3 - Loop through frame differences, extract keyframes - copy to keyframes directory
         count = 0
         for frame_diff in frame_differences:
             # Check if the average difference is greater than the threshold, this is a keyframe, so we move it to the keyframes directory
             if frame_diff[3] > threshold:
                 selected_keyframe = frame_diff[0]
                 print(
-                    f"Keyframe found: {selected_keyframe} with difference {frame_diff[3]}, moving to keyframes directory..."
+                    f"Keyframe found: {selected_keyframe} with difference {frame_diff[3]}..."
                 )
                 shutil.move(
                     os.path.join(self.all_frames, selected_keyframe), self.output_dir
