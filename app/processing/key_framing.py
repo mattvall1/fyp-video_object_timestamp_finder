@@ -21,7 +21,7 @@ class KeyFraming:
         self.all_frames = f"data/original_frames"
 
     # Module 1 - Extract all original frames
-    def split_video(self):
+    def _split_video(self):
         # Open video file
         video_cap = cv2.VideoCapture(self.file_path)
         if not video_cap.isOpened():
@@ -52,7 +52,7 @@ class KeyFraming:
         video_cap.release()
 
     # Module 2 - Calculate frame differences
-    def calculate_frame_difference(self):
+    def _calculate_frame_difference(self):
         # Read all frames from the directory
         frames = sorted(os.listdir(self.all_frames))
         frame_diffs = []
@@ -78,7 +78,7 @@ class KeyFraming:
             frame_2_gray = cv2.cvtColor(frame_2, cv2.COLOR_BGR2GRAY)
 
             # Generate histograms
-            frame_1_hist, frame_2_hist = self.generate_histograms(frame_1_gray, frame_2_gray)
+            frame_1_hist, frame_2_hist = self._generate_histograms(frame_1_gray, frame_2_gray)
 
             # Find difference of the two frames
             difference = cv2.absdiff(frame_1_hist, frame_2_hist)
@@ -90,7 +90,7 @@ class KeyFraming:
             print(f"Absolute difference: {sum_diff}")
 
             # Plot histograms
-            self.plot_histogram(frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path)
+            self._plot_histogram(frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path)
 
             # Add this frame difference to main list
             frame_diffs.append(frame_diff)
@@ -98,7 +98,8 @@ class KeyFraming:
         return frame_diffs
 
     # Module 2 - Generate histograms
-    def generate_histograms(self, frame_1_gray, frame_2_gray):
+    @staticmethod
+    def _generate_histograms(frame_1_gray, frame_2_gray):
         # Calculate histograms (and flatten them)
         hist_1 = cv2.calcHist([frame_1_gray], [0], None, [256], [0, 256]).flatten()
         hist_2 = cv2.calcHist([frame_2_gray], [0], None, [256], [0, 256]).flatten()
@@ -106,7 +107,8 @@ class KeyFraming:
         return hist_1, hist_2
 
     # Module 3 - Calculate threshold  TODO: This is slightly different to the paper, this should run within the loop, but this makes more sense
-    def calculate_threshold(self, frame_diffs, const):
+    @staticmethod
+    def _calculate_threshold(frame_diffs, const):
         # Get the mean of the differences
         total_diffs = sum(frame_diff[3] for frame_diff in frame_diffs)
         mean_diffs = total_diffs / len(frame_diffs)
@@ -118,7 +120,7 @@ class KeyFraming:
         return sd_diffs + (mean_diffs * const)
 
     # Display histograms from Module 2
-    def plot_histogram(self, frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path):
+    def _plot_histogram(self, frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path):
         # Create figure for plotting (so it fits nicely in the window - 16:9/1080p)
         plt.figure(figsize=(19.2, 10.8), dpi=100)
 
@@ -164,13 +166,13 @@ class KeyFraming:
     def extract_keyframes(self):
         print("Extracting keyframes...")
         # Module 1 - Extract frames
-        self.split_video()
+        self._split_video()
 
         # Module 2 - Calculate frame differences
-        frame_differences = self.calculate_frame_difference()
+        frame_differences = self._calculate_frame_difference()
 
         # Module 3 - Extract keyframes - NOTE ON CONST VALUE: Smaller const = lower threshold/more keyframes | Larger const = higher threshold/fewer keyframes
-        threshold = self.calculate_threshold(frame_differences, 1)
+        threshold = self._calculate_threshold(frame_differences, 1)
 
         # Module 3 - Loop through frame differences and extract keyframes - copy these to the keyframes directory
         for frame_diff in frame_differences:
