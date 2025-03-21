@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 
 class KeyFraming:
+    # pylint: disable=too-few-public-methods
     """Handles the extraction of key frames from video files by using S Ghatak's method."""
 
     def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
@@ -207,7 +208,7 @@ class KeyFraming:
         # Module 2 - Calculate frame differences
         frame_differences = self._calculate_frame_difference()
 
-        # Module 3 - Extract keyframes - CONST VALUE: Smaller const = lower threshold | Larger const = higher threshold
+        # Module 3 - Extract keyframes - CONST VALUE: Smaller const = lower threshold (and vice versa)
         threshold = self._calculate_threshold(frame_differences, 0.7)
 
         # Module 3 - Loop through frame differences, extract keyframes - copy to keyframes directory

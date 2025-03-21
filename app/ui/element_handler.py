@@ -12,7 +12,7 @@ class ElementHandler:
     def __init__(self, main_window):
         # Get reference to the main window
         self.main_window = main_window
-        self._selected_file_path = None
+        self.selected_file_path = None
         self.search_term_handler = None
 
         # Find all UI elements
@@ -84,7 +84,7 @@ class ElementHandler:
         if file_path:
             self.select_file_text.setText(file_path.split("/")[-1])
             # Store file path for later use when find button is clicked
-            self._selected_file_path = file_path
+            self.selected_file_path = file_path
         elif not file_path:
             print("No file selected")
 
@@ -94,17 +94,17 @@ class ElementHandler:
         search_term = self.find_text.text()
 
         # Check if file path and search term are set
-        if self._selected_file_path and search_term:
+        if self.selected_file_path and search_term:
             # Create a SearchTermHandler instance
             self.search_term_handler = LanguageHandler(search_term)
             # Use property setter or method to safely set main window's file path
-            self.main_window._selected_file_path = self._selected_file_path
+            self.main_window.selected_file_path = self.selected_file_path
             self.main_window.create_file_handler()
-        elif not self._selected_file_path and not search_term:
+        elif not self.selected_file_path and not search_term:
             print("No file selected or search term provided")
         elif not search_term:
             print("No search term provided")
-        elif not self._selected_file_path:
+        elif not self.selected_file_path:
             print("No file selected")
 
     def handle_prev_button(self):
