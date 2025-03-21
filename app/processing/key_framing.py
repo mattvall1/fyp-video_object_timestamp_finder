@@ -1,7 +1,10 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
 # Purpose: Key framing class
+# Note: This is based upon: https://www.ijeast.com/papers/51-56,Tesma108,IJEAST.pdf (TODO: Must be cited in report)
 import os
+import shutil
+
 import cv2
 import matplotlib.pyplot as plt
 
@@ -17,7 +20,7 @@ class KeyFraming:
         self.total_frames = 0
         self.all_frames = f"data/original_frames"
 
-    # S Ghatak paper - Module 1
+    # Module 1 - Extract all original frames
     def split_video(self):
         # Open video file
         video_cap = cv2.VideoCapture(self.file_path)
@@ -48,7 +51,7 @@ class KeyFraming:
 
         video_cap.release()
 
-    # S Ghatak paper - Module 2
+    # Module 2 - Calculate frame differences
     def calculate_frame_difference(self):
         # Read all frames from the directory
         frames = sorted(os.listdir(self.all_frames))
@@ -88,13 +91,9 @@ class KeyFraming:
             # Add this frame difference to main list
             frame_diffs.append(frame_diff)
 
-            # Testing
-            if i == 4:
-                break
-
         return frame_diffs
 
-    # S Ghatak paper - Module 2 - Plot and save histograms
+    # Module 2 - Generate histograms
     def generate_histograms(self, frame_1_gray, frame_2_gray):
         # Calculate histograms (and flatten them)
         hist_1 = cv2.calcHist([frame_1_gray], [0], None, [256], [0, 256]).flatten()
@@ -102,7 +101,7 @@ class KeyFraming:
 
         return hist_1, hist_2
 
-    # S Ghatak paper - Module 3 - Extract keyframes - Step 1: Calculate  TODO: This is slightly different to the paper, this should run within the loop, but this makes more sense
+    # Module 3 - Calculate threshold  TODO: This is slightly different to the paper, this should run within the loop, but this makes more sense
     def calculate_threshold(self, frame_diffs, const):
         # Get the mean of the differences
         total_diffs = sum(frame_diff[3] for frame_diff in frame_diffs)
@@ -114,7 +113,7 @@ class KeyFraming:
         # Find the threshold
         return sd_diffs + (mean_diffs * const)
 
-
+    # Display histograms from Module 2
     def plot_histogram(self, frame_1_gray, frame_2_gray, frame_1_hist, frame_2_hist, frame_1_path, frame_2_path):
         # Create figure for plotting (so it fits nicely in the window - 16:9/1080p)
         plt.figure(figsize=(19.2, 10.8), dpi=100)
@@ -157,7 +156,7 @@ class KeyFraming:
         # Display histograms in preview window
         self.frame_displayer.display_frame(hist_output_path)
 
-    # S Ghatak paper - All steps
+    # Complete workflow
     def extract_keyframes(self):
         print("Extracting keyframes...")
         # Module 1 - Extract frames
@@ -169,4 +168,13 @@ class KeyFraming:
         # Module 3 - Extract keyframes - NOTE ON CONST VALUE: Smaller const = lower threshold/more keyframes | Larger const = higher threshold/fewer keyframes
         threshold = self.calculate_threshold(frame_differences, 1)
 
-        exit() # TEMP
+        # Module 3 - Loop through frame differences and extract keyframes - copy these to the keyframes directory
+        for frame_diff in frame_differences:
+            # Check if the average difference is greater than the threshold, if so, frame 1 is a keyframe, else frame 2 is a keyframe
+            if frame_diff[3] > threshold:
+                selected_keyframe = frame_diff[0]
+            else:
+                selected_keyframe = frame_diff[1]
+
+            # Move selected original frame to keyframes directory
+            shutil.move(os.path.join(self.all_frames, selected_keyframe), self.output_dir)
