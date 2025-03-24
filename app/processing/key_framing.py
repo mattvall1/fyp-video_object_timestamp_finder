@@ -52,7 +52,9 @@ class KeyFraming:
             timestamp = round(video_cap.get(cv2.CAP_PROP_POS_MSEC))
 
             # Save frame as JPEG file
-            frame_path = os.path.join(self.all_frames, f"{frame_count:04d}_{timestamp}.jpg")
+            frame_path = os.path.join(
+                self.all_frames, f"{frame_count:04d}_{timestamp}.jpg"
+            )
             cv2.imwrite(frame_path, image)
             success, image = video_cap.read()
             print(f"Saving frame '{frame_path}'")

@@ -101,10 +101,12 @@ class FileHandler:
 
             if search_results:
                 # Get timestamp for the frame - divide by 1000 to convert to seconds
-                timestamp = int(frame.split('_')[1].split('.')[0]) / 1000
+                timestamp = int(frame.split("_")[1].split(".")[0]) / 1000
 
                 # Print search results
-                print(f"Search term found: {", ".join(search_results)} at {timestamp} seconds")
+                print(
+                    f"Search term found: {", ".join(search_results)} at {timestamp} seconds"
+                )
 
                 # Pause processing
                 self.element_handler.handle_continue_button()

@@ -57,7 +57,6 @@ class ElementHandler:
         # Connect the start/stop button to the start/stop handler
         self.continue_button.clicked.connect(self.handle_continue_button)
 
-
     def show_file_selector(self):
         """Show file selector dialog and handle selected file."""
         file_dialog = QtWidgets.QFileDialog()
@@ -103,5 +102,3 @@ class ElementHandler:
             self.continue_button.setEnabled(False)
         else:
             self.continue_button.setEnabled(True)
-
-
