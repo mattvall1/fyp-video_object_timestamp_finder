@@ -169,9 +169,9 @@ p, li { white-space: pre-wrap; }
      <number>0</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="start_stop_button">
+   <widget class="QPushButton" name="continue_button">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -182,39 +182,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string>Stop/Start</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="next_button">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>540</x>
-      <y>550</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Next</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="prev_button">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>300</x>
-      <y>550</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Previous</string>
+     <string>Continue</string>
     </property>
    </widget>
   </widget>

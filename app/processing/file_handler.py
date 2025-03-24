@@ -4,6 +4,8 @@
 
 import os
 import csv
+import time
+
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
@@ -94,20 +96,25 @@ class FileHandler:
                 )
             )
 
+            # Save caption to CSV
+            self.save_caption(frame, generator_output)
+
             if search_results:
                 # Get timestamp for the frame - divide by 1000 to convert to seconds
                 timestamp = int(frame.split('_')[1].split('.')[0]) / 1000
 
-
+                # Print search results
                 print(f"Search term found: {", ".join(search_results)} at {timestamp} seconds")
-                print("PAUSE SIGNAL")
+
                 # Pause processing
+                self.element_handler.handle_continue_button()
+                while self.element_handler.continue_button.isEnabled():
+                    print("Processing paused, press continue to resume.")
+                    time.sleep(1)
+                print("Processing resumed")
 
             else:
                 print("Search term not found")
-
-            # Save caption to CSV
-            self.save_caption(frame, generator_output)
 
             # Update progress bar (second half of bar)
             self.progress_bar.setValue(50 + int((frame_count / total_frames) * 50))

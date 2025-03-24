@@ -32,14 +32,8 @@ class ElementHandler:
             QtWidgets.QGraphicsView, "preview_frame"
         )
 
-        self.prev_button = self.main_window.findChild(
-            QtWidgets.QPushButton, "prev_button"
-        )
-        self.start_stop_button = self.main_window.findChild(
-            QtWidgets.QPushButton, "start_stop_button"
-        )
-        self.next_button = self.main_window.findChild(
-            QtWidgets.QPushButton, "next_button"
+        self.continue_button = self.main_window.findChild(
+            QtWidgets.QPushButton, "continue_button"
         )
 
         self.progress_bar = self.main_window.findChild(
@@ -60,14 +54,9 @@ class ElementHandler:
         # Connect the find button to the find handler
         self.find_button.clicked.connect(self.handle_find_button)
 
-        # Connect the previous button to the previous handler
-        self.prev_button.clicked.connect(self.handle_prev_button)
-
         # Connect the start/stop button to the start/stop handler
-        self.start_stop_button.clicked.connect(self.handle_start_stop_button)
+        self.continue_button.clicked.connect(self.handle_continue_button)
 
-        # Connect the next button to the next handler
-        self.next_button.clicked.connect(self.handle_next_button)
 
     def show_file_selector(self):
         """Show file selector dialog and handle selected file."""
@@ -108,20 +97,11 @@ class ElementHandler:
         elif not self.selected_file_path:
             print("No file selected")
 
-    def handle_prev_button(self):
-        """Handle previous button click to show previous frame."""
-        print("Previous button clicked")
+    def handle_continue_button(self):
+        # Toggle state
+        if self.continue_button.isEnabled():
+            self.continue_button.setEnabled(False)
+        else:
+            self.continue_button.setEnabled(True)
 
-    def handle_start_stop_button(self):
-        """
-        Handle start/stop button click to pause/resume processing.
 
-        Returns:
-            bool: Processing state
-        """
-        print("Start/Stop button clicked")
-        return True
-
-    def handle_next_button(self):
-        """Handle next button click to show next frame."""
-        print("Next button clicked")
