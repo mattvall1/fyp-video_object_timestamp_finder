@@ -124,9 +124,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>660</y>
+      <y>600</y>
       <width>980</width>
-      <height>130</height>
+      <height>190</height>
      </rect>
     </property>
     <property name="cursor" stdset="0">
@@ -160,7 +160,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>640</y>
+      <y>580</y>
       <width>980</width>
       <height>15</height>
      </rect>
