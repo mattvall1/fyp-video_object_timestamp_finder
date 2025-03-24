@@ -2,7 +2,7 @@
 # COMP1682 Final Year Project.
 """UI element handling functionality for the application."""
 
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, uic
 from app.processing.language_handler import LanguageHandler
 
 
@@ -102,3 +102,51 @@ class ElementHandler:
             self.continue_button.setEnabled(False)
         else:
             self.continue_button.setEnabled(True)
+
+    def show_save_location(self):
+        """Show save location dialog and handle selected location."""
+        save_location = QtWidgets.QFileDialog.getExistingDirectory(
+            self.main_window, "Select Save Location"
+        )
+        return save_location
+
+    def generate_report_modal(self):
+        """Show report generation/closing modal"""
+        # Load the report dialog UI
+        final_report_modal = QtWidgets.QDialog(self.main_window)
+        uic.loadUi("ui/final_report_modal.ui", final_report_modal)
+        final_report_modal.setWindowTitle("Processing Complete")
+
+        # Get elements
+        choose_button = final_report_modal.findChild(
+            QtWidgets.QPushButton, "choose_button"
+        )
+        save_location_text = final_report_modal.findChild(
+            QtWidgets.QLineEdit, "save_location_text"
+        )
+
+        # Connect the save button to directly update the save location text
+        choose_button.clicked.connect(
+            lambda: save_location_text.setText(self.show_save_location())
+        )
+
+        # Keep showing the dialog until user cancels or provides valid location
+        while True:
+            result = final_report_modal.exec()
+
+            # If user pressed 'No', return False
+            if result != QtWidgets.QDialog.DialogCode.Accepted:
+                return False
+
+            # If user pressed 'Yes' with a location, return the location
+            if save_location_text.text().strip() != "":
+                print(f"Save location: {save_location_text.text()}")
+                return save_location_text.text()
+
+            # If user pressed 'Yes' without a location, show error and loop again
+            QtWidgets.QMessageBox.warning(
+                self.main_window,
+                "No Save Location",
+                "Please select a save location for the report.",
+                QtWidgets.QMessageBox.StandardButton.Ok,
+            )

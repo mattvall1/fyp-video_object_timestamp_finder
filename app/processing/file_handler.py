@@ -7,6 +7,7 @@ import csv
 import time
 
 from app.global_tools import Tools
+from app.processing.completion_handler import CompletionHandler
 from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
 from app.processing.key_frame_handler import KeyFrameHandler
@@ -67,7 +68,7 @@ class FileHandler:
         self.process_keyframes()
 
     def process_keyframes(self):
-        """Process extracted keyframes by generating and analyzing captions."""
+        """This is the main processing function. It handles the captioning of keyframes etc."""
         # Create instance of ImageCaptioningHandler
         frame_caption_generator = ImageCaptioningHandler(
             original_output_dir=self.output_dir
@@ -124,6 +125,15 @@ class FileHandler:
 
         # Close the CSV file after writing all captions
         self.results_file.close()
+        print("All captions saved to CSV file.")
+
+        # Run completion handler
+        completion_handler = CompletionHandler(self.element_handler)
+        # Ask user if they want to generate a report
+
+        generate_report = self.element_handler.generate_report_modal()
+        if generate_report:
+            completion_handler.generate_completion_report()
 
     def save_caption(self, frame, caption):
         """
