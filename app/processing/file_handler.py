@@ -85,7 +85,7 @@ class FileHandler:
             print("Generated caption: " + generator_output)
 
             # Display frame in preview window
-            self.frame_displayer.display_frame(frame)
+            self.frame_displayer.display_frame(self.output_dir + "/" + frame)
 
             # Compare caption to search term
             search_results = (
@@ -93,13 +93,13 @@ class FileHandler:
                     generator_output
                 )
             )
-            # TEMP PRINT
+
             if search_results:
-                # Get timestamp for the frame
-                timestamp = frame
+                # Get timestamp for the frame - divide by 1000 to convert to seconds
+                timestamp = int(frame.split('_')[1].split('.')[0]) / 1000
 
 
-                print(f"Search term found: {", ".join(search_results)}")
+                print(f"Search term found: {", ".join(search_results)} at {timestamp} seconds")
                 print("PAUSE SIGNAL")
                 # Pause processing
 
