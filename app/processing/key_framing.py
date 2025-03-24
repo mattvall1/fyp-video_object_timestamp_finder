@@ -137,7 +137,6 @@ class KeyFraming:
         return hist_1, hist_2
 
     # Module 3 - Calculate threshold
-    # TODO: This is slightly different to the paper, possibly change?
     @staticmethod
     def _calculate_threshold(frame_diffs, const):
         # Get the mean of the differences

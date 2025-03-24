@@ -53,8 +53,8 @@ class ImageCaptioningHandler:
                 image_size=(image.width, image.height),
             )["<MORE_DETAILED_CAPTION>"]
 
-        # Return key words
-        return [caption, "None"]
+        # Return caption
+        return caption
 
     def frame_caption(self, frame):
         """
@@ -72,7 +72,4 @@ class ImageCaptioningHandler:
         caption_output = self.get_captions(frame_location)
 
         # Return key words
-        return [
-            self.original_output_dir + "/" + frame,
-            caption_output[0],
-        ]  # Example return value
+        return caption_output

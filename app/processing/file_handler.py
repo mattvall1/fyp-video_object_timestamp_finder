@@ -82,19 +82,23 @@ class FileHandler:
 
             # Caption frame
             generator_output = frame_caption_generator.frame_caption(frame)
-            print("Generated caption: " + generator_output[1])
+            print("Generated caption: " + generator_output)
 
             # Display frame in preview window
-            self.frame_displayer.display_frame(generator_output[0])
+            self.frame_displayer.display_frame(frame)
 
             # Compare caption to search term
             search_results = (
                 self.element_handler.search_term_handler.compare_caption_to_search_term(
-                    generator_output[1]
+                    generator_output
                 )
             )
             # TEMP PRINT
             if search_results:
+                # Get timestamp for the frame
+                timestamp = frame
+
+
                 print(f"Search term found: {", ".join(search_results)}")
                 print("PAUSE SIGNAL")
                 # Pause processing
@@ -103,7 +107,7 @@ class FileHandler:
                 print("Search term not found")
 
             # Save caption to CSV
-            self.save_caption(frame, generator_output[1])
+            self.save_caption(frame, generator_output)
 
             # Update progress bar (second half of bar)
             self.progress_bar.setValue(50 + int((frame_count / total_frames) * 50))
