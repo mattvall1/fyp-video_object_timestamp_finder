@@ -24,7 +24,6 @@ class KeyFraming:
         self.frame_displayer = frame_displayer
         self.progress_bar = progress_bar
 
-        # Split video method
         self.total_frames = 0
         self.all_frames = "data/original_frames"
 
@@ -36,18 +35,24 @@ class KeyFraming:
             print(f"Error: Could not open video file {self.file_path}")
             return
 
+        # Open video file
         success, image = video_cap.read()
         if not success:
             print("Error: Could not read video")
             video_cap.release()
             return
 
+        # Get total number of frames and setup count
         self.total_frames = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        count = 0
+        frame_count = 0
 
+        # Save frames to directory
         while success:
+            # Get timestamp for frame (milliseconds)
+            timestamp = round(video_cap.get(cv2.CAP_PROP_POS_MSEC))
+
             # Save frame as JPEG file
-            frame_path = os.path.join(self.all_frames, f"{count:04d}.jpg")
+            frame_path = os.path.join(self.all_frames, f"{frame_count:04d}_{timestamp}.jpg")
             cv2.imwrite(frame_path, image)
             success, image = video_cap.read()
             print(f"Saving frame '{frame_path}'")
@@ -56,9 +61,9 @@ class KeyFraming:
             self.frame_displayer.display_frame(frame_path)
 
             # Update progress bar (first third of first half of bar)
-            self.progress_bar.setValue(int((count / self.total_frames) * 16))
+            self.progress_bar.setValue(int((frame_count / self.total_frames) * 16))
 
-            count += 1
+            frame_count += 1
 
         video_cap.release()
 
