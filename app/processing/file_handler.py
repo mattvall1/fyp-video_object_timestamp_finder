@@ -9,7 +9,7 @@ import time
 from app.global_tools import Tools
 from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
-from app.processing.key_framing import KeyFraming
+from app.processing.key_frame_handler import KeyFrameHandler
 
 
 def setup_caption_file(video_name):
@@ -55,7 +55,7 @@ class FileHandler:
     def extract_keyframes(self):
         """Extract keyframes from the video file and process them."""
         # Create instance of KeyFraming
-        key_fr = KeyFraming(
+        key_fr = KeyFrameHandler(
             file_path=self.file_path,
             output_dir=self.output_dir,
             frame_displayer=self.frame_displayer,

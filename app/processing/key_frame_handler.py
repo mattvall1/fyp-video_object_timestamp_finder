@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # TODO: Mention in report here we started with katna but it didnt do what I wanted
 
 
-class KeyFraming:
+class KeyFrameHandler:
     # TODO: In report Explain what these pylint things do
     # pylint: disable=too-few-public-methods,too-many-arguments,too-many-positional-arguments
     """Handles the extraction of key frames from video files by using S Ghatak's method."""
