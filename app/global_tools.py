@@ -9,7 +9,6 @@ class Tools:
             "data/key_frames",
             "data/original_frames",
             "data/frame_histograms",
-            "data/data_files",
         ]
         count = 0
         for directory in directories:
@@ -25,7 +24,6 @@ class Tools:
     def create_directories():
         directories = [
             "data",
-            "data/data_files",
             "data/key_frames",
             "data/frame_histograms",
             "data/original_frames",

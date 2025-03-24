@@ -23,7 +23,7 @@ def setup_caption_file(video_name):
     # Open the CSV file to write results to - DO NOT use 'with' statement (as it closes the file)
     # pylint: disable=consider-using-with
     captions_file = open(
-        f"data/data_files/{video_name}_captions.csv",
+        f"data/{video_name}_captions.csv",
         "w",
         newline="\n",
         encoding="utf-8",

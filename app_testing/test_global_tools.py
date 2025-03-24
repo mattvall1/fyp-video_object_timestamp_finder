@@ -17,7 +17,6 @@ class TestGlobalTools(unittest.TestCase):
         os.makedirs(os.path.join(self.test_dir, "data/key_frames"))
         os.makedirs(os.path.join(self.test_dir, "data/original_frames"), exist_ok=True)
         os.makedirs(os.path.join(self.test_dir, "data/frame_histograms"), exist_ok=True)
-        os.makedirs(os.path.join(self.test_dir, "data/data_files"), exist_ok=True)
 
     def tearDown(self):
         # Clean up temporary directory
@@ -32,7 +31,6 @@ class TestGlobalTools(unittest.TestCase):
             ['0000.jpg', '0001.jpg', '0002.jpg', '0003.jpg'],  # key_frames
             ['0000.jpg', '0001.jpg', '0002.jpg', '0003.jpg', '0004.jpg', '0005.jpg', '0006.jpg'],               # original_frames
             ['0000_0001_hist.jpg', '0001_0002_hist.jpg'],  # frame_histograms
-            []                          # data_files (empty)
         ]
 
         # Call clear_frame_directories
@@ -53,7 +51,6 @@ class TestGlobalTools(unittest.TestCase):
         # Expected directories to be created (TODO: Update with actual expected directories, when we get to full testing phase)
         expected_dirs = [
             "data",
-            "data/data_files",
             "data/key_frames",
             "data/frame_histograms",
             "data/original_frames",
