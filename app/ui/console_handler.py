@@ -11,7 +11,6 @@ class ConsoleHandler:
 
     def __init__(self, text_edit):
         self.output_field = text_edit
-        self.line_count = 0
 
     def write(self, text):
         """
@@ -24,7 +23,3 @@ class ConsoleHandler:
         self.output_field.insertPlainText(text)
         self.output_field.ensureCursorVisible()
         QtWidgets.QApplication.processEvents()  # Ensure the UI updates in real-time
-
-    def flush(self):
-        """Flush method required for file-like object compatibility."""
-        # TODO: Do we need this? Why is this here?
