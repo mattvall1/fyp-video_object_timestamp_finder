@@ -6,7 +6,7 @@ Based on: https://www.ijeast.com/papers/51-56,Tesma108,IJEAST.pdf
 """
 import os
 import shutil
-
+import time
 import cv2
 import matplotlib.pyplot as plt
 
@@ -64,6 +64,9 @@ class KeyFrameHandler:
 
             # Update progress bar (first third of first half of bar)
             self.progress_bar.setValue(int((frame_count / self.total_frames) * 16))
+
+            # Short wait to prevent overloading drive
+            time.sleep(0.1)
 
             frame_count += 1
 
