@@ -16,6 +16,9 @@ class ElementHandler:
         self.selected_file_path = None
         self.search_term_handler = None
 
+        # Save search term
+        self.search_term = None
+
         # Find all UI elements
         self.select_file_button = self.main_window.findChild(
             QtWidgets.QPushButton, "select_file_button"
@@ -80,18 +83,18 @@ class ElementHandler:
     def handle_find_button(self):
         """Handle find button click to start search with selected file and search term."""
         # Get search term
-        search_term = self.find_text.text()
+        self.search_term = self.find_text.text()
 
         # Check if file path and search term are set
-        if self.selected_file_path and search_term:
+        if self.selected_file_path and self.search_term:
             # Create a SearchTermHandler instance
-            self.search_term_handler = LanguageHandler(search_term)
+            self.search_term_handler = LanguageHandler(self.search_term)
             # Use property setter or method to safely set main window's file path
             self.main_window.selected_file_path = self.selected_file_path
             self.main_window.create_file_handler()
-        elif not self.selected_file_path and not search_term:
+        elif not self.selected_file_path and not self.search_term:
             print("No file selected or search term provided")
-        elif not search_term:
+        elif not self.search_term:
             print("No search term provided")
         elif not self.selected_file_path:
             print("No file selected")

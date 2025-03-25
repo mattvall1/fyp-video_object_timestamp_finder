@@ -44,6 +44,7 @@ class FileHandler:
         self.frame_displayer = FrameDisplayer(self.element_handler.preview_element)
         self.progress_bar = self.element_handler.progress_bar
         self.output_dir = "data/key_frames"
+        self.matching_frames = []
 
         # Delete old frames
         Tools.clear_frame_directories()
@@ -104,16 +105,21 @@ class FileHandler:
                 # Get timestamp for the frame - divide by 1000 to convert to seconds
                 timestamp = int(frame.split("_")[1].split(".")[0]) / 1000
 
+                # Add frame to matching frames list (we need to save the path to the frame here)
+                self.matching_frames.append({"filename": self.output_dir + "/" + frame, "caption": generator_output, "timestamp": timestamp})
+
                 # Print search results
                 print(
                     f"Search term found: {", ".join(search_results)} at {timestamp} seconds"
                 )
 
-                # Pause processing
+                # Pause processing (continue regardless of user input after 10 seconds)
                 self.element_handler.handle_continue_button()
-                while self.element_handler.continue_button.isEnabled():
-                    print("Processing paused, press continue to resume.")
+                ignore_wait_seconds = 10
+                while self.element_handler.continue_button.isEnabled() and ignore_wait_seconds != 0:
+                    print(f"Processing paused, press continue to resume. Continuing in {ignore_wait_seconds} seconds")
                     time.sleep(1)
+                    ignore_wait_seconds -= 1
                 print("Processing resumed")
 
             else:
@@ -128,12 +134,12 @@ class FileHandler:
         print("All captions saved to CSV file.")
 
         # Run completion handler
-        completion_handler = CompletionHandler(self.element_handler)
+        completion_handler = CompletionHandler(self.element_handler, self.matching_frames)
         # Ask user if they want to generate a report
 
         generate_report = self.element_handler.generate_report_modal()
         if generate_report:
-            completion_handler.generate_completion_report()
+            completion_handler.generate_completion_report(generate_report)
 
     def save_caption(self, frame, caption):
         """
