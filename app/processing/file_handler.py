@@ -12,29 +12,6 @@ from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
 from app.processing.key_frame_handler import KeyFrameHandler
 
-
-def setup_caption_file(video_name):
-    """
-    Set up CSV writer for storing captions.
-
-    Parameters:
-        video_name: Name of the video file being processed
-
-    Return:
-        tuple: CSV writer and file handle
-    """
-    # Open the CSV file to write results to - DO NOT use 'with' statement (as it closes the file)
-    # pylint: disable=consider-using-with
-    captions_file = open(
-        f"data/{video_name}_captions.csv",
-        "w",
-        newline="\n",
-        encoding="utf-8",
-    )
-    csv_writer = csv.writer(captions_file)
-    return csv_writer, captions_file
-
-
 class FileHandler:
     """Handles video file processing, keyframe extraction, and caption generation."""
 
@@ -50,9 +27,31 @@ class FileHandler:
         Tools.clear_frame_directories()
 
         # Create writer for caption file
-        self.csv_writer, self.results_file = setup_caption_file(
+        self.csv_writer, self.results_file = self._setup_caption_file(
             file_path.split(".")[0].split("/")[-1]
         )
+
+    @staticmethod
+    def _setup_caption_file(video_name):
+        """
+        Set up CSV writer for storing captions.
+
+        Parameters:
+            video_name: Name of the video file being processed
+
+        Return:
+            tuple: CSV writer and file handle
+        """
+        # Open the CSV file to write results to - DO NOT use 'with' statement (as it closes the file)
+        # pylint: disable=consider-using-with
+        captions_file = open(
+            f"data/{video_name}_captions.csv",
+            "w",
+            newline="\n",
+            encoding="utf-8",
+        )
+        csv_writer = csv.writer(captions_file)
+        return csv_writer, captions_file
 
     def extract_keyframes(self):
         """Extract keyframes from the video file and process them."""

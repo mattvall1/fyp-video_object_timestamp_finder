@@ -64,7 +64,8 @@ class LanguageHandler:
             return list(intersection)
         return False
 
-    def _split_caption(self, caption):
+    @staticmethod
+    def _split_caption(caption):
         """
         Split caption into individual words after cleaning.
 
@@ -83,7 +84,8 @@ class LanguageHandler:
         # Remove duplicates and return
         return set(split_caption)
 
-    def _remove_irrelevant_words(self, word_set):
+    @staticmethod
+    def _remove_irrelevant_words(word_set):
         """
         Remove irrelevant words from a set of words.
 

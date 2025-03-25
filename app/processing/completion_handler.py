@@ -147,8 +147,8 @@ class CompletionHandler:
             # Update position for next element
             y_position -= (scaled_height + 60 + (caption_row_height - table_row_height))
 
-
-    def _save_pdf(self, pdf_canvas):
+    @staticmethod
+    def _save_pdf(pdf_canvas):
         # Save the PDF file
         pdf_canvas.save()
         print("PDF saved successfully.")
