@@ -23,7 +23,7 @@ class ImageCaptioningHandler:
             "microsoft/Florence-2-large", trust_remote_code=True
         )
 
-    def get_captions(self, frame_location):
+    def _get_caption(self, frame_location):
         """
         Generate captions for an image using the Florence-2 model.
 
@@ -69,7 +69,7 @@ class ImageCaptioningHandler:
         frame_location = self.original_output_dir + "/" + frame
 
         # Detect objects in frame and get detected object strings
-        caption_output = self.get_captions(frame_location)
+        caption_output = self._get_caption(frame_location)
 
         # Return key words
         return caption_output

@@ -14,15 +14,6 @@ class LanguageHandler:
         # Get synonyms for the search term
         self.search_term_synonyms = self._get_search_synonyms()
 
-    def get_search_term(self):
-        """
-        Get the search term.
-
-        Returns:
-            str: The current search term
-        """
-        return self.search_term
-
     def _get_search_synonyms(self):
         """
         Get synonyms for the search term using WordNet.
