@@ -53,7 +53,7 @@ class FileHandler:
         csv_writer = csv.writer(captions_file)
         return csv_writer, captions_file
 
-    def extract_keyframes(self):
+    def retrieve_keyframes(self):
         """Extract keyframes from the video file and process them."""
         # Create instance of KeyFraming
         key_fr = KeyFrameHandler(
@@ -65,9 +65,9 @@ class FileHandler:
         key_fr.extract_keyframes()
 
         # Generate captions for keyframes
-        self.process_keyframes()
+        self._process_keyframes()
 
-    def process_keyframes(self):
+    def _process_keyframes(self):
         """This is the main processing function. It handles the captioning of keyframes etc."""
         # Create instance of ImageCaptioningHandler
         frame_caption_generator = ImageCaptioningHandler(

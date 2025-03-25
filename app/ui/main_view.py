@@ -17,7 +17,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.file_handler = None
         self.selected_file_path = None
         uic.loadUi("ui/main_view.ui", self)
 
@@ -36,8 +35,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def create_file_handler(self):
         """Create file handler and begin keyframe extraction process."""
         # Create file handler instance and play video
-        self.file_handler = FileHandler(
+        file_handler = FileHandler(
             self.selected_file_path,
             element_handler=self.element_handler,
         )
-        self.file_handler.extract_keyframes()
+        file_handler.retrieve_keyframes()
