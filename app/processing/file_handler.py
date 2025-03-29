@@ -1,6 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-"""File handler module for processing video files and extracting keyframes."""
+# Purpose: File handler module for processing video files and extracting keyframes.
 
 import os
 import csv

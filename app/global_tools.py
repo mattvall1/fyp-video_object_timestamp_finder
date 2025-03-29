@@ -1,6 +1,7 @@
-# Script to delete all key frames from the key_frames directory
+# © 2025 Matthew Vallance. All rights reserved.
+# COMP1682 Final Year Project.
+# Purpose: Tools to delete and create directories
 import os
-
 
 class Tools:
     @staticmethod
