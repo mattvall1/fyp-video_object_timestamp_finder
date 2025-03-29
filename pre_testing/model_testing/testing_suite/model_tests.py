@@ -18,7 +18,7 @@ from pre_testing.model_testing.testing_suite.metrics.ROUGE_score import ROUGESco
 import open_clip
 from transformers import (
     AutoProcessor,
-    AutoModelForImageTextToText,
+    AutoModelForImageTextToText, AutoModelForCausalLM,
 )
 
 
@@ -149,6 +149,14 @@ if __name__ == "__main__":
         "Salesforce/blip-image-captioning-base"
     ).to(device)
 
+    # ---------- Florence2 ----------
+    florence_processor = AutoProcessor.from_pretrained(
+        "microsoft/Florence-2-large", trust_remote_code=True
+    )
+    florence_model = AutoModelForCausalLM.from_pretrained(
+        "microsoft/Florence-2-large", trust_remote_code=True
+    ).to(device)
+
     print("Models loaded, starting test...")
     # Get model scores
     completion_percentage = 0
@@ -213,6 +221,23 @@ if __name__ == "__main__":
 
         # Calculate scores and save results
         calculate_scores_save("BLIP", reference_captions[i], blip_candidate_caption)
+
+        # ---------- Run Florence2 ----------
+        inputs = florence_processor(images=image, text=[""], return_tensors="pt").to(
+            device
+        )
+        with torch.no_grad():
+            outputs = florence_model.generate(**inputs, max_new_tokens=50)
+            florence_candidate_caption = florence_processor.decode(
+                outputs[0], skip_special_tokens=True
+            )
+        # Print candidate caption
+        print(f"Florence2 Candidate: {florence_candidate_caption}")
+
+        # Calculate scores and save results
+        calculate_scores_save(
+            "Florence2", reference_captions[i], florence_candidate_caption
+        )
 
         # Print progress
         completion_percentage += 1
