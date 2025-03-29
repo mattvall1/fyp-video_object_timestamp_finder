@@ -55,6 +55,13 @@ def save_failed_url(url):
     with open("results/failed_urls.csv", "a") as rf:
         rf.write(url + "\n")
 
+# Add this function to save other errors
+def save_error(error_message, image_url, model_name=None):
+    with open("results/other_errors.csv", "a", newline="\n") as error_file:
+        writer = csv.writer(error_file)
+        if error_file.tell() == 0:
+            writer.writerow(["Timestamp", "Model", "Image URL", "Error Message"])
+        writer.writerow([int(time.time()), model_name or "N/A", image_url, error_message])
 
 # Calculate scores
 def calculate_scores_save(model_name, reference_captions, candidate_caption):
@@ -162,6 +169,7 @@ if __name__ == "__main__":
     completion_percentage = 0
     total_images = len(reference_captions)
     total_failed = 0
+
     for i in range(total_images):
         image_url = image_urls[i]
         print(f"Image URL: {image_url}")
@@ -186,58 +194,73 @@ if __name__ == "__main__":
         print(f"Reference(s): {reference_captions[i]}")
 
         # ---------- Run OpenCLIP ----------
-        transformed_image = (
-            openclip_transform(image).unsqueeze(0).to(torch.float32).to(device)
-        )
+        try:
+            transformed_image = (
+                openclip_transform(image).unsqueeze(0).to(torch.float32).to(device)
+            )
 
-        with torch.no_grad():
-            generation = openclip_model.generate(transformed_image)
+            with torch.no_grad():
+                generation = openclip_model.generate(transformed_image)
 
-        openclip_candidate_caption = (
-            open_clip.decode(generation[0])
-            .split("<end_of_text>")[0]
-            .replace("<start_of_text>", "")
-        )
+            openclip_candidate_caption = (
+                open_clip.decode(generation[0])
+                .split("<end_of_text>")[0]
+                .replace("<start_of_text>", "")
+            )
 
-        # Print candidate caption
-        print(f"OpenCLIP Candidate: {openclip_candidate_caption}")
+            # Print candidate caption
+            print(f"OpenCLIP Candidate: {openclip_candidate_caption}")
 
-        # Calculate scores and save results
-        calculate_scores_save(
-            "OpenCLIP", reference_captions[i], openclip_candidate_caption
-        )
+            # Calculate scores and save results
+            calculate_scores_save(
+                "OpenCLIP", reference_captions[i], openclip_candidate_caption
+            )
+        except Exception as e:
+            error_msg = f"OpenCLIP processing error: {str(e)}"
+            print(error_msg)
+            save_error(error_msg, image_url, "OpenCLIP")
 
         # ---------- Run BLIP ----------
-        inputs = blip_processor(images=image, text=[""], return_tensors="pt").to(device)
+        try:
+            inputs = blip_processor(images=image, text=[""], return_tensors="pt").to(device)
 
-        with torch.no_grad():
-            outputs = blip_model.generate(**inputs, max_new_tokens=50)
-            blip_candidate_caption = blip_processor.decode(
-                outputs[0], skip_special_tokens=True
-            )
+            with torch.no_grad():
+                outputs = blip_model.generate(**inputs, max_new_tokens=50)
+                blip_candidate_caption = blip_processor.decode(
+                    outputs[0], skip_special_tokens=True
+                )
 
-        # Print candidate caption
-        print(f"BLIP Candidate: {blip_candidate_caption}")
+            # Print candidate caption
+            print(f"BLIP Candidate: {blip_candidate_caption}")
 
-        # Calculate scores and save results
-        calculate_scores_save("BLIP", reference_captions[i], blip_candidate_caption)
+            # Calculate scores and save results
+            calculate_scores_save("BLIP", reference_captions[i], blip_candidate_caption)
+        except Exception as e:
+            error_msg = f"BLIP processing error: {str(e)}"
+            print(error_msg)
+            save_error(error_msg, image_url, "BLIP")
 
         # ---------- Run Florence2 ----------
-        inputs = florence_processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(
-            device
-        )
-        with torch.no_grad():
-            outputs = florence_model.generate(**inputs, max_new_tokens=50)
-            florence_candidate_caption = florence_processor.decode(
-                outputs[0], skip_special_tokens=True
+        try:
+            inputs = florence_processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(
+                device
             )
-        # Print candidate caption
-        print(f"Florence2 Candidate: {florence_candidate_caption}")
+            with torch.no_grad():
+                outputs = florence_model.generate(**inputs, max_new_tokens=50)
+                florence_candidate_caption = florence_processor.decode(
+                    outputs[0], skip_special_tokens=True
+                )
+            # Print candidate caption
+            print(f"Florence2 Candidate: {florence_candidate_caption}")
 
-        # Calculate scores and save results
-        calculate_scores_save(
-            "Florence2", reference_captions[i], florence_candidate_caption
-        )
+            # Calculate scores and save results
+            calculate_scores_save(
+                "Florence2", reference_captions[i], florence_candidate_caption
+            )
+        except Exception as e:
+            error_msg = f"Florence2 processing error: {str(e)}"
+            print(error_msg)
+            save_error(error_msg, image_url, "Florence2")
 
         # Print progress
         completion_percentage += 1
