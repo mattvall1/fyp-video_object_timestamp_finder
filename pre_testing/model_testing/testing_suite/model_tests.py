@@ -223,7 +223,7 @@ if __name__ == "__main__":
         calculate_scores_save("BLIP", reference_captions[i], blip_candidate_caption)
 
         # ---------- Run Florence2 ----------
-        inputs = florence_processor(images=image, text=[""], return_tensors="pt").to(
+        inputs = florence_processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(
             device
         )
         with torch.no_grad():
