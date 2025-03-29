@@ -5,6 +5,7 @@ import csv
 import time
 import PIL
 from io import BytesIO
+import nltk
 import torch
 import requests
 from PIL import Image
@@ -121,8 +122,9 @@ def calculate_scores_save(model_name, reference_captions, candidate_caption):
 if __name__ == "__main__":
     # Setup test
     text_caps = TextCaps()
-    device = "mps"
+    device = "cuda"
     limit = 0  # Set to 0 to run all images
+    nltk.data.path.append("E:\\yr3fyp_object_detection\\nltk_data")
 
     # Set up results file and get writer
     csv_writer, results_file = setup_results_file()
