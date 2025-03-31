@@ -19,5 +19,23 @@ if(!is.null(results)) {
   cat("Total rows:", nrow(results), "\n")
   cat("Total columns:", ncol(results), "\n")
 
+} else {
+  cat("Failed to load data\n")
+  stop("Data loading error")
 }
 
+# Extract and sum BLEU scores for OpenCLIP model
+if("model" %in% colnames(results) && "metric" %in% colnames(results) && "score" %in% colnames(results)) {
+  # Filter for OpenCLIP model and BLEU metric
+  openclip_bleu <- results[results$model == "OpenCLIP" & results$metric == "BLEU", ]
+
+  # Calculate total BLEU score
+  total_bleu_score <- sum(openclip_bleu$score, na.rm = TRUE)
+
+  # Display results
+  cat("Total OpenCLIP BLEU score:", total_bleu_score, "\n")
+  cat("Number of OpenCLIP BLEU scores:", nrow(openclip_bleu), "\n")
+  cat("Average OpenCLIP BLEU score:", total_bleu_score / nrow(openclip_bleu), "\n")
+} else {
+  cat("Required columns not found in the dataset\n")
+}

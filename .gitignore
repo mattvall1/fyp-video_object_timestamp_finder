@@ -20,6 +20,7 @@ runs/
 
 # Data analysis (in R) ignores
 testing_data_analysis/model_results.csv
+testing_data_analysis/model_results.db
 
 # ---------- LaTeX Reports -----------
 *.acn
