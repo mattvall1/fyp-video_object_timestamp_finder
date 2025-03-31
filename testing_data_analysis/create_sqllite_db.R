@@ -20,8 +20,8 @@ for (csv_file_path in csv_file_paths) {
   # Read the CSV file into a data frame
   results_csv_df <- read_csv(csv_file_path)
 
-  # Convert headings to lowercase
-  results_csv_df <- setNames(results_csv_df, tolower(names(results_csv_df)))
+  # Convert headings to lowercase (and replace spaces with underscores)
+  results_csv_df <- setNames(results_csv_df, gsub(" ", "_", tolower(names(results_csv_df))))
 
   # Get the table name from the CSV file name
   table_name <- gsub("\\.csv$", "", basename(csv_file_path))
