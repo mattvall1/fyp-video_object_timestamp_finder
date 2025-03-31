@@ -18,6 +18,9 @@ pre_testing/key_framing/outputs
 # Premade model testing
 runs/
 
+# Data analysis (in R) ignores
+testing_data_analysis/model_results.csv
+
 # ---------- LaTeX Reports -----------
 *.acn
 *.acr
