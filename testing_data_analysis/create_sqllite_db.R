@@ -13,6 +13,9 @@ sqlite_db_path <- "model_results.db"
 # Read the CSV file into a data frame
 results_csv_df <- read_csv(csv_file_path)
 
+# Convert headings to lowercase
+results_csv_df <- setNames(results_csv_df, tolower(names(results_csv_df)))
+
 # Connect to the SQLite database (it will be created if it doesn't exist)
 results_db <- dbConnect(SQLite(), dbname = sqlite_db_path)
 
