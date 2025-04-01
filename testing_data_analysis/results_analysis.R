@@ -5,6 +5,7 @@
 # Load the required libraries
 library(data.table)
 library(RSQLite)
+library(ggplot2)
 
 # Set DB path
 sqlite_db_path <- "testing_results.db"
@@ -79,16 +80,62 @@ print(all_metrics)
 fwrite(summary_table, "output/summary_table.csv")
 fwrite(all_metrics, "output/all_metrics.csv")
 
-# Create a pie chart of the summary (save as PNG)
+# Create a pie chart of the summary
 png("output/summary_pie_chart.png", width = 1000, height = 1000)
+par(family = "Noto Serif")
 pie(
   c(summary_table$TotalImagesAnalysed, summary_table$MissingImages),
   labels = c("Valid Images", "Missing Images"),
   main = "Summary of Testing Results",
-  col = c("#5DE2E7", "#DF0101"),
+  col = c("#6F87ED", "#F06A78"),
   cex = 1.5, # Label size
   cex.main = 3 # Title size
 )
 dev.off()
 
+# Create a dataframe for the grouped bar chart of the metrics
+all_metrics <- data.frame(
+  model = rep(c("BLIP", "Florence2", "OpenCLIP"), each = 5),
+  metric = rep(c("BLEU", "METEOR", "ROUGE-1", "ROUGE-2", "ROUGE-L"), times = 3),
+  score = c(
+	bleu_scores$bleu[1], meteor_scores$meteor[1], rouge_1_scores$rouge_1[1],
+	rouge_2_scores$rouge_2[1], rouge_l_scores$rouge_l[1],
+	bleu_scores$bleu[2], meteor_scores$meteor[2], rouge_1_scores$rouge_1[2],
+	rouge_2_scores$rouge_2[2], rouge_l_scores$rouge_l[2],
+	bleu_scores$bleu[3], meteor_scores$meteor[3], rouge_1_scores$rouge_1[3],
+	rouge_2_scores$rouge_2[3], rouge_l_scores$rouge_l[3]
+  )
+)
 
+print(all_metrics)
+
+# Create a bar chart of the metrics using ggplot2 (save as PNG)
+png("output/metrics_bar_chart.png", width = 1000, height = 1000, res = 100)
+ggplot(all_metrics, aes(fill=model, y=score, x=metric)) +
+  # First, create horizontal lines (Remember: this needs asjusting dependant on data entered)
+  geom_hline(yintercept = seq(0, 0.36, by = 0.01), color = "gray90", linetype = "dashed") +
+  # Create bars
+  geom_bar(position='dodge', stat='identity') +
+  # Add nice colours
+  scale_fill_manual(values = c("BLIP" = "#6F87ED", "Florence2" = "#AA6FED", "OpenCLIP" = "#58D4EF")) +
+  # Force y-axis to start at 0 and add a small margin
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), limits = c(0, NA)) +
+  # Add the data labels (plus rename axis')
+  labs(
+	title = "Model Performance Metrics",
+	x = "Metric",
+	y = "Score",
+	fill = "Model"
+  ) +
+  # Classic theme (nice, simple theme)
+  theme_classic() +
+  # Theme adjustments
+  theme(
+	text = element_text(family = "Noto Serif"),
+	legend.title = element_text(size = 12, hjust = 0.5),
+	legend.text = element_text(size = 10),
+	plot.title = element_text(size = 24, face = "bold", hjust = 0.6),
+	axis.title = element_text(size = 14),
+  )
+
+dev.off()

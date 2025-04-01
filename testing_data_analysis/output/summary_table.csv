@@ -1,2 +1,2 @@
-TotalResults,TimeTakenHours,AvgTimeTakenSeconds,TotalImagesAttempted,TotalImagesAnalysed,MissingImages,PercentageImagesFailed,OtherErrors
-1235260,56.07,2,109765,82492,27273,24.85,424
+TotalResults,TimeTakenHours,TotalImagesAttempted,TotalImagesAnalysed,MissingImages,PercentageImagesFailed,OtherErrors
+1235260,56.07,109765,82492,27273,24.85,424
