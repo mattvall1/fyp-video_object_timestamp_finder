@@ -19,9 +19,7 @@ pre_testing/key_framing/outputs
 runs/
 
 # Data analysis (in R) ignores
-testing_data_analysis/model_results.csv
-testing_data_analysis/other_errors.csv
-testing_data_analysis/failed_urls.csv
+testing_data_analysis/results
 testing_data_analysis/testing_results.db
 
 # ---------- LaTeX Reports -----------

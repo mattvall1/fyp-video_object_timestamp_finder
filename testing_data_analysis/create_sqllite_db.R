@@ -7,9 +7,9 @@ library(RSQLite)
 library(readr)
 
 # Set paths
-csv_file_paths <- list("model_results.csv",
-					   "failed_urls.csv",
-					   "other_errors.csv")
+csv_file_paths <- list("results/auto_results.csv",
+					   "results/failed_urls.csv",
+					   "results/other_errors.csv")
 sqlite_db_path <- "testing_results.db"
 
 # Connect to the SQLite database (it will be created if it doesn't exist)
