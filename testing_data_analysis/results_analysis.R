@@ -18,7 +18,6 @@ results_summary <- dbGetQuery(db_conn, "SELECT COUNT(*) AS total_rows, MAX(times
 # Import the original summary table from the DB (some of this will match the results_summary table)
 summary <- dbGetQuery(db_conn, "SELECT \"total_failed/non-existent_images\" AS total_failed, total_attempted_images FROM summary")
 
-
 # Get BLEU scores for each model
 bleu_scores <- dbGetQuery(db_conn, "SELECT model, AVG(score) AS bleu FROM auto_results WHERE metric = 'BLEU' GROUP BY model")
 print(bleu_scores)
@@ -52,7 +51,6 @@ dbDisconnect(db_conn)
 summary_table <- data.table(
   TotalResults = results_summary$total_rows,
   TimeTakenHours = round(results_summary$total_time_taken_s/60/60, 2), # Convert seconds to hours
-  AvgTimeTakenSeconds = 2, # TODO: Calculate average time taken per image
   TotalImagesAttempted = summary$total_attempted_images,
   TotalImagesAnalysed = summary$total_attempted_images - summary$total_failed,
   MissingImages = failed_urls$failed_urls,
