@@ -1,6 +1,10 @@
 # Notes on testing_data/ directory
 The testing_data/ directory must be created and contains the datasets used for testing the model. Each dataset is stored in a separate subdirectory.
 
+## Pre-requisites
+Imnstall: 
+Install: `pip install aac-metrics`
+
 ## Directory structure
 The various files should be retrieved according to the list in the next section.
 ```

@@ -10,19 +10,15 @@ This directory contains all automated tests for the application
 
 ## Running Tests
 
-Open a terminal and navigate to the app_testing directory of the project. Then run:
-
-To run all tests:
-
-```bash
-python run_tests.py
-```
-
-To run specific test files:
-
-```bash
-python processing/test_file_handler.py
-```
+1. Open a terminal and navigate to the app_testing directory of the project. Then run any of the following commands to run the tests:
+   1. To run all tests:
+    ```bash
+    python run_tests.py
+    ```
+   2. To run specific test files:
+    ```bash
+    python processing/test_file_handler.py
+    ```
 
 ## Notes
 
