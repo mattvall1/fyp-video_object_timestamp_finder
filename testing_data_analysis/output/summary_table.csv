@@ -1,2 +1,2 @@
-TotalRows,MissingURLs,OtherErrors,TimeTakenHours
-1235260,27273,424,56.0736
+TotalResults,TimeTakenHours,AvgTimeTakenSeconds,TotalImagesAttempted,TotalImagesAnalysed,MissingImages,PercentageImagesFailed,OtherErrors
+1235260,56.07,2,109765,82492,27273,24.85,424

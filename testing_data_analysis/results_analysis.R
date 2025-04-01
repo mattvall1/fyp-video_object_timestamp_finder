@@ -12,8 +12,12 @@ sqlite_db_path <- "testing_results.db"
 # Open SQLLite connection
 db_conn <- dbConnect(RSQLite::SQLite(), sqlite_db_path)
 
-# First, get some statistics about the table
+# First, get some statistics about the results table
 results_summary <- dbGetQuery(db_conn, "SELECT COUNT(*) AS total_rows, MAX(timestamp) - MIN(timestamp) AS total_time_taken_s FROM auto_results")
+
+# Import the original summary table from the DB (some of this will match the results_summary table)
+summary <- dbGetQuery(db_conn, "SELECT \"total_failed/non-existent_images\" AS total_failed, total_attempted_images FROM summary")
+
 
 # Get BLEU scores for each model
 bleu_scores <- dbGetQuery(db_conn, "SELECT model, AVG(score) AS bleu FROM auto_results WHERE metric = 'BLEU' GROUP BY model")
@@ -46,10 +50,14 @@ dbDisconnect(db_conn)
 
 # Create a summary table
 summary_table <- data.table(
-  TotalRows = results_summary$total_rows,
-  MissingURLs = failed_urls$failed_urls,
-  OtherErrors = other_errors$other_errors,
-  TimeTakenHours = round(results_summary$total_time_taken_s/60/60, 4) # Convert seconds to hours
+  TotalResults = results_summary$total_rows,
+  TimeTakenHours = round(results_summary$total_time_taken_s/60/60, 2), # Convert seconds to hours
+  AvgTimeTakenSeconds = 2, # TODO: Calculate average time taken per image
+  TotalImagesAttempted = summary$total_attempted_images,
+  TotalImagesAnalysed = summary$total_attempted_images - summary$total_failed,
+  MissingImages = failed_urls$failed_urls,
+  PercentageImagesFailed = round((summary$total_failed / summary$total_attempted_images) * 100, 2),
+  OtherErrors = other_errors$other_errors
 )
 
 # Combine all metric scores into a single table
@@ -76,10 +84,10 @@ fwrite(all_metrics, "output/all_metrics.csv")
 # Create a pie chart of the summary (save as PNG)
 png("output/summary_pie_chart.png", width = 1000, height = 1000)
 pie(
-  c(summary_table$TotalRows, summary_table$MissingURLs, summary_table$OtherErrors),
-  labels = c("Valid Results", "Missing Images", "Other Errors"),
+  c(summary_table$TotalImagesAnalysed, summary_table$MissingImages),
+  labels = c("Valid Images", "Missing Images"),
   main = "Summary of Testing Results",
-  col = c("#5DE2E7", "#DF0101", "#FE9900"),
+  col = c("#5DE2E7", "#DF0101"),
   cex = 1.5, # Label size
   cex.main = 3 # Title size
 )

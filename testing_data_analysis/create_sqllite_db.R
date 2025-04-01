@@ -6,10 +6,11 @@
 library(RSQLite)
 library(readr)
 
-# Set paths
+# Set paths (Note: We only import the summary, for ease of use within the analysis)
 csv_file_paths <- list("results/auto_results.csv",
 					   "results/failed_urls.csv",
-					   "results/other_errors.csv")
+					   "results/other_errors.csv",
+					   "results/summary.csv")
 sqlite_db_path <- "testing_results.db"
 
 # Connect to the SQLite database (it will be created if it doesn't exist)
