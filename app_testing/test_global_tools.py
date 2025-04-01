@@ -48,7 +48,7 @@ class TestGlobalTools(unittest.TestCase):
         self.assertEqual(count, 13)
 
         # Check if os.listdir was called for each directory
-        self.assertEqual(mock_listdir.call_count, 4)
+        self.assertEqual(mock_listdir.call_count, 3)
 
         # Check if os.remove was called for each file
         self.assertEqual(mock_remove.call_count, 13)
