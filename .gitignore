@@ -18,8 +18,8 @@ pre_testing/key_framing/outputs
 runs/
 
 # Data analysis (in R) ignores
-testing_data_analysis/results
-testing_data_analysis/testing_results.db
+testing_data_analysis/automated_testing/results
+testing_data_analysis/automated_testing/testing_results.db
 
 # ---------- LaTeX Reports -----------
 *.acn
