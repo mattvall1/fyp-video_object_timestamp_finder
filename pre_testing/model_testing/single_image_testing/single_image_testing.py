@@ -22,20 +22,20 @@ from transformers import (
 device = "mps"
 image_paths = []
 runs = 2
-models_to_run = ["OpenCLIP", "YOLO", "SalesForceBLIP", "Florence2"]
+models_to_run = ["OpenCLIP", "SalesForceBLIP", "Florence2"]
 
 # YOLO settings (if using YOLO)
 if "YOLO" in models_to_run:
     yolo_settings.update(
         {
-            "datasets_dir": "../../datasets",
+            "datasets_dir": "../../../datasets",
             "runs_dir": "detection_output/yolo_runs",
             "weights_dir": "detection_output/yolo_runs",
         }
     )
 
 # Get all image paths
-path = "../../../testing_images"
+path = "../../testing_images/"
 dir_paths = os.listdir(path)
 for dir_path in dir_paths:
     if dir_path.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tiff")):
