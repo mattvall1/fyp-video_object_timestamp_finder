@@ -73,7 +73,7 @@ def save_results(results):
                 [
                     int(time.time()),
                     result[0],
-                    run,
+                    result[2],
                     image_paths[run],
                     result[1][0][run],
                     result[1][2][run],
@@ -86,12 +86,12 @@ def save_results(results):
         if file.tell() == 0:
             writer.writerow(
                 [
-                    "Timestamp",
-                    "Model Name",
-                    "Run Number",
-                    "Image Name",
-                    "Model output",
-                    "Time Taken",
+                    "timestamp",
+                    "model_name",
+                    "run_number",
+                    "image_name",
+                    "model_output",
+                    "time_taken",
                 ]
             )
         writer.writerows(to_write)
@@ -105,22 +105,22 @@ def run_test(save_to_csv=True):
                 for i in range(runs):
                     results = run_open_clip()
                     print_results(model_name, i, results)
-                    run_results.append([model_name, results])
+                    run_results.append([model_name, results, i])
             case "YOLO":
                 for i in range(runs):
                     results = run_yolo()
                     print_results(model_name, i, results)
-                    run_results.append([model_name, results])
+                    run_results.append([model_name, results, i])
             case "SalesForceBLIP":
                 for i in range(runs):
                     results = run_blip()
                     print_results(model_name, i, results)
-                    run_results.append([model_name, results])
+                    run_results.append([model_name, results, i])
             case "Florence2":
                 for i in range(runs):
                     results = run_florence2()
                     print_results(model_name, i, results)
-                    run_results.append([model_name, results])
+                    run_results.append([model_name, results, i])
             case _:
                 print("Model not found, continuing...")
 
