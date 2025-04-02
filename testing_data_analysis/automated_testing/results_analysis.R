@@ -1,6 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-# Purpose: Analyse the data from the testing of captioning algorithms
+# Purpose: Analyse the data from the automated testing of captioning algorithms
 
 # Load the required libraries
 library(data.table)
@@ -113,7 +113,7 @@ print(all_metrics)
 png("output/metrics_bar_chart.png", width = 1000, height = 1000, res = 100)
 ggplot(all_metrics, aes(fill=model, y=score, x=metric)) +
   # First, create horizontal lines (Remember: this needs asjusting dependant on data entered)
-  geom_hline(yintercept = seq(0, 0.36, by = 0.01), color = "gray90", linetype = "dashed") +
+  geom_hline(yintercept = seq(0, 0.36, by = 0.01), color = "#E2EAF2", linetype = "dashed") +
   # Create bars
   geom_bar(position='dodge', stat='identity') +
   # Add nice colours
