@@ -9,7 +9,6 @@ app/data
 pre_testing/azure_testing/api_key.txt
 pre_testing/binary_search_theory/api_key.txt
 pre_testing/binary_search_theory/frames
-pre_testing/model_testing/single_image_testing/results.csv
 nltk_data
 pre_testing/model_testing/testing_suite/testing_data
 pre_testing/model_testing/testing_suite/results

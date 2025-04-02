@@ -21,7 +21,7 @@ from transformers import (
 # ---- Setup ----
 device = "mps"
 image_paths = []
-runs = 2
+runs = 3
 models_to_run = ["OpenCLIP", "SalesForceBLIP", "Florence2"]
 
 # YOLO settings (if using YOLO)
