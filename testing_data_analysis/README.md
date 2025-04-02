@@ -21,6 +21,6 @@ This directory contains all R code for data analysis, it was developed within Je
    2. JetBrains DataGrip can be used to view the database (or other appropriate tools)
 4. Run the `automated_testing/results_analysis.R` to perform the analysis
 
-# Manual testing results (~100+ datapoints)
+### Manual testing results (~100+ datapoints)
 2. Import the `results.csv` file to `manual_testing/results.csv`
 3. Run the `results_analysis.R` file
