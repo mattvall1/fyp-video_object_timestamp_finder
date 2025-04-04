@@ -127,6 +127,47 @@ class TestImageCaptioningHandler(unittest.TestCase):
         # Verify the result is correct
         self.assertEqual(result, test_caption)
 
+    def test_get_caption_with_nonexistent_file(self):
+        # Create a path to a non-existent image
+        nonexistent_image_path = os.path.join(self.test_dir, "nonexistent.jpg")
+        
+        # Call the method and expect an exception
+        with self.assertRaises(FileNotFoundError):
+            self.captioning_handler._get_caption(nonexistent_image_path)
+    
+    def test_get_caption_with_invalid_image(self):
+        # Create an invalid image file (empty file)
+        invalid_image_path = os.path.join(self.test_dir, "invalid.jpg")
+        with open(invalid_image_path, 'w') as f:
+            f.write("This is not a valid image file")
+            
+        # Call the method and expect an exception
+        with self.assertRaises(Exception):
+            self.captioning_handler._get_caption(invalid_image_path)
+    
+    @patch(
+        "app.processing.image_captioning_handler.ImageCaptioningHandler._get_caption"
+    )
+    def test_frame_caption_with_empty_frame_name(self, mock_get_caption):
+        # Set up the mock to raise an exception for empty frame name
+        mock_get_caption.side_effect = ValueError("Empty frame name")
+        
+        # Call the method with empty frame name and expect an exception
+        with self.assertRaises(ValueError):
+            self.captioning_handler.frame_caption("")
+    
+    def test_init_with_invalid_output_dir(self):
+        # Test initialization with an invalid output directory
+        with patch(
+            "app.processing.image_captioning_handler.AutoModelForCausalLM"
+        ) as mock_model:
+            with patch(
+                "app.processing.image_captioning_handler.AutoProcessor"
+            ) as mock_processor:
+                # Initialize with invalid directory (should allow but may cause issues later)
+                handler = ImageCaptioningHandler(original_output_dir="")
+                self.assertEqual(handler.original_output_dir, "")
+
 
 if __name__ == "__main__":
     unittest.main()
