@@ -86,6 +86,56 @@ class TestGlobalTools(unittest.TestCase):
             any_order=True,
         )
 
+    @patch("os.remove")
+    @patch("os.path.isfile")
+    @patch("os.listdir")
+    def test_clear_frame_directories_with_non_files(self, mock_listdir, mock_isfile, mock_remove):
+        # Mock return values
+        mock_listdir.side_effect = [
+            ["file1.jpg", "file2.jpg", "not_a_file"],  # key_frames
+            ["file3.jpg", "file4.jpg"],  # original_frames
+            [],  # frame_histograms (empty)
+        ]
+        
+        # Mock isfile to return False for "not_a_file"
+        mock_isfile.side_effect = lambda path: "not_a_file" not in path
+        
+        # Call clear_frame_directories
+        count = Tools.clear_frame_directories()
+        
+        # Check if the correct number of files were deleted (4, not 5)
+        self.assertEqual(count, 4)
+        
+        # Verify os.remove was called only for actual files
+        self.assertEqual(mock_remove.call_count, 4)
+    
+    @patch("os.remove")
+    @patch("os.path.isfile", return_value=True)
+    @patch("os.listdir")
+    def test_clear_frame_directories_with_permission_error(self, mock_listdir, mock_isfile, mock_remove):
+        # Mock return values
+        mock_listdir.return_value = ["file1.jpg", "file2.jpg"]
+        
+        # Mock os.remove to raise PermissionError for the second file
+        mock_remove.side_effect = [None, PermissionError("Permission denied")]
+        
+        # Call and expect exception
+        with self.assertRaises(PermissionError):
+            Tools.clear_frame_directories()
+        
+        # Verify os.remove was called twice before exception
+        self.assertEqual(mock_remove.call_count, 2)
+    
+    @patch("os.makedirs")
+    @patch("builtins.print")
+    def test_create_directories_with_permission_error(self, mock_print, mock_makedirs):
+        # Mock os.makedirs to raise PermissionError
+        mock_makedirs.side_effect = PermissionError("Permission denied")
+        
+        # Call and expect exception
+        with self.assertRaises(PermissionError):
+            Tools.create_directories()
+
 
 if __name__ == "__main__":
     unittest.main()
