@@ -98,3 +98,39 @@ class TestFrameDisplayer(unittest.TestCase):
 
         # Verify new scene was created - Once in __init__, once in clear_frame
         self.assertEqual(self.mock_qgraphicsscene.call_count, 2)
+
+    def test_display_frame_with_nonexistent_file(self):
+        # Test displaying a frame with a non-existent file path
+        non_existent_path = os.path.join(self.test_dir, "does_not_exist.jpg")
+        
+        # Mock QImage to raise an exception when initialized with invalid path
+        self.mock_qimage.side_effect = Exception("File not found")
+        
+        # Call the method and expect an exception
+        with self.assertRaises(Exception):
+            self.frame_displayer.display_frame(non_existent_path)
+            
+        # Verify QImage was attempted to be created with non-existent path
+        self.mock_qimage.assert_called_once_with(non_existent_path)
+        
+    def test_display_frame_with_invalid_image(self):
+        # Create an invalid image file (empty file)
+        invalid_image_path = os.path.join(self.test_dir, "invalid_image.jpg")
+        with open(invalid_image_path, 'w') as f:
+            f.write("This is not a valid image file")
+            
+        # Mock QImage to raise an exception when initialized with invalid image
+        self.mock_qimage.side_effect = Exception("Invalid image format")
+        
+        # Call the method and expect an exception
+        with self.assertRaises(Exception):
+            self.frame_displayer.display_frame(invalid_image_path)
+            
+        # Verify QImage was attempted to be created with invalid image path
+        self.mock_qimage.assert_called_once_with(invalid_image_path)
+        
+    def test_init_with_none_preview_element(self):
+        # Test initialization with None as the preview element
+        with patch("app.processing.frame_display.QGraphicsScene") as mock_scene:
+            with self.assertRaises(ValueError):
+                FrameDisplayer(None)

@@ -11,6 +11,8 @@ class FrameDisplayer:
     """Handles displaying frames in the application UI using QGraphicsScene."""
 
     def __init__(self, preview_element):
+        if not preview_element:
+            raise ValueError("Preview element cannot be None")
         self.preview_element = preview_element
         # Create a scene
         self.scene = QGraphicsScene()
