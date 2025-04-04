@@ -19,6 +19,15 @@ class KeyFrameHandler:
     """Handles the extraction of key frames from video files by using S Ghatak's method."""
 
     def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
+        if not file_path or not os.path.isfile(file_path):
+            raise ValueError("File path cannot be empty")
+        if not output_dir or not os.path.isdir(output_dir):
+            raise ValueError("Output directory cannot be empty")
+        if not frame_displayer:
+            raise ValueError("Frame displayer cannot be None")
+        if not progress_bar:
+            raise ValueError("Progress bar cannot be None")
+
         self.file_path = file_path
         self.output_dir = output_dir
         self.frame_displayer = frame_displayer
