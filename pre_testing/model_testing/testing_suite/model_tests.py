@@ -18,7 +18,8 @@ from pre_testing.model_testing.testing_suite.metrics.ROUGE_score import ROUGESco
 import open_clip
 from transformers import (
     AutoProcessor,
-    AutoModelForImageTextToText, AutoModelForCausalLM,
+    AutoModelForImageTextToText,
+    AutoModelForCausalLM,
 )
 
 
@@ -55,13 +56,17 @@ def save_failed_url(url):
     with open("results/failed_urls.csv", "a") as rf:
         rf.write(url + "\n")
 
+
 # Add this function to save other errors
 def save_error(error_message, image_url, model_name=None):
     with open("results/other_errors.csv", "a", newline="\n") as error_file:
         writer = csv.writer(error_file)
         if error_file.tell() == 0:
             writer.writerow(["Timestamp", "Model", "Image URL", "Error Message"])
-        writer.writerow([int(time.time()), model_name or "N/A", image_url, error_message])
+        writer.writerow(
+            [int(time.time()), model_name or "N/A", image_url, error_message]
+        )
+
 
 # Calculate scores
 def calculate_scores_save(model_name, reference_captions, candidate_caption):
@@ -222,7 +227,9 @@ if __name__ == "__main__":
 
         # ---------- Run BLIP ----------
         try:
-            inputs = blip_processor(images=image, text=[""], return_tensors="pt").to(device)
+            inputs = blip_processor(images=image, text=[""], return_tensors="pt").to(
+                device
+            )
 
             with torch.no_grad():
                 outputs = blip_model.generate(**inputs, max_new_tokens=50)
@@ -242,9 +249,9 @@ if __name__ == "__main__":
 
         # ---------- Run Florence2 ----------
         try:
-            inputs = florence_processor(images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt").to(
-                device
-            )
+            inputs = florence_processor(
+                images=image, text=["<MORE_DETAILED_CAPTION>"], return_tensors="pt"
+            ).to(device)
             with torch.no_grad():
                 outputs = florence_model.generate(**inputs, max_new_tokens=50)
                 florence_candidate_caption = florence_processor.decode(

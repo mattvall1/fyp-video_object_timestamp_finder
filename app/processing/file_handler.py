@@ -12,6 +12,7 @@ from app.processing.frame_display import FrameDisplayer
 from app.processing.image_captioning_handler import ImageCaptioningHandler
 from app.processing.key_frame_handler import KeyFrameHandler
 
+
 class FileHandler:
     """Handles video file processing, keyframe extraction, and caption generation."""
 
@@ -105,7 +106,13 @@ class FileHandler:
                 timestamp = int(frame.split("_")[1].split(".")[0]) / 1000
 
                 # Add frame to matching frames list (we need to save the path to the frame here)
-                self.matching_frames.append({"filename": self.output_dir + "/" + frame, "caption": generator_output, "timestamp": timestamp})
+                self.matching_frames.append(
+                    {
+                        "filename": self.output_dir + "/" + frame,
+                        "caption": generator_output,
+                        "timestamp": timestamp,
+                    }
+                )
 
                 # Print search results
                 print(
@@ -115,8 +122,13 @@ class FileHandler:
                 # Pause processing (continue regardless of user input after 10 seconds)
                 self.element_handler.handle_continue_button()
                 ignore_wait_seconds = 10
-                while self.element_handler.continue_button.isEnabled() and ignore_wait_seconds != 0:
-                    print(f"Processing paused, press continue to resume. Continuing in {ignore_wait_seconds} seconds")
+                while (
+                    self.element_handler.continue_button.isEnabled()
+                    and ignore_wait_seconds != 0
+                ):
+                    print(
+                        f"Processing paused, press continue to resume. Continuing in {ignore_wait_seconds} seconds"
+                    )
                     time.sleep(1)
                     ignore_wait_seconds -= 1
                 print("Processing resumed")
@@ -133,7 +145,9 @@ class FileHandler:
         print("All captions saved to CSV file.")
 
         # Run completion handler
-        completion_handler = CompletionHandler(self.element_handler, self.matching_frames)
+        completion_handler = CompletionHandler(
+            self.element_handler, self.matching_frames
+        )
         # Ask user if they want to generate a report
 
         generate_report = self.element_handler.generate_report_modal()

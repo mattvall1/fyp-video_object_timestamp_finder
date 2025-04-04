@@ -3,6 +3,7 @@
 # Purpose: Tools to delete and create directories
 import os
 
+
 class Tools:
     @staticmethod
     def clear_frame_directories():
