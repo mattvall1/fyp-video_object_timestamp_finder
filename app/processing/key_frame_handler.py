@@ -148,7 +148,7 @@ class KeyFrameHandler:
         total_diffs = sum(frame_diff[3] for frame_diff in frame_diffs)
         mean_diffs = total_diffs / len(frame_diffs)
 
-        # Get the standard deviation of the differences TODO: Explain why we do this
+        # Get the standard deviation of the differences
         sd_diffs = (
             sum((frame_diff[3] - mean_diffs) ** 2 for frame_diff in frame_diffs)
             / len(frame_diffs)

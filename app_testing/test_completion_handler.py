@@ -1,6 +1,6 @@
 # © 2025 Matthew Vallance. All rights reserved.
 # COMP1682 Final Year Project.
-"""Unit tests for the CompletionHandler class."""
+# Purpose: Unit tests for the CompletionHandler class.
 
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
@@ -150,7 +150,3 @@ class TestCompletionHandler(unittest.TestCase):
         
         # Verify PDF was saved
         mock_canvas_instance.save.assert_called_once()
-
-
-if __name__ == '__main__':
-    unittest.main()
