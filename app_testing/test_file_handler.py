@@ -10,9 +10,6 @@ import csv
 from io import StringIO
 
 from app.processing.file_handler import FileHandler
-from app.processing.key_frame_handler import KeyFrameHandler
-from app.processing.image_captioning_handler import ImageCaptioningHandler
-from app.processing.completion_handler import CompletionHandler
 
 
 class TestFileHandler(unittest.TestCase):
