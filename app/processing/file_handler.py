@@ -17,6 +17,9 @@ class FileHandler:
     """Handles video file processing, keyframe extraction, and caption generation."""
 
     def __init__(self, file_path, element_handler):
+        if not file_path or not os.path.exists(file_path):
+            raise ValueError("Invalid file path provided")
+
         self.file_path = file_path
         self.element_handler = element_handler
         self.frame_displayer = FrameDisplayer(self.element_handler.preview_element)
@@ -144,15 +147,15 @@ class FileHandler:
         self.results_file.close()
         print("All captions saved to CSV file.")
 
-        # Run completion handler
-        completion_handler = CompletionHandler(
-            self.element_handler, self.matching_frames
-        )
-        # Ask user if they want to generate a report
-
-        generate_report = self.element_handler.generate_report_modal()
-        if generate_report:
-            completion_handler.generate_completion_report(generate_report)
+        # Run completion handler (only if there are matching frames)
+        if self.matching_frames:
+            completion_handler = CompletionHandler(
+                self.element_handler, self.matching_frames
+            )
+            # Ask user if they want to generate a report
+            generate_report = self.element_handler.generate_report_modal()
+            if generate_report:
+                completion_handler.generate_completion_report(generate_report)
 
     def save_caption(self, frame, caption):
         """
@@ -161,7 +164,13 @@ class FileHandler:
         Parameters:
             frame: Frame identifier
             caption: Generated caption text
+
+        Raises:
+            TypeError: If the caption is empty
         """
+        if frame is None or caption is None:
+            raise TypeError("Frame and caption cannot be None")
+
         # Save the caption to a text file, using the writer created earlier
         self.csv_writer.writerow([frame, caption])
         print("Caption saved for frame")

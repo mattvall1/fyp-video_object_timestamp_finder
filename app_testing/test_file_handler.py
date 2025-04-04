@@ -32,6 +32,9 @@ class TestFileHandler(unittest.TestCase):
         os.makedirs(self.output_dir, exist_ok=True)
 
         # Set up patches
+        self.path_exists_patch = patch('os.path.exists', return_value=True)
+        self.mock_path_exists = self.path_exists_patch.start()
+
         # Note: this prevents segfault
         self.frame_displayer_patch = patch(
             "app.processing.frame_display.FrameDisplayer", autospec=True
@@ -64,6 +67,8 @@ class TestFileHandler(unittest.TestCase):
 
     def tearDown(self):
         # Stop all patches
+        self.path_exists_patch.stop()
+        self.setup_caption_patch.stop()
         self.setup_caption_patch.stop()
         self.tools_patch.stop()
         self.frame_displayer_patch.stop()
@@ -196,3 +201,59 @@ class TestFileHandler(unittest.TestCase):
 
         # Verify csv writer was called correctly
         self.mock_csv_writer.writerow.assert_called_once_with([frame, caption])
+
+    def test_init_with_invalid_file_path(self):
+        # Test initialization with an invalid file path
+        with patch("app.processing.file_handler.FrameDisplayer") as mock_frame_displayer:
+            with patch("app.processing.file_handler.Tools") as mock_tools:
+                with patch("app.processing.file_handler.FileHandler._setup_caption_file") as mock_setup:
+                    mock_setup.return_value = (MagicMock(), MagicMock())
+                    
+                    # Call with invalid path
+                    with self.assertRaises(ValueError):
+                        FileHandler("", self.mock_element_handler)
+    
+    def test_save_caption_with_none_values(self):
+        # Test save_caption with None values
+        with self.assertRaises(TypeError):
+            self.file_handler.save_caption(None, None)
+        
+        # Test with None frame
+        with self.assertRaises(TypeError):
+            self.file_handler.save_caption(None, "Test caption")
+            
+        # Test with None caption
+        with self.assertRaises(TypeError):
+            self.file_handler.save_caption("test_frame.jpg", None)
+    
+    @patch("os.listdir")
+    @patch("app.processing.file_handler.ImageCaptioningHandler")
+    def test_process_keyframes_with_empty_directory(
+        self, mock_image_captioning_handler_class, mock_listdir
+    ):
+        # Test _process_keyframes with empty directory
+        mock_listdir.return_value = []  # No frames in directory
+        
+        # Create mock captioning handler
+        mock_captioning_handler = MagicMock()
+        mock_image_captioning_handler_class.return_value = mock_captioning_handler
+        
+        # Call the method to test
+        self.file_handler._process_keyframes()
+        
+        # Verify that captioning was not attempted
+        mock_captioning_handler.frame_caption.assert_not_called()
+        
+        # Verify that no matching frames were added
+        self.assertEqual(len(self.file_handler.matching_frames), 0)
+        
+    @patch("app.processing.file_handler.KeyFrameHandler")
+    def test_retrieve_keyframes_with_exception(self, mock_key_frame_handler_class):
+        # Create mock KeyFrameHandler that raises an exception
+        mock_key_frame_handler = MagicMock()
+        mock_key_frame_handler.extract_keyframes.side_effect = Exception("Video processing error")
+        mock_key_frame_handler_class.return_value = mock_key_frame_handler
+        
+        # Call the method and expect an exception
+        with self.assertRaises(Exception):
+            self.file_handler.retrieve_keyframes()
