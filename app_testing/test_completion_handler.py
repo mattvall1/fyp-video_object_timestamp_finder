@@ -153,3 +153,52 @@ class TestCompletionHandler(unittest.TestCase):
 
         # Verify PDF was saved
         mock_canvas_instance.save.assert_called_once()
+
+    def test_init_with_empty_matching_frames(self):
+        # Test initialization with empty matching frames list
+        handler = CompletionHandler(self.mock_element_handler, [])
+        
+        # Verify the empty list was saved
+        self.assertEqual(handler.matching_frames, [])
+        self.assertEqual(handler.video_name, "video_test")
+    
+    def test_init_with_invalid_matching_frames(self):
+        # Test initialization with invalid matching frames format
+        invalid_frames = [{"invalid_key": "value"}]
+        
+        # Initialize without required fields should not raise error during init
+        # but will cause issues during PDF generation
+        handler = CompletionHandler(self.mock_element_handler, invalid_frames)
+        self.assertEqual(handler.matching_frames, invalid_frames)
+    
+    @patch("app.processing.completion_handler.canvas.Canvas")
+    def test_setup_pdf_with_invalid_path(self, mock_canvas):
+        # Setup mock canvas that raises an exception when file can't be created
+        mock_canvas.side_effect = IOError("Cannot create file")
+        
+        # Call the method and expect an exception
+        with self.assertRaises(IOError):
+            self.completion_handler._setup_pdf("/nonexistent/directory")
+    
+    @patch("app.processing.completion_handler.Image.open")
+    @patch("app.processing.completion_handler.canvas.Canvas")
+    def test_generate_pdf_content_with_missing_images(self, mock_canvas, mock_image_open):
+        # Setup mock canvas
+        mock_canvas_instance = MagicMock()
+        
+        # Setup mock image.open to raise FileNotFoundError
+        mock_image_open.side_effect = FileNotFoundError("File not found")
+        
+        # Create handler with frames pointing to non-existent images
+        bad_frames = [
+            {
+                "filename": "/nonexistent/path/frame.jpg",
+                "caption": "Test caption",
+                "timestamp": 1.0
+            }
+        ]
+        handler = CompletionHandler(self.mock_element_handler, bad_frames)
+        
+        # Call the method and expect an exception
+        with self.assertRaises(FileNotFoundError):
+            handler._generate_pdf_content(mock_canvas_instance)
