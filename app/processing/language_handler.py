@@ -9,6 +9,10 @@ class LanguageHandler:
     """Handles language processing tasks including synonym extraction and text comparison."""
 
     def __init__(self, search_term):
+        # Check if search term is empty
+        if not search_term:
+            raise ValueError("Search term cannot be empty.")
+
         self.search_term = search_term
 
         # Get synonyms for the search term
@@ -71,6 +75,9 @@ class LanguageHandler:
 
         # Split clean caption into individual words
         split_caption = clean_caption.split(" ")
+
+        # Remove empty strings from the list
+        split_caption = [word for word in split_caption if word]
 
         # Remove duplicates and return
         return set(split_caption)
