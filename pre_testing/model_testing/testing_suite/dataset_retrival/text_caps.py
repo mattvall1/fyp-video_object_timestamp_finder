@@ -40,5 +40,8 @@ class TextCaps:
 
 if __name__ == "__main__":
     text_caps = TextCaps()
-    # print(text_caps.get_reference_image_urls())
-    print(text_caps.get_reference_captions()[1])
+    for i in range(10):
+        print(text_caps.get_reference_image_urls()[i])
+        for caption in text_caps.get_reference_captions()[i]:
+            print(caption)
+        print("\n")
