@@ -1,0 +1,2 @@
+# Ignore HTML results file in language counts
+app_testing/results/* linguist-vendored
