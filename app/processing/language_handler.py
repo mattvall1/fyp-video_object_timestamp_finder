@@ -2,7 +2,7 @@
 # COMP1682 Final Year Project.
 """Handles search term processing and text comparison."""
 import re
-from nltk.corpus import wordnet  # TODO: Check if we should use Open WordNet instead
+from nltk.corpus import wordnet
 
 
 class LanguageHandler:
@@ -93,7 +93,7 @@ class LanguageHandler:
         Returns:
             set: Set of relevant words
         """
-        # Define lists of irrelevant words (TODO: Make sure this is what we need to remove)
+        # Define lists of irrelevant words
         pronouns = [
             "i",
             "me",

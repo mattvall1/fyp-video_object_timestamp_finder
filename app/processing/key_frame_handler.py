@@ -10,8 +10,6 @@ import time
 import cv2
 import matplotlib.pyplot as plt
 
-# TODO: Mention in report here we started with katna but it didnt do what I wanted
-
 
 class KeyFrameHandler:
     # TODO: In report Explain what these pylint things do
