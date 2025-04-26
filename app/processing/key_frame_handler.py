@@ -19,6 +19,10 @@ class KeyFrameHandler:
     def __init__(self, file_path, output_dir, frame_displayer, progress_bar):
         if not file_path or not os.path.isfile(file_path):
             raise ValueError("File path cannot be empty")
+        if not file_path.endswith((".mp4", ".avi", ".mov")):
+            raise ValueError("File must be a video file")
+        if not cv2.VideoCapture(file_path).isOpened():
+            raise ValueError("File cannot be opened")
         if not output_dir or not os.path.isdir(output_dir):
             raise ValueError("Output directory cannot be empty")
         if not frame_displayer:
