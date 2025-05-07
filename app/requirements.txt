@@ -1,0 +1,10 @@
+einops
+matplotlib
+nltk==3.9.1
+opencv-python
+PyQt6==6.9.0
+Pillow==10.1.0
+timm
+torch==2.5.1
+transformers==4.51.3
+reportlab==4.0.7

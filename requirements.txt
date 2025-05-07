@@ -1,3 +1,4 @@
+# Note: For only the main app, use requirements.txt located in the app directory
 black
 CairoSVG
 einops
