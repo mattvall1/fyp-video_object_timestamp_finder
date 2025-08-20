@@ -2,8 +2,6 @@
 ## Retrieving objects from short videos using text descriptions
 ### University of Greenwich - Computer Science BSc
 
-**Note:** The full paper will be included with this repository, after the final submission has been graded. This is to avoid plagiarism issues for markers.
-
 ## Abstract (from poster presentation)
 This project investigates retrieving objects from 
 short video clips using text descriptions generated 
